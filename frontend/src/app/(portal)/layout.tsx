@@ -1,4 +1,4 @@
-
+'use client'
 const links: {
     href: string;
     title: string;
@@ -21,7 +21,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                     {
                         links.map((link) =>
                             (
-                                <a key={link.title} href={link.href} className={"rounded px-4 py-2 hover:dark:bg-gray-100/10 hover:bg-orange-500 hover:text-white dark:hover:text-black"}>{ link.title }</a>
+                                <a key={link.title} href={link.href} className={"rounded px-4 py-2 hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white"}>{ link.title }</a>
                             )
                         )
                     }
