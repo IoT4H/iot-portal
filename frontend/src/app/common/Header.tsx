@@ -15,7 +15,7 @@ function Logo() {
 export default function Header() {
 
     return (
-        <header className="sticky top-0 z-40 bg-orange-100 dark:bg-gray-100/10">
+        <header className="sticky top-0 z-40 bg-orange-100 dark:bg-zinc-900 backdrop-blur-sm">
             <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8 border-solid border-b border-gray-400/30 dark:border-gray-50/30" aria-label="Global">
                 <div className="flex lg:flex-1">
                     <Logo />

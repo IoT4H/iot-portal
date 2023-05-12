@@ -1,7 +1,5 @@
-'use client'
 import { ListItemUseCase, ListUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { fakerDE as faker } from "@faker-js/faker"
-import { useState } from "react";
 export default function Home() {
 
     const generateUSeCases = () => {
@@ -12,14 +10,11 @@ export default function Home() {
         }
     };
 
-    const [useCases, SetUseCases] = useState(faker.helpers.uniqueArray(generateUSeCases, 10));
-    const [markedUseCases, SetMarkedUseCases] = useState(faker.helpers.uniqueArray(generateUSeCases, 10));
-
     return (
         <div className="flex flex-row content-stretch gap-12">
             <ListUseCase title={"Beispiel Use-Cases"}>
                 {
-                    useCases.map(useCase =>
+                    faker.helpers.uniqueArray(generateUSeCases, 10).map(useCase =>
                         <ListItemUseCase key={useCase.title} title={useCase.title} description={useCase.description} badges={useCase.badges}/>
                     )
                 }
@@ -27,7 +22,7 @@ export default function Home() {
 
             <ListUseCase title={"Merkliste"}>
                 {
-                    markedUseCases.map(useCase =>
+                    faker.helpers.uniqueArray(generateUSeCases, 10).map(useCase =>
                         <ListItemUseCase key={useCase.title} title={useCase.title} description={useCase.description} badges={useCase.badges}/>
                     )
                 }
