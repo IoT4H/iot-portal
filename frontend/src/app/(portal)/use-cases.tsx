@@ -52,8 +52,8 @@ export function ListUseCase ({  title,
 }) {
     return (
         <>
-            <div className="flex-auto rounded bg-white dark:bg-zinc-950 p-4 shadow">
-                <h2 className={"dark:text-white font-bold text-xl border-solid border-b-4 inline-block pr-2 py-1 border-orange-500"}>{ title }</h2>
+            <div className="flex-auto rounded bg-white dark:bg-zinc-950 p-4 shadow max-h-full sticky top-0">
+                <h2 className={"dark:text-white font-bold text-xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 "}>{ title }</h2>
                 <ul role="list" className="divide-y dark:divide-gray-100/10">
                     { children }
                 </ul>

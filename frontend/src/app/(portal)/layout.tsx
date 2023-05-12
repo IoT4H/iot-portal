@@ -16,8 +16,8 @@ const links: {
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <div className=" bg-orange-100 dark:bg-zinc-900 sticky top-24 h-16">
-                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 h-full flex flex-row items-center">
+            <div className="bg-orange-100 dark:bg-zinc-900 sticky top-16 h-16">
+                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 h-full flex flex-row items-center">
                     {
                         links.map((link) =>
                             (
@@ -27,8 +27,8 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                     }
                 </div>
             </div>
-            <div className={"h-28 bg-orange-100 dark:bg-zinc-900 shadow sticky top-40 -z-10"}></div>
-            <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 -mt-28">
+            <div className={"h-28 bg-orange-100 dark:bg-zinc-900 shadow sticky top-32 -z-10"}></div>
+            <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8 -mt-28">
                 {children}
             </div>
         </>
