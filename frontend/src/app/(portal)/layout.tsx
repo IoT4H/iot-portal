@@ -28,7 +28,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                 </div>
             </div>
             <div className={"h-28 bg-orange-100 dark:bg-zinc-900 shadow sticky top-32 -z-10"}></div>
-            <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8 -mt-28">
+            <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8 -mt-28  w-full">
                 {children}
             </div>
         </>

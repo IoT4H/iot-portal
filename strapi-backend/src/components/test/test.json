@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_test_tests",
+  "info": {
+    "displayName": "test",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "firmware": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "geraet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::device.device"
+    },
+    "amount": {
+      "type": "integer",
+      "default": 1
+    }
+  }
+}

@@ -4,7 +4,17 @@ import { StarIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarFilledIcon } from "@heroicons/react/24/solid"
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import Link from "next/link"
 
+
+export type UseCase = {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    description: string;
+    badges: string[];
+}
 
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
@@ -14,14 +24,15 @@ export function Badge({ name } : { name: string; color?: string; }) {
         </span>
     );
 }
-export function ListItemUseCase ({ title, description, badges } : { title: string; description: string; badges: string[] }) {
+export function ListItemUseCase ({ id, title, description, badges, slug } : { id: number; title: string; slug: string; description: string; badges: string[] }) {
     const [ marked, setMarked ] = useState(false)
 
     return (
         <>
-            <li className="flex justify-between gap-x-6 py-5">
-                <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer hover:bg-gray-400/10">
-                    <div>
+            <Link href={"/usecase/" + id}>
+            <li className="flex justify-between gap-x-6 py-5" >
+                <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
+                    <div className={"flex-grow"}>
                         <div className="flex flex-row items-center pb-2">
                             {
                                 marked ? <StarFilledIcon onClick={() => setMarked(false)} className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/> : <StarIcon onClick={() => setMarked(true)} className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/>
@@ -35,11 +46,12 @@ export function ListItemUseCase ({ title, description, badges } : { title: strin
                             }
                         </div>
                     </div>
-                    <div className={"flex items-center flex-row"}>
+                    <div className={"flex flex-grow-0 items-center flex-row"}>
                         <ChevronRightIcon  className={"w-6 h-6"}/>
                     </div>
                 </div>
             </li>
+        </Link>
         </>
     );
 }
