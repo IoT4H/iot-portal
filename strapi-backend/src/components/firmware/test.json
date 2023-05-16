@@ -1,7 +1,7 @@
 {
   "collectionName": "components_test_tests",
   "info": {
-    "displayName": "test",
+    "displayName": "Image",
     "description": ""
   },
   "options": {},
@@ -11,10 +11,7 @@
       "multiple": false,
       "required": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "files"
       ]
     },
     "geraet": {

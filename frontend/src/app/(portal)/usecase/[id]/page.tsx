@@ -14,13 +14,21 @@ function Tab({name, active, onClick} : {name: string; active?: boolean, onClick:
     );
 }
 
+const InfoTab = ({summary} : {summary: string}) => {
+    return (
+        <>
+            { summary }
+        </>
+    );
+}
+
 export default function UseCase() {
     const router = useRouter();
     const params = useParams();
     const [description, setDescription] = useState("");
     const [summary, setSummary] = useState("");
     const [pageTitle, setPageTitle] = useState("");
-    const [tabs, setTabs] = useState<{title: string; content: string;}[]>([]);
+    const [tabs, setTabs] = useState<{title: string; content: string | JSX.Element;}[]>([]);
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
 
@@ -28,10 +36,10 @@ export default function UseCase() {
     useEffect(  () => {
 
         const fetchData = async () => {
-            const useCaseRes = fetch("http://localhost:1337/api/use-cases/" + params.id)
+            const useCaseRes = fetch("http://localhost:1337/api/use-cases?filters\\[slug]=" + params.id)
                 .then(res => res.json())
                 .then((data) => {
-                    const useCase = data.data;
+                    const useCase = data.data[0];
                     const uAr: UseCase = {
                         id: useCase.id,
                         title: useCase.attributes.Titel,
@@ -44,7 +52,7 @@ export default function UseCase() {
                     setPageTitle(uAr.title);
                     setDescription(uAr.description);
                     setSummary(uAr.summary);
-                    setTabs([{title: 'Info', content: uAr.summary }, {title:'Anleitung', content: "asdas"}, {title:'Downloads', content: "hfrtg"}]);
+                    setTabs([{title: 'Info', content: (<InfoTab summary={summary} />) }, {title:'Anleitung', content: "asdas"}, {title:'Downloads', content: "hfrtg"}]);
                     setActiveTab(tabs[0]);
                 });
         };
@@ -70,7 +78,6 @@ export default function UseCase() {
                     <div>
                         { activeTab && activeTab.content }
                     </div>
-                    <div className={"w-5/12 pl-4 border-gray-900/10 border-l-2"}>DU</div>
                 </div>
             </div>
         </>

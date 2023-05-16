@@ -29,7 +29,7 @@ export function ListItemUseCase ({ id, title, description, badges, slug } : { id
 
     return (
         <>
-            <Link href={"/usecase/" + id}>
+            <Link href={"/usecase/" + slug}>
             <li className="flex justify-between gap-x-6 py-5" >
                 <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
                     <div className={"flex-grow"}>
