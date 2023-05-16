@@ -4,7 +4,6 @@ import { StarIcon as StarFilledIcon } from "@heroicons/react/24/solid"
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link"
 
 
 export type UseCase = {
@@ -15,8 +14,8 @@ export type UseCase = {
     summary: string;
     description: string;
     images?: string[];
-    tags?: string[];
-    devices: string[];
+    tags: string[];
+    devices: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -29,9 +28,7 @@ export function mapUseCase(useCase: any): UseCase {
         description: useCase.attributes.description,
         images: useCase.attributes.Bilder && useCase.attributes.Bilder.data && useCase.attributes.Bilder.data.map((b: any) => mapImageData(b)) || undefined,
         tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t :any) => t.attributes.name)) || [],
-        devices:  (useCase.attributes.Images && useCase.attributes.Images.map((i :any) => {
-            return i.device.data && i.device.data.attributes.name || undefined;
-        })) || []
+        devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || []
     }
 }
 
@@ -81,10 +78,9 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                         <p className={"dark:text-gray-300 text-sm"}>{ useCase.description }</p>
                         <div className="flex flex-row gap-2 mt-4 flex-wrap">
                             {
-                                useCase.tags && useCase.tags.map(tag => (<Badge key={tag} name={tag}/>))
-                            }
-                            {
-                                useCase.devices && useCase.devices.map(device => (<Badge key={device} name={device}/>))
+                                 [...useCase.devices.map((i :any) => {
+                                     return i.device.data && i.device.data.attributes.name;
+                                 }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                             }
                         </div>
                     </div>
