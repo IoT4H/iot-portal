@@ -14,14 +14,14 @@
         "files"
       ]
     },
-    "geraet": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::device.device"
-    },
     "amount": {
       "type": "integer",
       "default": 1
+    },
+    "device": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::device.device"
     }
   }
 }

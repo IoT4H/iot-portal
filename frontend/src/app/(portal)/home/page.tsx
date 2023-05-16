@@ -1,5 +1,5 @@
 'use client'
-import { ListItemUseCase, ListUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -11,18 +11,36 @@ export default function Home() {
 
     useEffect(  () => {
 
+        const qs = require('qs');
+        const query = qs.stringify(
+            {
+                fields: '*',
+                populate: {
+                    Thumbnail: {
+                        populate: '*',
+                    },
+                    tags: {
+                        populate: '*',
+                    },
+                    Images: {
+                        populate: '*',
+                        device : {
+                            populate: "*"
+                        }
+                    }
+                }
+            },
+            {
+                encodeValuesOnly: true, // prettify URL
+            }
+        );
+
+
         const fetchData = async () => {
-            const useCaseRes = fetch("http://localhost:1337/api/use-cases")
+            const useCaseRes = fetch(`http://localhost:1337/api/use-cases?${query}`)
                 .then(res => res.json())
                 .then((data) => {
-                    const uAr: UseCase[] = data.data.map((useCase: any): UseCase => ({
-                        id: useCase.id,
-                        title: useCase.attributes.Titel,
-                        slug: useCase.attributes.slug,
-                        summary: useCase.attributes.Kurzbeschreibung,
-                        description: useCase.attributes.Beschreibung,
-                        badges: [...useCase.attributes.Tags || []]
-                    }));
+                    const uAr: UseCase[] = data.data.map((useCase: any): UseCase => (mapUseCase(useCase)));
                     setUseCases(useCases => [...uAr]);
                 });
         };
@@ -36,9 +54,8 @@ export default function Home() {
         <div className="flex flex-row content-stretch gap-12">
             <ListUseCase title={"Beispiel Use-Cases"}>
                 {
-                    useCases.length > 0 && useCases.map(useCase =>
-                        <ListItemUseCase key={useCase.id} id={useCase.id} title={useCase.title} description={useCase.summary}
-                                         badges={useCase.badges} slug={useCase.slug}/>
+                    useCases.length > 0 && useCases.map((u: UseCase) =>
+                        <ListItemUseCase key={u.id}  useCase={u} />
                     )
                 }
             </ListUseCase>
