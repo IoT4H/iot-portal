@@ -25,11 +25,49 @@ function Tab({Icon, className, name, active, onClick} : {Icon?: HeroIcon; classN
 
 type Tabs = 'Info' | 'Bilder' | 'Anleitung' | 'Setup';
 
+
+function PictureGallery({ pictures } : {pictures?: any[]}) {
+    console.log(pictures)
+    return (
+        <div className={"grid grid-cols-[repeat(auto-fill,_minmax(224px,_1fr))] gap-2"}>
+            { pictures && pictures.map((pic) => {
+                return (
+                    <div key={pic.hash} className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}>
+                        <img src={"http://localhost:1337" + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+function Instructions({ instructions } : { instructions: any[]}) {
+    return (
+        <>
+        { instructions.map((instruction, index) => (
+                <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
+                    <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
+                    <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
+                </div>
+            )) }
+        </>
+    );
+}
+
+function Info({ description } : { description: string; }) {
+    return (<ReactMarkdown className={"markdown mx-8"}>{description}</ReactMarkdown>);
+}
+
 export default function UseCase() {
     const router = useRouter();
     const params = useParams();
     const [activeTab, setActiveTab] = useState<Tabs>('Info' );
     const [useCase, setUseCase] = useState<UseCase>();
+
+
+    useEffect(() => {
+        console.log(useCase);
+    }, [useCase]);
 
     useEffect(  () => {
 
@@ -92,7 +130,7 @@ export default function UseCase() {
                         }
                         <div className={"flex flex-shrink flex-col"}>
                             <div><h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{ useCase.title }</h2></div>
-                            <div className="flex flex-row gap-2 mt-4 flex-wrap">
+                            <div className="flex flex-row gap-2 mt-4 flex-wrap text-orange-500">
                                 {
                                     [...useCase.devices.map((i :any) => {
                                         return i.device.data && i.device.data.attributes.name;
@@ -132,28 +170,10 @@ export default function UseCase() {
                         <Tab name={"Anleitung"} active={activeTab === 'Anleitung'} onClick={() => setActiveTab('Anleitung')}/>
 
                     </div>
-                    <div className={"flex flex-row content-stretch gap-12"}>
-                        <div>
-                            { activeTab === 'Info' && ( <ReactMarkdown className={"markdown mx-8"}>{useCase.description}</ReactMarkdown>) }
-                            { activeTab === 'Anleitung' && (
-                                useCase.instructions.map((instruction, index) => (
-                                    <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
-                                        <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
-                                        <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
-                                    </div>
-                                ))
-                            ) }
-                            { activeTab === 'Setup' && (
-                                <>
-                                    <div>
-                                        {
-                                            useCase.devices.map((d) => (<p key={d.id}>{d.amount}x {d.device.data.attributes.name}</p>))
-                                        }
-                                    </div>
-                                    <button className={"bg-orange-500/80 hover:bg-orange-500 p-4 px-8 text-white"} onClick={() => alert("TEST")}>Setup einrichten</button>
-                                </>
-                            )}
-                        </div>
+                    <div className={"w-full"}>
+                            { activeTab === 'Info' && ( <Info description={useCase.description} />) }
+                            { activeTab === 'Anleitung' && ( <Instructions instructions={useCase.instructions}/>) }
+                            { activeTab === 'Bilder' && ( <PictureGallery pictures={useCase.pictures} />)}
                     </div>
                 </div>
         </>)

@@ -43,7 +43,7 @@ export function mapUseCase(useCase: any): UseCase {
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
         <span
-            className={"inline-flex items-center rounded-md dark:dark:bg-gray-100/10 bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-700/10"}>
+            className={"inline-flex items-center rounded-md dark:dark:bg-gray-100/10 bg-orange-50 px-2 py-1 text-xs font-medium text-orange-500 ring-1 ring-inset ring-orange-500/10"}>
             { name }
         </span>
     );
@@ -77,7 +77,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             }</div>
                             <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
                         </div>
-                        <p className={"dark:text-gray-300 text-sm"}>{ useCase.description }</p>
+                        <p className={"dark:text-gray-300 text-sm"}>{ useCase.summary }</p>
                         <div className="flex flex-row gap-2 mt-4 flex-wrap">
                             {
                                  [...useCase.devices.map((i :any) => {
