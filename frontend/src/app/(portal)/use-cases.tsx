@@ -10,33 +10,35 @@ export type UseCase = {
     id: number;
     title: string;
     slug: string;
-    thumbnail?: string;
+    thumbnail?: any;
     summary: string;
     description: string;
-    images?: string[];
+    pictures?: any[];
     tags: string[];
     devices: any[];
+    setupDuration: number;
+    complexity: number;
+    instructions: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
+    console.log(useCase)
     return {
         id: useCase.id,
         title: useCase.attributes.Titel,
         slug: useCase.attributes.slug,
-        thumbnail: useCase.attributes.Thumbnail && useCase.attributes.Thumbnail.data && mapImageData(useCase.attributes.Thumbnail.data) || undefined,
+        thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes || undefined,
         summary: useCase.attributes.summary,
         description: useCase.attributes.description,
-        images: useCase.attributes.Bilder && useCase.attributes.Bilder.data && useCase.attributes.Bilder.data.map((b: any) => mapImageData(b)) || undefined,
+        pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || undefined,
         tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t :any) => t.attributes.name)) || [],
-        devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || []
+        devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || [],
+        setupDuration: useCase.attributes.setupDuration,
+        complexity: useCase.attributes.complexity,
+        instructions: useCase.attributes.instructions
     }
 }
 
-function mapImageData({
-    image
-                      } : {image: any}): string {
-    return image && "http://localhost:1337" + image.attributes.url
-}
 
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
@@ -63,7 +65,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                     {
                         useCase.thumbnail && (
                             <div className={"flex flex-grow-0 items-center flex-row w-fit"}>
-                                <img src={useCase.thumbnail} className={""}/>
+                                <img src={"http://localhost:1337" + useCase.thumbnail.url} className={""}/>
                             </div>
                         )
                     }
@@ -101,7 +103,7 @@ export function ListUseCase ({  title,
 }) {
     return (
         <>
-            <div className="flex-auto rounded bg-white dark:bg-zinc-950 p-4 shadow max-h-full sticky top-0">
+            <div className="flex-auto rounded bg-white dark:bg-zinc-800 p-4 shadow max-h-full sticky top-0">
                 <h2 className={"dark:text-white font-bold text-xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 "}>{ title }</h2>
                 <ul role="list" className="divide-y dark:divide-gray-100/10">
                     { children }

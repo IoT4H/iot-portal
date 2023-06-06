@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_instructions_instructions",
+  "info": {
+    "displayName": "instructions"
+  },
+  "options": {},
+  "attributes": {
+    "stepName": {
+      "type": "string"
+    },
+    "pictures": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "step": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

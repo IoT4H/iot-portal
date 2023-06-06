@@ -20,7 +20,7 @@
       "type": "richtext",
       "required": true
     },
-    "Thumbnail": {
+    "thumbnail": {
       "type": "media",
       "multiple": false,
       "required": false,
@@ -31,7 +31,7 @@
         "audios"
       ]
     },
-    "Bilder": {
+    "pictures": {
       "type": "media",
       "multiple": true,
       "required": false,
@@ -59,6 +59,26 @@
     },
     "summary": {
       "type": "text"
+    },
+    "setupDuration": {
+      "type": "integer",
+      "default": 30,
+      "min": 0,
+      "required": true
+    },
+    "complexity": {
+      "type": "integer",
+      "required": true,
+      "default": 1,
+      "min": 1,
+      "max": 5
+    },
+    "instructions": {
+      "displayName": "instructions",
+      "type": "component",
+      "repeatable": true,
+      "component": "instructions.instructions",
+      "required": true
     }
   }
 }
