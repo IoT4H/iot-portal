@@ -119,12 +119,14 @@ export default function UseCase() {
     return (
         useCase && (
         <>
-                <div className="block rounded bg-white dark:bg-zinc-800 p-4 shadow max-h-full sticky top-0">
-                    <div className={"flex flex-row gap-4"}>
+                <div className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
+                    <div className={"flex flex-row gap-8"}>
                         {
                             useCase.thumbnail !== undefined && (
-                                <div className={"w-3/6 shrink-0"}>
-                                    <img src={"http://localhost:1337" + useCase.thumbnail.url} />
+                                <div className={"w-6/12 shrink-0"}>
+                                    <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
+                                        <img src={"http://localhost:1337" + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                    </div>
                                 </div>
                             )
                         }
@@ -139,23 +141,23 @@ export default function UseCase() {
                             </div>
                             <p className={"text-sm text-gray-400 py-4"}> { useCase.summary }</p>
                             <div className={"flex flex-row justify-evenly gap-8 my-4"}>
-                                <div className={"text-xs flex flex-col items-center gap-2 "} title={"Sensoren"}>
+                                <div className={"text-xs flex flex-col items-center gap-2 text-center"} title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>
                                     10
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2 "} title={"Microcontroller"}>
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Microcontroller"}>
                                     <CpuChipIcon className={"w-8"}/>
                                     3
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2 "} title={"Computer"}>
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Computer"}>
                                     <ComputerDesktopIcon className={"w-8"}/>
                                     3
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2 "} title={"Setup Dauer"}>
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Setup Dauer"}>
                                     <ClockIcon className={"w-8"}/>
                                     {useCase.setupDuration}min
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2 "} title={"Schwierigkeit"}>
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Schwierigkeit"}>
                                     <CodeBracketIcon className={"w-8"}/>
                                     Level {useCase.complexity}
                                 </div>
@@ -164,16 +166,18 @@ export default function UseCase() {
 
                         </div>
                     </div>
-                    <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
-                        <Tab name={"Info"} active={activeTab === 'Info'} onClick={() => setActiveTab('Info')}/>
-                        <Tab name={"Bilder"} active={activeTab === 'Bilder'} onClick={() => setActiveTab('Bilder')}/>
-                        <Tab name={"Anleitung"} active={activeTab === 'Anleitung'} onClick={() => setActiveTab('Anleitung')}/>
+                    <div>
+                        <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
+                            <Tab name={"Info"} active={activeTab === 'Info'} onClick={() => setActiveTab('Info')}/>
+                            <Tab name={"Bilder"} active={activeTab === 'Bilder'} onClick={() => setActiveTab('Bilder')}/>
+                            <Tab name={"Anleitung"} active={activeTab === 'Anleitung'} onClick={() => setActiveTab('Anleitung')}/>
 
-                    </div>
-                    <div className={"w-full"}>
-                            { activeTab === 'Info' && ( <Info description={useCase.description} />) }
-                            { activeTab === 'Anleitung' && ( <Instructions instructions={useCase.instructions}/>) }
-                            { activeTab === 'Bilder' && ( <PictureGallery pictures={useCase.pictures} />)}
+                        </div>
+                        <div className={"w-full"}>
+                                { activeTab === 'Info' && ( <Info description={useCase.description} />) }
+                                { activeTab === 'Anleitung' && ( <Instructions instructions={useCase.instructions}/>) }
+                                { activeTab === 'Bilder' && ( <PictureGallery pictures={useCase.pictures} />)}
+                        </div>
                     </div>
                 </div>
         </>)
