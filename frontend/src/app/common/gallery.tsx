@@ -18,10 +18,6 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                             </div>
                             <img src={"http://localhost:1337" + pics[index].url}  className={"max-w-[50vw] max-h-[50vh]"}/>
                         </div>
-                        <div className={"absolute w-full h-full"}
-                             onClick={() => gallery(0, [])}
-                        >
-                        </div>
                     </div>
                 )
             }
