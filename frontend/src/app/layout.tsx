@@ -1,6 +1,6 @@
 import './globals.css'
 import Header from "@iot-portal/frontend/app/common/Header";
-import { Inter } from 'next/font/google'
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,12 +16,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body className={`${inter.className} min-h-screen h-max flex`}>
-          <div className={'flex flex-1 flex-col '}>
+        <body className={`${inter.className} min-h-screen h-max flex`}>
+            <div className={'flex flex-1 flex-col '}>
               <Header/>
               {children}
-          </div>
-      </body>
+            </div>
+        </body>
     </html>
   )
 }
+

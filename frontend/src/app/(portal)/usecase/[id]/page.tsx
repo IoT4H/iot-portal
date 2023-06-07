@@ -1,6 +1,8 @@
 'use client'
+import Gallery from "@iot-portal/frontend/app/common/gallery";
+import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import { useParams, useRouter } from "next/navigation";
-import { MouseEventHandler, Suspense, useEffect, useState } from "react";
+import { Context, createContext, MouseEventHandler, Suspense, useContext, useEffect, useState } from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import {
     PlayIcon,
@@ -27,12 +29,18 @@ type Tabs = 'Info' | 'Bilder' | 'Anleitung' | 'Setup';
 
 
 function PictureGallery({ pictures } : {pictures?: any[]}) {
-    console.log(pictures)
+
+    const gallery = useContext(GalleryContext);
+
     return (
         <div className={"grid grid-cols-[repeat(auto-fill,_minmax(224px,_1fr))] gap-2"}>
-            { pictures && pictures.map((pic) => {
+            { pictures && pictures.map((pic, index, allPics) => {
                 return (
-                    <div key={pic.hash} className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}>
+                    <div
+                        key={pic.hash}
+                        className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
+                        onClick={() => gallery(index, allPics)}
+                    >
                         <img src={"http://localhost:1337" + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                     </div>
                 );
@@ -64,6 +72,7 @@ export default function UseCase() {
     const [activeTab, setActiveTab] = useState<Tabs>('Info' );
     const [useCase, setUseCase] = useState<UseCase>();
 
+    const gallery = useContext(GalleryContext);
 
     useEffect(() => {
         console.log(useCase);
@@ -123,7 +132,9 @@ export default function UseCase() {
                     <div className={"flex flex-row gap-8"}>
                         {
                             useCase.thumbnail !== undefined && (
-                                <div className={"w-6/12 shrink-0"}>
+                                <div className={"w-6/12 shrink-0 cursor-pointer"}
+                                     onClick={() => gallery(0, [useCase.thumbnail])}
+                                >
                                     <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
                                         <img src={"http://localhost:1337" + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                                     </div>
