@@ -166,7 +166,7 @@ export default function UseCase() {
 
                         </div>
                     </div>
-                    <div>
+                    <div className={"pb-8"}>
                         <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                             <Tab name={"Info"} active={activeTab === 'Info'} onClick={() => setActiveTab('Info')}/>
                             <Tab name={"Bilder"} active={activeTab === 'Bilder'} onClick={() => setActiveTab('Bilder')}/>
