@@ -10,7 +10,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
         <>
             {
                 pics.length >= 1 && (
-                    <div className={"absolute w-full h-full z-50 flex content-center items-center justify-center bg-gray-50/20 "}>
+                    <div className={"fixed w-full h-full z-50 flex content-center items-center justify-center bg-gray-50/20 "}>
                         <div className={"bg-zinc-700 p-12 drop-shadow-2xl pt-16"}>
                             <div className={"w-12 absolute top-2 right-2 cursor-pointer"}
                                  onClick={ () => gallery(0, [])}>

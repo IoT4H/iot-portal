@@ -50,12 +50,28 @@ function PictureGallery({ pictures } : {pictures?: any[]}) {
 }
 
 function Instructions({ instructions } : { instructions: any[]}) {
+
+    const gallery = useContext(GalleryContext);
+
     return (
         <>
         { instructions.map((instruction, index) => (
                 <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
                     <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
                     <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
+                    <div className={"grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] gap-2 py-4"}>
+                        { instruction.pictures && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
+                            return (
+                                <div
+                                    key={pic.attributes.hash}
+                                    className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
+                                    onClick={() => gallery(index, allPics.map(p => p.attributes))}
+                                >
+                                    <img src={"http://localhost:1337" + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             )) }
         </>
