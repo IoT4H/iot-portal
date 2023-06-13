@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/20/solid";
+import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import { useContext } from "react";
 
@@ -16,7 +16,11 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                  onClick={ () => gallery(0, [])}>
                                 <XMarkIcon />
                             </div>
-                            <img src={"http://localhost:1337" + pics[index].url}  className={"max-w-[50vw] max-h-[50vh]"}/>
+                            <div className={'flex flex-row items-center'}>
+                                { index > 0 && (<ChevronLeftIcon  className={"flex-grow-0 w-24 h-24 cursor-pointer"} onClick={ () => gallery(index - 1, pics)}/>) }
+                                <img src={"http://localhost:1337" + pics[index].url}  className={"max-w-[50vw] max-h-[50vh]"}/>
+                                { index < pics.length - 1 && (<ChevronRightIcon className={"flex-grow-0 w-24 h-24 cursor-pointer"} onClick={ () => gallery(index + 1, pics)}/>) }
+                            </div>
                         </div>
                     </div>
                 )
