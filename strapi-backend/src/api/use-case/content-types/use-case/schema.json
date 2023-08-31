@@ -79,9 +79,6 @@
       "repeatable": true,
       "component": "instructions.instructions",
       "required": true
-    },
-    "Wochendende": {
-      "type": "string"
     }
   }
 }
