@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    depends_on:
+      - strapi
+  portaldb:
+    image: postgres
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_DB: strapi
+  strapi:
+    build:
+      context: ./strapi-backend
+    restart: unless-stopped
+    ports:
+      - '1337:1337'
+    environment:
+      DATABASE_HOST: 'portaldb'
+      NODE_ENV: 'production'
+      DATABASE_CLIENT: 'postgres'
+    depends_on:
+      - portaldb
