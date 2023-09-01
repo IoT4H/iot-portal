@@ -61,7 +61,7 @@ function Instructions({ instructions } : { instructions: any[]}) {
                     <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
                     <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
                     <div className={"grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] gap-2 py-4"}>
-                        { instruction.pictures && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
+                        { instruction.pictures && instruction.pictures.data && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
                             return (
                                 <div
                                     key={pic.attributes.hash}
