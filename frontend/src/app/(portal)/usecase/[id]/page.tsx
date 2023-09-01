@@ -56,7 +56,7 @@ function Instructions({ instructions } : { instructions: any[]}) {
 
     return (
         <>
-        { instructions.map((instruction, index) => (
+        { instructions && instructions.map((instruction, index) => (
                 <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
                     <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
                     <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
