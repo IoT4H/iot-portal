@@ -27,6 +27,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+ENV NEXT_TELEMETRY_DISABLED 1
+ARG NEXT_PUBLIC_STRAPI_API_URL=/api
+ENV NEXT_PUBLIC_STRAPI_API_URL=${NEXT_PUBLIC_STRAPI_API_URL}
+
 RUN yarn build
 
 # If using npm comment out above and use below instead
@@ -38,7 +42,9 @@ WORKDIR /app
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
+ARG NEXT_PUBLIC_STRAPI_API_URL=/api
+
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
