@@ -140,14 +140,14 @@ export default function UseCase() {
         useCase && (
         <>
                 <div className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
-                    <div className={"flex flex-row gap-8"}>
+                    <div className={"flex md:flex-row flex-col gap-8"}>
                         {
                             useCase.thumbnail !== undefined && (
-                                <div className={"w-6/12 shrink-0 cursor-pointer"}
+                                <div className={"w-full md:w-6/12 shrink-0 cursor-pointer"}
                                      onClick={() => gallery(0, [useCase.thumbnail])}
                                 >
                                     <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
-                                        <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                        <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"relative max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} />
                                     </div>
                                 </div>
                             )
