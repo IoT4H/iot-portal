@@ -1,6 +1,7 @@
 'use client'
 import Gallery from "@iot-portal/frontend/app/common/gallery";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
+import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import { Context, createContext, MouseEventHandler, Suspense, useContext, useEffect, useState } from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -96,15 +97,11 @@ export default function UseCase() {
 
     useEffect(  () => {
 
-        const qs = require('qs');
-        const query = qs.stringify(
+        const qsPara =
             {
                 fields: '*',
                 populate: {
-                    thumbnail: {
-                        populate: '*',
-                    },
-                    pictures: {
+                    Thumbnail: {
                         populate: '*',
                     },
                     tags: {
@@ -115,29 +112,14 @@ export default function UseCase() {
                         device : {
                             populate: "*"
                         }
-                    },
-                    instructions: {
-                        populate: '*',
                     }
-                },
-                filters: {
-                    slug: params.id
                 }
-            },
-            {
-                encodeValuesOnly: true, // prettify URL
             }
-        );
+        ;
 
-        const fetchData = async () => {
-            const useCaseRes = fetch(`http://localhost:1337/api/use-cases?${query}`)
-                .then(res => res.json())
-                .then((data) => {
-                    setUseCase(mapUseCase(data.data[0]));
-                });
-        };
-
-        fetchData();
+        fetchAPI('/use-cases', qsPara).then((data) => {
+            setUseCase(mapUseCase(data.data[0]));
+        });
 
     }, [])
 
