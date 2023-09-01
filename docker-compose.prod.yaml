@@ -1,0 +1,42 @@
+version: '3.5'
+services:
+  frontend:
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portal_ui.rule=Host(`portal.iot4h.de`)"
+      - "traefik.http.routers.portal_ui.entrypoints=websecure"
+      - "traefik.http.routers.portal_ui.tls.certresolver=myresolver"
+      - "traefik.http.services.portal_ui.loadbalancer.server.port=3000"
+  strapi:
+    networks:
+      - traefik
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portal_cms.rule=(Host(`portal.iot4h.de`) && PathPrefix(`/api`) )"
+      - "traefik.http.routers.portal_cms.entrypoints=websecure"
+      - "traefik.http.routers.portal_cms.tls.certresolver=myresolver"
+      - "traefik.http.services.portal_cms.loadbalancer.server.port=1337"
+      - "traefik.http.middlewares.portal_cms_api.stripprefix.prefixes=/api"
+      - "traefik.http.routers.portal_cms.middlewares=portal_cms_api@docker"
+    build:
+      args:
+        - STRAPI_URL=https://portal.iot4h.de/api
+    env_file:
+      - .prod.env
+    environment:    
+      STRAPI_URL: "https://portal.iot4h.de/api"
+      DATABASE_HOST: 'portaldb'
+      NODE_ENV: 'production'
+      DATABASE_CLIENT: 'postgres'
+      APP_KEYS: "{}"
+      API_TOKEN_SALT: "DEV"
+
+
+
+networks:
+  traefik:
+    name: "website_default"
+    external: true
