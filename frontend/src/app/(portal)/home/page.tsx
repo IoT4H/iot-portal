@@ -3,6 +3,7 @@ import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/a
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { fetchAPI } from '@iot-portal/frontend/lib/api'
 export default function Home() {
 
     const router = useRouter();
@@ -11,41 +12,31 @@ export default function Home() {
 
     useEffect(  () => {
 
-        const qs = require('qs');
-        const query = qs.stringify(
-            {
-                fields: '*',
-                populate: {
-                    Thumbnail: {
-                        populate: '*',
-                    },
-                    tags: {
-                        populate: '*',
-                    },
-                    Images: {
-                        populate: '*',
-                        device : {
-                            populate: "*"
+        const qsPara =
+                {
+                    fields: '*',
+                    populate: {
+                        Thumbnail: {
+                            populate: '*',
+                        },
+                        tags: {
+                            populate: '*',
+                        },
+                        Images: {
+                            populate: '*',
+                            device : {
+                                populate: "*"
+                            }
                         }
                     }
                 }
-            },
-            {
-                encodeValuesOnly: true, // prettify URL
-            }
-        );
+            ;
 
+        fetchAPI('/use-cases', qsPara).then((data) => {
+            const uAr: UseCase[] = data.data.map((useCase: any): UseCase => (mapUseCase(useCase)));
+            setUseCases(useCases => [...uAr]);
+        });
 
-        const fetchData = async () => {
-            const useCaseRes = fetch(`http://localhost:1337/api/use-cases?${query}`)
-                .then(res => res.json())
-                .then((data) => {
-                    const uAr: UseCase[] = data.data.map((useCase: any): UseCase => (mapUseCase(useCase)));
-                    setUseCases(useCases => [...uAr]);
-                });
-        };
-
-        fetchData();
 
     }, [])
 
