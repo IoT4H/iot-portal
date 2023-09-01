@@ -2,6 +2,7 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import { useContext, useEffect, useState } from "react";
+import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 
 export default function Gallery({ index, pics} : { index: number; pics: any[]}) {
 
@@ -29,7 +30,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                     <ChevronLeftIcon className={"w-24 h-24"}/>
                                 </div>
                                 <div className={"order-1 2xl:order-2 flex-shrink transition-all ease-out duration-500 relative flex flex-row items-stretch justify-center"}>
-                                    <img src={"http://localhost:1337" + pics[currentIndex].url} className={" transition-all ease-out duration-500 "}/>
+                                    <img src={getStrapiURL() + pics[currentIndex].url} className={" transition-all ease-out duration-500 "}/>
                                     <div className={"w-12 text-white/50 bg-orange-500/20 hover:bg-orange-500/50 hover:text-white absolute top-0 right-0 cursor-pointer"}
                                          onClick={ () => gallery(0, [])}>
                                         <XMarkIcon />

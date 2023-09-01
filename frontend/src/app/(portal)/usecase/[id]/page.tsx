@@ -1,7 +1,7 @@
 'use client'
 import Gallery from "@iot-portal/frontend/app/common/gallery";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
-import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import { Context, createContext, MouseEventHandler, Suspense, useContext, useEffect, useState } from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -42,7 +42,7 @@ function PictureGallery({ pictures } : {pictures?: any[]}) {
                         className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
                         onClick={() => gallery(index, allPics)}
                     >
-                        <img src={"http://localhost:1337" + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                        <img src={getStrapiURL() + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                     </div>
                 );
             })}
@@ -56,19 +56,19 @@ function Instructions({ instructions } : { instructions: any[]}) {
 
     return (
         <>
-        { instructions.map((instruction, index) => (
+        { instructions && instructions.map((instruction, index) => (
                 <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
                     <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
                     <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
                     <div className={"grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] gap-2 py-4"}>
-                        { instruction.pictures && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
+                        { instruction.pictures && instruction.pictures.data && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
                             return (
                                 <div
                                     key={pic.attributes.hash}
                                     className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
                                     onClick={() => gallery(index, allPics.map(p => p.attributes))}
                                 >
-                                    <img src={"http://localhost:1337" + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                    <img src={getStrapiURL() + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                                 </div>
                             );
                         })}
@@ -97,11 +97,13 @@ export default function UseCase() {
 
     useEffect(  () => {
 
+        console.log(params.id)
+
         const qsPara =
             {
                 fields: '*',
                 populate: {
-                    Thumbnail: {
+                    thumbnail: {
                         populate: '*',
                     },
                     tags: {
@@ -112,8 +114,19 @@ export default function UseCase() {
                         device : {
                             populate: "*"
                         }
+                    },
+                    pictures: {
+                        populate: '*',
+                    },
+                    instructions: {
+                        populate: '*',
                     }
-                }
+                },
+                filters: {
+                    slug: {
+                        $eq: params.id,
+                    },
+                },
             }
         ;
 
@@ -127,14 +140,14 @@ export default function UseCase() {
         useCase && (
         <>
                 <div className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
-                    <div className={"flex flex-row gap-8"}>
+                    <div className={"flex md:flex-row flex-col gap-8"}>
                         {
                             useCase.thumbnail !== undefined && (
-                                <div className={"w-6/12 shrink-0 cursor-pointer"}
+                                <div className={"w-full md:w-6/12 shrink-0 cursor-pointer"}
                                      onClick={() => gallery(0, [useCase.thumbnail])}
                                 >
                                     <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
-                                        <img src={"http://localhost:1337" + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                        <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"relative max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} />
                                     </div>
                                 </div>
                             )
