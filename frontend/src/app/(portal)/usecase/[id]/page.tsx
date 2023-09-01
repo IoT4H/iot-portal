@@ -1,7 +1,7 @@
 'use client'
 import Gallery from "@iot-portal/frontend/app/common/gallery";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
-import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { useParams, useRouter } from "next/navigation";
 import { Context, createContext, MouseEventHandler, Suspense, useContext, useEffect, useState } from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -42,7 +42,7 @@ function PictureGallery({ pictures } : {pictures?: any[]}) {
                         className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
                         onClick={() => gallery(index, allPics)}
                     >
-                        <img src={"http://localhost:1337" + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                        <img src={getStrapiURL() + pic.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                     </div>
                 );
             })}
@@ -68,7 +68,7 @@ function Instructions({ instructions } : { instructions: any[]}) {
                                     className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
                                     onClick={() => gallery(index, allPics.map(p => p.attributes))}
                                 >
-                                    <img src={"http://localhost:1337" + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                    <img src={getStrapiURL() + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                                 </div>
                             );
                         })}
@@ -97,11 +97,13 @@ export default function UseCase() {
 
     useEffect(  () => {
 
+        console.log(params.id)
+
         const qsPara =
             {
                 fields: '*',
                 populate: {
-                    Thumbnail: {
+                    thumbnail: {
                         populate: '*',
                     },
                     tags: {
@@ -112,8 +114,19 @@ export default function UseCase() {
                         device : {
                             populate: "*"
                         }
+                    },
+                    pictures: {
+                        populate: '*',
+                    },
+                    instructions: {
+                        populate: '*',
                     }
-                }
+                },
+                filters: {
+                    slug: {
+                        $eq: params.id,
+                    },
+                },
             }
         ;
 
@@ -134,7 +147,7 @@ export default function UseCase() {
                                      onClick={() => gallery(0, [useCase.thumbnail])}
                                 >
                                     <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
-                                        <img src={"http://localhost:1337" + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                        <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                                     </div>
                                 </div>
                             )
