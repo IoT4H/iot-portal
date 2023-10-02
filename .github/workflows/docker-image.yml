@@ -21,7 +21,7 @@ jobs:
       - name: Build the Docker frontend
         run: docker build ./frontend  --cache-from ghcr.io/iot4h/portal-ui:latest --tag ghcr.io/iot4h/portal-ui --label "runnumber=${GITHUB_RUN_ID}"
       - name: Build the Docker strapi
-        run: docker build ./strapi-backend  --cache-from ghcr.io/iot4h/portal-api:latest --tag ghcr.io/iot4h/portal-api --label "runnumber=${GITHUB_RUN_ID}"
+        run: docker build ./strapi-backend  --build-arg STRAPI_URL=https://portal.iot4h.de/api --cache-from ghcr.io/iot4h/portal-api:latest --tag ghcr.io/iot4h/portal-api --label "runnumber=${GITHUB_RUN_ID}"
 
 
         #
