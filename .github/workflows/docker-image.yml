@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker frontend
+      run: docker build ./frontend --file Dockerfile --tag portal-ui:$(date +%s)
+    - name: Build the Docker strapi
+      run: docker build ./strapi-backend --file Dockerfile --tag portal-api:$(date +%s)
