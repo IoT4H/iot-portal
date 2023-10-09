@@ -1,7 +1,9 @@
 'use client'
+import { PhotoIcon } from "@heroicons/react/20/solid";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarFilledIcon } from "@heroicons/react/24/solid"
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -19,6 +21,7 @@ export type UseCase = {
     setupDuration: number;
     complexity: number;
     instructions: any[];
+    costs: number;
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -35,7 +38,8 @@ export function mapUseCase(useCase: any): UseCase {
         devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || [],
         setupDuration: useCase.attributes.setupDuration,
         complexity: useCase.attributes.complexity,
-        instructions: useCase.attributes.instructions
+        instructions: useCase.attributes.instructions,
+        costs: useCase.attributes.costs
     }
 }
 
@@ -62,19 +66,22 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
         <>
             <li className="flex justify-between gap-x-6 py-5" onClick={() => router.push("/usecase/" + useCase.slug)}>
                 <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
+                    <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-40 w-40 overflow-hidden rounded"}>
                     {
                         useCase.thumbnail && (
-                            <div className={"flex flex-grow-0 items-center flex-row w-fit"}>
-                                <img src={"http://localhost:1337" + useCase.thumbnail.url} className={""}/>
-                            </div>
+                                <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover"}/>
+                        ) || (
+                            <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                         )
                     }
+                    </div>
                     <div className={"flex-grow w-full"}>
                         <div className="flex flex-row items-center pb-2 z-10">
-                            <div onClick={(e) => markUseCase(e)}>
+                            {/*<div onClick={(e) => markUseCase(e)}>*/}
                             {
-                                marked ? <StarFilledIcon className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/> : <StarIcon  className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/>
-                            }</div>
+                              //  marked ? <StarFilledIcon className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/> : <StarIcon  className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/>
+                            }
+                            {/*</div> */}
                             <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
                         </div>
                         <p className={"dark:text-gray-300 text-sm"}>{ useCase.summary }</p>

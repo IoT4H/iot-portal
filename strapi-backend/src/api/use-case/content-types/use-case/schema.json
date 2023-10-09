@@ -36,10 +36,7 @@
       "multiple": true,
       "required": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
     },
     "slug": {
@@ -79,6 +76,11 @@
       "repeatable": true,
       "component": "instructions.instructions",
       "required": true
+    },
+    "costs": {
+      "type": "decimal",
+      "min": 0,
+      "default": 0
     }
   }
 }

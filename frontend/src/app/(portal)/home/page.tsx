@@ -16,7 +16,7 @@ export default function Home() {
                 {
                     fields: '*',
                     populate: {
-                        Thumbnail: {
+                        thumbnail: {
                             populate: '*',
                         },
                         tags: {

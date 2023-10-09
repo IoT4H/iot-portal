@@ -10,9 +10,9 @@ import {
     ChevronDoubleRightIcon
 } from "@heroicons/react/24/solid";
 import {
+    AcademicCapIcon,
     ClockIcon,
-    CodeBracketIcon,
-    ComputerDesktopIcon,
+    CurrencyEuroIcon,
     CpuChipIcon,
     SignalIcon
 } from "@heroicons/react/20/solid";
@@ -165,22 +165,36 @@ export default function UseCase() {
                             <div className={"flex flex-row justify-evenly gap-8 my-4"}>
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"} title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>
-                                    10
+                                    { useCase.devices
+                                        .filter((i) => i.device.data.attributes.type == 'sensor')
+                                        .map((i) => {
+                                            return i.amount;
+                                        }).reduce((pv, c) => {
+                                            return pv + c;
+                                        }, 0)
+                                    }
                                 </div>
                                 <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Microcontroller"}>
                                     <CpuChipIcon className={"w-8"}/>
-                                    3
+                                    { useCase.devices
+                                        .filter((i) => i.device.data.attributes.type == 'microcontroller')
+                                    .map((i) => {
+                                        return i.amount;
+                                    }).reduce((pv, c) => {
+                                        return pv + c;
+                                    }, 0)
+                                }
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Computer"}>
-                                    <ComputerDesktopIcon className={"w-8"}/>
-                                    3
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Kosten"}>
+                                    <CurrencyEuroIcon className={"w-8"}/>
+                                    {useCase.costs}€
                                 </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Setup Dauer"}>
+                                <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Aufbaudauer"}>
                                     <ClockIcon className={"w-8"}/>
                                     {useCase.setupDuration}min
                                 </div>
                                 <div className={"text-xs flex flex-col items-center gap-2  text-center"} title={"Schwierigkeit"}>
-                                    <CodeBracketIcon className={"w-8"}/>
+                                    <AcademicCapIcon className={"w-8"}/>
                                     Level {useCase.complexity}
                                 </div>
                             </div>

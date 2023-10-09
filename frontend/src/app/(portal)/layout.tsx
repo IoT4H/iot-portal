@@ -7,14 +7,17 @@ import { useState } from 'react';
 const links: {
     href: string;
     title: string;
+    deactive: boolean;
 }[] = [
     {
         title: "Use-Cases",
-        href: "/home"
+        href: "/home",
+        deactive: false,
     },
     {
         title: "Meine Use-Cases",
-        href: "/home"
+        href: "/home",
+        deactive: true,
     }
 ];
 
@@ -36,7 +39,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                     {
                         links.map((link) =>
                             (
-                                <a key={link.title} href={link.href} className={"rounded px-4 py-2 hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white"}>{ link.title }</a>
+                                <a key={link.title} href={!link.deactive ? link.href : undefined} className={`rounded px-4 py-2 ${ !link.deactive && 'hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactive && 'text-gray-500'}`}>{ link.title }</a>
                             )
                         )
                     }
