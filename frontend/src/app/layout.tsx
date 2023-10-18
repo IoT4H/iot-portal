@@ -25,8 +25,8 @@ export default async function RootLayout({
 
 
     const page = (await fetchAPI('/portal-einstellungen', qsPara)).data.attributes;
-    console.log(page)
     metadata.title = page.title;
+    metadata.description = page.description;
 
     return (
         <html lang="de">

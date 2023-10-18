@@ -1,4 +1,3 @@
-'use client'
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarFilledIcon } from "@heroicons/react/24/solid"

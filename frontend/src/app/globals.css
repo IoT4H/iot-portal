@@ -43,3 +43,12 @@ body {
 .markdown ul {
   margin-left: 2.5rem;
 }
+
+.markdown * img, .markdown img {
+  width: 60%;
+  margin-block: 2rem;
+  margin-inline: 20%;
+  aspect-ratio: initial;
+  object-fit: contain;
+  object-position: center;
+}

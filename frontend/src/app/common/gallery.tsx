@@ -1,3 +1,4 @@
+'use client'
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";

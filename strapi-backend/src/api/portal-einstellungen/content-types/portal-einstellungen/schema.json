@@ -12,21 +12,13 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "favicon": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "title": {
       "type": "string",
       "required": true,
       "default": "Portal | IoT4H"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }
