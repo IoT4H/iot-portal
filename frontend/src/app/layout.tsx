@@ -3,6 +3,7 @@ import Header from "@iot-portal/frontend/app/common/Header";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Inter } from 'next/font/google';
 import Head from "next/head";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,8 @@ export default async function RootLayout({
                                          }: {
     children: React.ReactNode
 }) {
+    const headersList = headers()
+
     const qsPara =
         {
             fields: '*',

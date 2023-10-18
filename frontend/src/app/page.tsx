@@ -1,9 +1,11 @@
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { headers } from "next/headers";
 import Image from 'next/image'
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 export default async function LandingPage() {
+    const headersList = headers()
 
     const qsPara =
         {
