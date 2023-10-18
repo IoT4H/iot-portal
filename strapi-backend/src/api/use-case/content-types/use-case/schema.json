@@ -81,6 +81,11 @@
       "type": "decimal",
       "min": 0,
       "default": 0
+    },
+    "firms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::firm.firm"
     }
   }
 }

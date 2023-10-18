@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "firms",
+  "info": {
+    "singularName": "firm",
+    "pluralName": "firms",
+    "displayName": "Betriebe"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "Logo": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

@@ -27,7 +27,13 @@ export default function Home() {
                             device : {
                                 populate: "*"
                             }
-                        }
+                        },
+                        firms: {
+                            populate: '*',
+                            Logo : {
+                                populate: "*"
+                            }
+                        },
                     }
                 }
             ;

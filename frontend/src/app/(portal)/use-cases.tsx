@@ -21,6 +21,7 @@ export type UseCase = {
     complexity: number;
     instructions: any[];
     costs: number;
+    firms: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -38,7 +39,8 @@ export function mapUseCase(useCase: any): UseCase {
         setupDuration: useCase.attributes.setupDuration,
         complexity: useCase.attributes.complexity,
         instructions: useCase.attributes.instructions,
-        costs: useCase.attributes.costs
+        costs: useCase.attributes.costs,
+        firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || []
     }
 }
 
@@ -65,7 +67,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
         <>
             <li className="flex justify-between gap-x-6 py-5" onClick={() => router.push("/usecase/" + useCase.slug)}>
                 <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
-                    <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-40 w-40 overflow-hidden rounded"}>
+                    <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
                     {
                         useCase.thumbnail && (
                                 <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover"}/>
@@ -89,6 +91,11 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                                  [...useCase.devices.map((i :any) => {
                                      return i.device.data && i.device.data.attributes.name;
                                  }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
+                            }
+                        </div>
+                        <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
+                            {
+                                useCase.firms.map((f :any) => f.Logo && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
                             }
                         </div>
                     </div>
