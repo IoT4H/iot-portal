@@ -19,7 +19,7 @@ jobs:
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: Build the Docker frontend
-        run: docker build ./frontend  --cache-from ghcr.io/iot4h/portal-ui:latest --tag ghcr.io/iot4h/portal-ui --label "runnumber=${GITHUB_RUN_ID}"
+        run: docker build ./frontend  --cache-from ghcr.io/iot4h/portal-ui:latest  --build-arg NEXT_PUBLIC_STRAPI_API_URL==https://portal.iot4h.de/api --tag ghcr.io/iot4h/portal-ui --label "runnumber=${GITHUB_RUN_ID}"
       - name: Build the Docker strapi
         run: docker build ./strapi-backend  --build-arg STRAPI_URL=https://portal.iot4h.de/api --cache-from ghcr.io/iot4h/portal-api:latest --tag ghcr.io/iot4h/portal-api --label "runnumber=${GITHUB_RUN_ID}"
 
