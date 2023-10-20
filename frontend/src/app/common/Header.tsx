@@ -5,7 +5,7 @@ function Logo() {
     return (
             <a href="/" className="-m-1.5 p-1.5 flex">
                 <span className="sr-only">IoT4H Portal</span>
-                <img className="h-10 w-auto" src="/IoT4H.svg" alt="IoT4H Logo" />
+                <img className="h-10 w-auto" src="/iot4h.svg" alt="IoT4H Logo" />
                 <h1 className="text-black dark:text-white text-3xl font-bold border-black/50 dark:border-white/50 border-l-2 pl-4">Portal</h1>
             </a>
     );
