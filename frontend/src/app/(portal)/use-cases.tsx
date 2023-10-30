@@ -85,7 +85,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             {/*</div> */}
                             <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
                         </div>
-                        <p className={"dark:text-gray-300 text-sm"}>{ useCase.summary }</p>
+                        <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
                         <div className="flex flex-row gap-2 mt-4 flex-wrap">
                             {
                                  [...useCase.devices.map((i :any) => {

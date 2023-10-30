@@ -59,7 +59,7 @@ function Instructions({ instructions } : { instructions: any[]}) {
         { instructions && instructions.map((instruction, index) => (
                 <div key={index} className={"mx-8 border-b py-8 border-gray-500/40"}>
                     <h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2>
-                    <p><ReactMarkdown className={"markdown"}>{instruction.step}</ReactMarkdown></p>
+                    <p><ReactMarkdown className={"markdown text-justify"}>{instruction.step}</ReactMarkdown></p>
                     <div className={"grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] gap-2 py-4"}>
                         { instruction.pictures && instruction.pictures.data && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
                             return (
@@ -80,7 +80,7 @@ function Instructions({ instructions } : { instructions: any[]}) {
 }
 
 function Info({ description } : { description: string; }) {
-    return (<ReactMarkdown className={"markdown mx-8"}>{description}</ReactMarkdown>);
+    return (<ReactMarkdown className={"markdown mx-8 text-justify"}>{description}</ReactMarkdown>);
 }
 
 export default function UseCase() {
@@ -161,7 +161,7 @@ export default function UseCase() {
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-400 py-4"}> { useCase.summary }</p>
+                            <p className={"text-sm text-gray-400 py-4 text-justify"}> { useCase.summary }</p>
                             <div className={"flex flex-row justify-evenly gap-8 my-4"}>
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"} title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>

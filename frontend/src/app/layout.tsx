@@ -27,14 +27,16 @@ export default async function RootLayout({
     ;
 
 
-    const page = (await fetchAPI('/portal-einstellungen', qsPara)).data.attributes;
-    metadata.title = page.title;
-    metadata.description = page.description;
+    const page = (await fetchAPI('/portal-einstellungen', qsPara)).data.attributes || null;
+    if(page) {
+        metadata.title = page.title;
+        metadata.description = page.description;
+    }
 
     return (
         <html lang="de">
         <Head>
-            <title>{page.title}</title>
+            <title>{metadata.title}</title>
         </Head>
         <body className={`${inter.className} min-h-screen h-max flex`}>
         <div className={'flex flex-1 flex-col '}>
