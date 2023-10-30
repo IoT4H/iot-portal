@@ -143,16 +143,15 @@ export default function UseCase() {
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
                             useCase.thumbnail !== undefined && (
-                                <div className={"w-full md:w-6/12 shrink-0 cursor-pointer"}
+                                <div className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden"}
                                      onClick={() => gallery(0, [useCase.thumbnail])}
                                 >
-                                    <div className={"flex relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full h-full"}>
-                                        <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"relative max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} />
-                                    </div>
+                                    <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url}  className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} />
+
                                 </div>
                             )
                         }
-                        <div className={"flex flex-shrink flex-col"}>
+                        <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
                             <div><h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{ useCase.title }</h2></div>
                             <div className="flex flex-row gap-2 mt-4 flex-wrap text-orange-500">
                                 {

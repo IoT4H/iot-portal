@@ -99,9 +99,6 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             }
                         </div>
                     </div>
-                    <div className={"flex flex-grow-0 items-center flex-row"}>
-                        <ChevronRightIcon  className={"w-6 h-6"}/>
-                    </div>
                 </div>
             </li>
         </>
