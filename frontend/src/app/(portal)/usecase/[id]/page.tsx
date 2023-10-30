@@ -34,7 +34,7 @@ function PictureGallery({ pictures } : {pictures?: any[]}) {
     const gallery = useContext(GalleryContext);
 
     return (
-        <div className={"grid grid-cols-[repeat(auto-fill,_minmax(224px,_1fr))] gap-2"}>
+        <div className={"grid md:grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] grid-cols-2 gap-2"}>
             { pictures && pictures.map((pic, index, allPics) => {
                 return (
                     <div

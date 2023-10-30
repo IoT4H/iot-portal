@@ -11,7 +11,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
     const [currentIndex, setCurrentIndex] = useState(index);
     useEffect( () => {
         setCurrentIndex(index);
-    }, [index])
+    }, [index]);
 
     return (
         <>
@@ -19,9 +19,9 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                 pics.length >= 1 && (
                     <div className={"fixed w-[100vw] h-[100vh] z-50 flex content-center items-center justify-center bg-gray-50/20 backdrop-blur-[1px]"}>
                         <div className={"transition-all ease-out duration-500"}>
-                            <div className={'flex flex-row justify-center items-stretch relative flex-wrap 2xl:flex-nowrap max-w-[80vw] max-h-[90vh] 2xl:max-w-[1228px] 2xl:max-h-[1200px]'}>
+                            <div className={'flex flex-row justify-center items-end md:items-stretch relative max-md:flex-wrap flex-nowrap w-[90vw] h-[90vh]'}>
 
-                                <div className={`order-2 2xl:order-1 py-8 flex-grow-0 flex-shrink-0 w-1/2 2xl:w-24 flex flex-col items-center justify-center ${currentIndex <= 0 ? 'opacity-0' : 'cursor-pointer'}`}  onClick={
+                                <div className={`max-md:order-2 order-1 md:py-8 flex-grow-0 flex-shrink-0 max-md:w-1/2 w-24 flex flex-col items-center justify-center min-h-0 max-md:h-24 ${currentIndex <= 0 ? 'opacity-0' : 'cursor-pointer'}`}  onClick={
                                     () =>  {
                                         if(currentIndex > 0) {
                                             setCurrentIndex(currentIndex - 1);
@@ -30,13 +30,13 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                 }>
                                     <ChevronLeftIcon className={"w-24 h-24"}/>
                                 </div>
-                                <div className={"order-1 2xl:order-2 flex-shrink transition-all ease-out duration-500 relative flex flex-col gap-2 items-center justify-center"}>
-                                    <img src={pics[currentIndex] && (getStrapiURL() + pics[currentIndex].url)} className={" transition-all ease-out duration-500 object-contain max-height-100"}/>
+                                <div className={"max-md:order-1 order-2 flex-shrink transition-all ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
+                                    <img src={pics[currentIndex] && (getStrapiURL() + pics[currentIndex].url)} className={"min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
                                     <div className={"h-8 text-center align-middle"}>
                                         {pics[currentIndex] ? pics[currentIndex].caption : ''}
                                     </div>
                                 </div>
-                                <div className={`order-3 py-8 flex-grow-0 flex-shrink-0 w-1/2 2xl:w-24 flex flex-col items-center justify-center ${currentIndex >= pics.length - 1? 'opacity-0' : 'cursor-pointer '}`} onClick={
+                                <div className={`order-3 md:py-8 flex-grow-0 flex-shrink-0 max-md:w-1/2 w-24 flex flex-col items-center justify-center min-h-0  max-md:h-24 ${currentIndex >= pics.length - 1? 'opacity-0' : 'cursor-pointer '}`} onClick={
                                     () =>  {
                                         if(currentIndex < pics.length - 1) {
                                             setCurrentIndex(currentIndex + 1);
