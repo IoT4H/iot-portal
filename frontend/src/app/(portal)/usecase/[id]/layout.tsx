@@ -3,6 +3,7 @@ import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import Head from "next/head";
 import { Suspense} from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import {
@@ -51,11 +52,19 @@ export default async function UseCase({children, params}: { children: React.Reac
     return (
         useCase && (
             <>
+                <Head>
+                    <meta property="og:type" content="website" />
+                    <meta property="og:title" content={useCase.title} />
+                    <meta property="og:description" content={useCase.summary} />
+                    <meta property="og:url" content={'https://portal.iot4h.de/usecase/'+ params.id} />
+                    <meta property="og:image" content={getStrapiURL() + useCase.thumbnail.formats.medium.url} />
+                </Head>
+
                 <div
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
-                            useCase.thumbnail !== undefined && (
+                            useCase.thumbnail && (
                                 <div
                                     className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden"}
                                 >
@@ -66,8 +75,8 @@ export default async function UseCase({children, params}: { children: React.Reac
                             )
                         }
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
-                            <div><h2
-                                className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h2>
+                            <div><h1
+                                className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h1>
                             </div>
                             <div className="flex flex-row gap-2 mt-4 flex-wrap text-orange-500">
                                 {

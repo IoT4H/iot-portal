@@ -1,6 +1,5 @@
 import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
-import { useParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 
 function Info({ description } : { description: string; }) {
