@@ -1,10 +1,6 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
-import { StarIcon } from "@heroicons/react/24/outline";
-import { StarIcon as StarFilledIcon } from "@heroicons/react/24/solid"
-import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 
 export type UseCase = {
@@ -25,7 +21,6 @@ export type UseCase = {
 }
 
 export function mapUseCase(useCase: any): UseCase {
-    console.log(useCase)
     return {
         id: useCase.id,
         title: useCase.attributes.Titel,
@@ -55,13 +50,7 @@ export function Badge({ name } : { name: string; color?: string; }) {
 }
 
 export function ListItemUseCase({useCase}: {useCase: UseCase}) {
-    const [ marked, setMarked ] = useState(false)
     const router = useRouter();
-
-    const markUseCase = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        setMarked(!marked);
-    }
 
     return (
         <>
@@ -78,11 +67,6 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                     </div>
                     <div className={"flex-grow w-full"}>
                         <div className="flex flex-row items-center pb-2 z-10">
-                            {/*<div onClick={(e) => markUseCase(e)}>*/}
-                            {
-                              //  marked ? <StarFilledIcon className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/> : <StarIcon  className={"text-yellow-400 inline-block h-5 w-5 mr-2"}/>
-                            }
-                            {/*</div> */}
                             <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
                         </div>
                         <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
