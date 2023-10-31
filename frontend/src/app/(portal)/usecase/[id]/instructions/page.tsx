@@ -39,8 +39,6 @@ function Instruction({ instructions } : { instructions: any[]}) {
 
 export default async function Instructions({params}: { params: { id: number } }) {
 
-    if(!params) return (<></>);
-
     const qsPara =
         {
             populate: {

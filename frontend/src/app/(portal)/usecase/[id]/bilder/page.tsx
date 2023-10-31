@@ -42,5 +42,5 @@ export default async function Bilder({params}: { params: { id: number } }) {
     });
 
 
-    return (<PictureGallery pictures={useCase.pictures}/>);
+    return (useCase && <PictureGallery pictures={useCase.pictures}/>);
 }
