@@ -1,9 +1,8 @@
-'use client'
 import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
-import Head from "next/head";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import {
@@ -16,6 +15,59 @@ import {
     CpuChipIcon,
     SignalIcon
 } from "@heroicons/react/20/solid";
+
+export async function generateMetadata({ params }: {params: Params}) {
+
+    const qsPara =
+        {
+            fields: '*',
+            populate: {
+                thumbnail: {
+                    populate: '*',
+                },
+                tags: {
+                    populate: '*',
+                },
+                Images: {
+                    populate: '*',
+                    device: {
+                        populate: "*"
+                    }
+                },
+            },
+            filters: {
+                slug: {
+                    $eq: params.id,
+                },
+            },
+        }
+    ;
+
+    const useCase: UseCase = await fetchAPI('/use-cases', qsPara).then((data) => {
+        return mapUseCase(data.data[0]);
+    });
+
+
+    const pageQsPara =
+        {
+            fields: '*',
+            populate: '*'
+        }
+    ;
+
+    const page = (await fetchAPI('/portal-einstellungen', pageQsPara)).data.attributes || null;
+
+    return {
+        title: page.title + " - " + useCase.title,
+        openGraph: {
+            images: [getStrapiURL() + useCase.thumbnail.formats.medium.url],
+            url: 'https://portal.iot4h.de/usecase/'+ params.id,
+            title: page.title + " - " + useCase.title,
+            type: 'website',
+            description: useCase.summary
+        },
+    }
+}
 
 export default async function UseCase({children, params}: { children: React.ReactNode, params: { id: number } }) {
 
@@ -52,14 +104,6 @@ export default async function UseCase({children, params}: { children: React.Reac
     return (
         useCase && (
             <>
-                <Head>
-                    <meta property="og:type" content="website" />
-                    <meta property="og:title" content={useCase.title} />
-                    <meta property="og:description" content={useCase.summary} />
-                    <meta property="og:url" content={'https://portal.iot4h.de/usecase/'+ params.id} />
-                    <meta property="og:image" content={getStrapiURL() + useCase.thumbnail.formats.medium.url} />
-                </Head>
-
                 <div
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
