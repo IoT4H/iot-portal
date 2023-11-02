@@ -1,5 +1,13 @@
+"use client"
+import { ModalUI } from "@iot-portal/frontend/app/common/modal";
+import { useRouter } from "next/navigation";
+
 export default function Login() {
+
+    const router = useRouter();
+
     return (
+        <ModalUI>
             <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-orange-50">
@@ -66,5 +74,6 @@ export default function Login() {
                     </p>
                 </div>
             </div>
+        </ModalUI>
     );
 }

@@ -1,14 +1,10 @@
 import './globals.css'
-import { mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import Header from "@iot-portal/frontend/app/common/Header";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
-import Head from "next/head";
-import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 export async function generateMetadata({ params }: {params: Params}) {
 
@@ -31,18 +27,17 @@ export async function generateMetadata({ params }: {params: Params}) {
         },
     }
 }
-export default async function RootLayout({
-                                             children,
-                                         }: {
-    children: React.ReactNode
-}) {
+export default async function RootLayout(props: { children: React.ReactNode,
+    auth: React.ReactNode}) {
+
 
     return (
         <html lang="de">
         <body className={`${inter.className} min-h-screen h-max flex`}>
         <div className={'flex flex-1 flex-col '}>
             <Header/>
-            {children}
+            {props.children}
+            {props.auth}
         </div>
         </body>
         </html>

@@ -1,13 +1,14 @@
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 import * as React from "react";
 
 function Logo() {
     return (
-            <a href="/" className="-m-1.5 p-1.5 flex">
+            <Link href="/" className="-m-1.5 p-1.5 flex">
                 <span className="sr-only">IoT4H Portal</span>
                 <img className="h-10 w-auto" src="/iot4h.svg" alt="IoT4H Logo" />
                 <h1 className="text-black dark:text-white text-3xl font-bold border-black/50 dark:border-white/50 border-l-2 pl-4">Portal</h1>
-            </a>
+            </Link>
     );
 }
 
@@ -20,9 +21,9 @@ export default function Header() {
                     <Logo />
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <a href={'/login'} className="text-sm font-semibold leading-6 text-gray-900 dark:text-white flex items-center gap-1">
+                    <Link href={'/login'} className="text-sm font-semibold leading-6 text-gray-900 dark:text-white flex items-center gap-1">
                         Log in <ArrowRightOnRectangleIcon className="h-6 w-6 inline-block"></ArrowRightOnRectangleIcon>
-                    </a>
+                    </Link>
                 </div>
             </nav>
         </header>
