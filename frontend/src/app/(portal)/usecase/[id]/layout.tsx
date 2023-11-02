@@ -66,6 +66,12 @@ export async function generateMetadata({ params }: {params: Params}) {
             type: 'website',
             description: useCase.summary
         },
+        twitter: {
+            card: 'summary_large_image',
+            title: page.title,
+            description: page.description,
+            images: [getStrapiURL() + useCase.thumbnail.formats.medium.url],
+        }
     }
 }
 
