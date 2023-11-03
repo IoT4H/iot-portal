@@ -1,6 +1,6 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { getStrapiURL } from "@iot-portal/frontend/lib/api";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 export type UseCase = {
@@ -50,40 +50,41 @@ export function Badge({ name } : { name: string; color?: string; }) {
 }
 
 export function ListItemUseCase({useCase}: {useCase: UseCase}) {
-    const router = useRouter();
 
     return (
         <>
-            <li className="flex justify-between gap-x-6 py-5" onClick={() => router.push("/usecase/" + useCase.slug)}>
-                <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
-                    <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
-                    {
-                        useCase.thumbnail && (
-                                <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover"}/>
-                        ) || (
-                            <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
-                        )
-                    }
+            <li className="flex justify-between gap-x-6 py-5">
+                <Link href={"/usecase/" + useCase.slug} className={"w-full"}>
+                    <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
+                        <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
+                        {
+                            useCase.thumbnail && (
+                                    <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover"}/>
+                            ) || (
+                                <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                            )
+                        }
+                        </div>
+                        <div className={"flex-grow w-full"}>
+                            <div className="flex flex-row items-center pb-2 z-10">
+                                <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
+                            </div>
+                            <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
+                            <div className="flex flex-row gap-2 mt-4 flex-wrap">
+                                {
+                                     [...useCase.devices.map((i :any) => {
+                                         return i.device.data && i.device.data.attributes.name;
+                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
+                                }
+                            </div>
+                            <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
+                                {
+                                    useCase.firms.map((f :any) => f.Logo && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div className={"flex-grow w-full"}>
-                        <div className="flex flex-row items-center pb-2 z-10">
-                            <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
-                        </div>
-                        <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
-                        <div className="flex flex-row gap-2 mt-4 flex-wrap">
-                            {
-                                 [...useCase.devices.map((i :any) => {
-                                     return i.device.data && i.device.data.attributes.name;
-                                 }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
-                            }
-                        </div>
-                        <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
-                            {
-                                useCase.firms.map((f :any) => f.Logo && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
-                            }
-                        </div>
-                    </div>
-                </div>
+                </Link>
             </li>
         </>
     );

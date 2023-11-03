@@ -1,10 +1,6 @@
-"use client"
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
-import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 export default function Login() {
-
-    const router = useRouter();
 
     return (
         <ModalUI>
@@ -39,9 +35,9 @@ export default function Login() {
                                     Passwort
                                 </label>
                                 <div className="text-sm">
-                                    <a href="#" className="font-semibold text-orange-400 hover:text-orange-500">
+                                    <Link href="#" className="font-semibold text-orange-400 hover:text-orange-500">
                                         Passwort vergessen?
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="mt-2">
@@ -68,9 +64,9 @@ export default function Login() {
 
                     <p className="mt-10 text-center text-sm text-gray-500">
                         Noch kein Account?{' '}
-                        <a href="#" className="font-semibold leading-6 text-orange-400 hover:text-orange-500">
+                        <Link href="#" className="font-semibold leading-6 text-orange-400 hover:text-orange-500">
                             Jetzt registrieren
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

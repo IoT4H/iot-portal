@@ -1,50 +1,36 @@
-'use client'
 import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { fetchAPI } from '@iot-portal/frontend/lib/api'
-export default function Home() {
+export default async function Home() {
 
-    const router = useRouter();
-    const [useCases, setUseCases] = useState<UseCase[]>([]);
-
-
-    useEffect(  () => {
-
-        const qsPara =
-                {
-                    fields: '*',
-                    populate: {
-                        thumbnail: {
-                            populate: '*',
-                        },
-                        tags: {
-                            populate: '*',
-                        },
-                        Images: {
-                            populate: '*',
-                            device : {
-                                populate: "*"
-                            }
-                        },
-                        firms: {
-                            populate: '*',
-                            Logo : {
-                                populate: "*"
-                            }
-                        },
+    const qsPara =
+        {
+            fields: '*',
+            populate: {
+                thumbnail: {
+                    populate: '*',
+                },
+                tags: {
+                    populate: '*',
+                },
+                Images: {
+                    populate: '*',
+                    device: {
+                        populate: "*"
                     }
-                }
-            ;
+                },
+                firms: {
+                    populate: '*',
+                    Logo: {
+                        populate: "*"
+                    }
+                },
+            }
+        }
+    ;
 
-        fetchAPI('/use-cases', qsPara).then((data) => {
-            const uAr: UseCase[] = data.data.map((useCase: any): UseCase => (mapUseCase(useCase)));
-            setUseCases(useCases => [...uAr]);
-        });
-
-
-    }, [])
+    const useCases = (await fetchAPI('/use-cases', qsPara)).data.map(
+        (useCase: any): UseCase => (mapUseCase(useCase)));
 
 
     return (
@@ -52,7 +38,7 @@ export default function Home() {
             <ListUseCase title={"Beispiel Use-Cases"}>
                 {
                     useCases.length > 0 && useCases.map((u: UseCase) =>
-                        <ListItemUseCase key={u.id}  useCase={u} />
+                        <ListItemUseCase key={u.id} useCase={u}/>
                     )
                 }
             </ListUseCase>

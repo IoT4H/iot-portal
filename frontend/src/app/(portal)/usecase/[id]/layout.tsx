@@ -1,3 +1,4 @@
+import ShareButton from "@iot-portal/frontend/app/(portal)/usecase/[id]/share-button";
 import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
@@ -125,8 +126,13 @@ export default async function UseCase({children, params}: { children: React.Reac
                             )
                         }
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
-                            <div><h1
-                                className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h1>
+                            <div className={"pr-12"}>
+                                <ShareButton className={"absolute top-6 right-6 w-8 aspect-square"} shareData={{
+                                    title: (await generateMetadata({params})).title,
+                                    text: "Das sieht interessant aus!",
+                                    url: 'https://portal.iot4h.de/usecase/'+ params.id,
+                                }}></ShareButton>
+                                <h1 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h1>
                             </div>
                             <div className="flex flex-row gap-2 mt-4 flex-wrap text-orange-500">
                                 {
