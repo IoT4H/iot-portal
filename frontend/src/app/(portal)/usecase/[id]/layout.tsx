@@ -126,8 +126,8 @@ export default async function UseCase({children, params}: { children: React.Reac
                             )
                         }
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
-                            <div className={"pr-12"}>
-                                <ShareButton className={"absolute top-6 right-6 w-8 aspect-square"} shareData={{
+                            <div className={"pr-12 relative"}>
+                                <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
                                     title: (await generateMetadata({params})).title,
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ params.id,
