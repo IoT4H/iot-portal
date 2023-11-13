@@ -1,6 +1,5 @@
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/20/solid";
+import AuthHeader from "@iot-portal/frontend/app/common/AuthHeader";
 import Link from "next/link";
-import * as React from "react";
 
 function Logo() {
     return (
@@ -21,9 +20,7 @@ export default function Header() {
                     <Logo />
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <Link href={'/login'} className="text-sm font-semibold leading-6 text-gray-900 dark:text-white flex items-center gap-1">
-                        Log in <ArrowRightOnRectangleIcon className="h-6 w-6 inline-block"></ArrowRightOnRectangleIcon>
-                    </Link>
+                    <AuthHeader />
                 </div>
             </nav>
         </header>
