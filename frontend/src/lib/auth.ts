@@ -50,7 +50,9 @@ export class Auth {
 
             const raw = await response.json();
 
-            localStorage.setItem(ID_ITEM_NAME, raw.jwt);
+            if(raw.jwt) {
+                localStorage.setItem(ID_ITEM_NAME, raw.jwt);
+            }
         } catch (e) {
 
         }
