@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_user_fullnames",
+  "info": {
+    "displayName": "fullname"
+  },
+  "options": {},
+  "attributes": {
+    "firstname": {
+      "type": "string",
+      "required": true
+    },
+    "middlename": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    }
+  }
+}

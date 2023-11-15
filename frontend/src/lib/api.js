@@ -20,13 +20,12 @@ export function getStrapiURL(path = "") {
  */
 export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
     // Merge default and user options
-    const mergedOptions = {
+    const mergedOptions = Object.assign({}, {
         headers: {
             "Content-Type": "application/json",
         },
         next: { revalidate: 5 },
-        ...options,
-    };
+    }, options);
 
     // Build request URL
     const queryString = qs.stringify(urlParamsObject);

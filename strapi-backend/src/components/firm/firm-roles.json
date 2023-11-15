@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_firm_firm_roles",
+  "info": {
+    "displayName": "firm_roles"
+  },
+  "options": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "Admin",
+        "Nutzer"
+      ]
+    }
+  }
+}

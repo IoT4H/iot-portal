@@ -4,7 +4,8 @@
   "info": {
     "singularName": "firm",
     "pluralName": "firms",
-    "displayName": "Betriebe"
+    "displayName": "Betriebe",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -17,11 +18,21 @@
       "unique": true
     },
     "Logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "roles": {
+      "type": "component",
+      "repeatable": true,
+      "component": "firm.firm-roles"
     }
   }
 }

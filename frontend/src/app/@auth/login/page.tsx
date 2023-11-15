@@ -1,6 +1,29 @@
+"use client"
+import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+
+
+
 export default function Login() {
+
+    const [username, SetUsername] = useState<string | undefined>("");
+    const [password, SetPassword] = useState<string | undefined>("");
+
+
+    const auth = useContext(AuthContext);
+
+    const router = useRouter();
+
+    const login = () => {
+        if( username && password ) {
+            auth.login(username, password).then(() => {
+                router.back();
+            });
+        }
+    }
 
     return (
         <ModalUI>
@@ -12,19 +35,20 @@ export default function Login() {
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" action="/home" method="POST">
+                    <form className="space-y-6" onSubmit={(event) => {event.preventDefault();login();}}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 dark:text-orange-50">
-                                E-Mail
+                                Username
                             </label>
                             <div className="mt-2">
                                 <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
+                                    id="username"
+                                    name="username"
+                                    type="username"
                                     autoComplete="email"
                                     required
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                    value={username} onChange={event => SetUsername(event.target.value)}
                                 />
                             </div>
                         </div>
@@ -48,6 +72,7 @@ export default function Login() {
                                     autoComplete="current-password"
                                     required
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                    value={password} onChange={event => SetPassword(event.target.value)}
                                 />
                             </div>
                         </div>

@@ -2,13 +2,15 @@ version: '3.5'
 services:
   frontend:
     environment:
-       NEXT_PUBLIC_STRAPI_API_URL: "/api"
+       NEXT_PUBLIC_STRAPI_API_URL: "localhost:1337/api"
     build:
       context: ./frontend
     
     restart: unless-stopped
     depends_on:
       - strapi
+    ports:
+      - "3000:3000"
   portaldb:
     image: postgres
     restart: unless-stopped
@@ -25,7 +27,8 @@ services:
       NODE_ENV: 'production'
       DATABASE_CLIENT: 'postgres'
       APP_KEYS: "{}"
-
+    ports:
+      - "1337:1337"
     depends_on:
       - portaldb
 
