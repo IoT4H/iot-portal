@@ -20,32 +20,44 @@ export default function AuthHeader() {
         });
     }
 
-    const [firstname, SetFirstname] = useState<string>();
-    const [middlename, SetMiddlename] = useState<string>();
-    const [lastname, SetLastname] = useState<string>();
-    const [firmName, SetFirmName] = useState<string>();
+    const [firstname, SetFirstname] = useState<string | undefined>(undefined);
+    const [middlename, SetMiddlename] = useState<string | undefined>(undefined);
+    const [lastname, SetLastname] = useState<string | undefined>(undefined);
+    const [firmName, SetFirmName] = useState<string | undefined>(undefined);
+    const [isAuth, SetIsAuth] = useState<boolean>(false);
 
 
 
     useEffect(() => {
-        auth.getUser().then((u) => {
-            SetFirstname(u.firstname)
-            SetMiddlename(u.middlename)
-            SetLastname(u.lastname)
-            SetFirmName(u.firm ? u.firm.name : undefined);
-        }).catch(() => {
+        SetIsAuth(auth.isAuth());
+    }, []);
+
+    useEffect(() => {
+        if (isAuth) {
+            auth.getUser().then((u) => {
+                SetFirstname(u.firstname)
+                SetMiddlename(u.middlename)
+                SetLastname(u.lastname)
+                SetFirmName(u.firm ? u.firm.name : undefined);
+            }).catch(() => {
+                SetFirstname(undefined);
+                SetMiddlename(undefined);
+                SetLastname(undefined);
+                SetFirmName(undefined);
+            });
+        } else {
             SetFirstname(undefined);
             SetMiddlename(undefined);
             SetLastname(undefined);
             SetFirmName(undefined);
-        });
-    })
+        }
+    }, [isAuth])
 
     return (
         <>
             {
-                auth.isAuth() ?
-                    (auth.isAuth()) && (
+                isAuth ?
+                    (
                         <div className={"flex flex-row gap-3 content-center"}>
                             <div className={"flex flex-col justify-center"}>
                                 <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border"}></UserIcon>
