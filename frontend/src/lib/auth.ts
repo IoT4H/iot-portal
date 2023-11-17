@@ -1,3 +1,4 @@
+"use client"
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 
 
@@ -9,6 +10,10 @@ export class Auth {
     }
 
     async getUser() {
+
+        if(!this.isAuth()) {
+            throw new Error("not logged in");
+        }
 
         const qsPara =
             {
@@ -26,7 +31,11 @@ export class Auth {
     }
 
     isAuth(): boolean {
-        return localStorage.getItem(ID_ITEM_NAME) !== null;
+        try {
+            return localStorage.getItem(ID_ITEM_NAME) !== null;
+        } catch (e) {
+            return false;
+        }
     }
 
     getToken() {

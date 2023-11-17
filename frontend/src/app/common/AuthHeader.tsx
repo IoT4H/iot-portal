@@ -33,6 +33,11 @@ export default function AuthHeader() {
             SetMiddlename(u.middlename)
             SetLastname(u.lastname)
             SetFirmName(u.firm ? u.firm.name : undefined);
+        }).catch(() => {
+            SetFirstname(undefined);
+            SetMiddlename(undefined);
+            SetLastname(undefined);
+            SetFirmName(undefined);
         });
     })
 

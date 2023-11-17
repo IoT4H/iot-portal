@@ -1,6 +1,6 @@
 import './globals.css'
 import Header from "@iot-portal/frontend/app/common/Header";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
 
@@ -27,8 +27,7 @@ export async function generateMetadata({ params }: {params: Params}) {
         },
     }
 }
-export default async function RootLayout(props: { children: React.ReactNode,
-    auth: React.ReactNode}) {
+export default async function RootLayout(props: any) {
 
 
     return (
@@ -38,6 +37,7 @@ export default async function RootLayout(props: { children: React.ReactNode,
             <Header/>
             {props.children}
             {props.auth}
+            {props.setup}
         </div>
         </body>
         </html>

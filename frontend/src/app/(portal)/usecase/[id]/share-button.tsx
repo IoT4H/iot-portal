@@ -1,5 +1,4 @@
 "use client"
-"client-only"
 import { ShareIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 

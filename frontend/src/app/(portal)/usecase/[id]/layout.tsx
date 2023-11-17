@@ -1,4 +1,5 @@
 import ShareButton from "@iot-portal/frontend/app/(portal)/usecase/[id]/share-button";
+import SetupButton from "@iot-portal/frontend/app/(portal)/usecase/setup-button";
 import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
@@ -6,9 +7,6 @@ import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import {
-    PlayIcon,
-} from "@heroicons/react/24/solid";
 import {
     AcademicCapIcon,
     ClockIcon,
@@ -76,7 +74,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     }
 }
 
-export default async function UseCase({children, params}: { children: React.ReactNode, params: { id: number } }) {
+export default async function UseCase(props: { children: React.ReactNode, params: {  id: number } }) {
 
     const qsPara =
         {
@@ -97,7 +95,7 @@ export default async function UseCase({children, params}: { children: React.Reac
             },
             filters: {
                 slug: {
-                    $eq: params.id,
+                    $eq: props.params.id,
                 },
             },
         }
@@ -106,7 +104,6 @@ export default async function UseCase({children, params}: { children: React.Reac
     const useCase: UseCase = await fetchAPI('/use-cases', qsPara).then((data) => {
         return mapUseCase(data.data[0]);
     });
-
 
     return (
         useCase && (
@@ -128,9 +125,9 @@ export default async function UseCase({children, params}: { children: React.Reac
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
                             <div className={"pr-12 relative"}>
                                 <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
-                                    title: (await generateMetadata({params})).title,
+                                    title: (await generateMetadata({params: props.params})).title,
                                     text: "Das sieht interessant aus!",
-                                    url: 'https://portal.iot4h.de/usecase/'+ params.id,
+                                    url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>
                                 <h1 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h1>
                             </div>
@@ -183,11 +180,7 @@ export default async function UseCase({children, params}: { children: React.Reac
                                     Level {useCase.complexity}
                                 </div>
                             </div>
-                            <button
-                                className={" mt-auto w-full text-center ml-auto bg-orange-500/80 hover:bg-orange-500 text-white flex-row flex gap-4  justify-center items-center uppercase mx-4 px-4 py-4"}>
-                                <PlayIcon className={"h-4"}/>Setup einrichten
-                            </button>
-
+                            <SetupButton></SetupButton>
                         </div>
                     </div>
                     <div className={"pb-8"}>
@@ -198,7 +191,7 @@ export default async function UseCase({children, params}: { children: React.Reac
                         </div>
                         <div className={"w-full"}>
                             <Suspense fallback={<Loading/>}>
-                                {children}
+                                {props.children}
                             </Suspense>
                         </div>
                     </div>

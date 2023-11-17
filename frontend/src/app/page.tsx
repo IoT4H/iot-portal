@@ -1,6 +1,5 @@
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { headers } from "next/headers";
-import Image from 'next/image'
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
@@ -16,7 +15,6 @@ export default async function LandingPage() {
 
     const load = (await fetchAPI('/startpage', qsPara));
     const page = load ? load.data.attributes : null;
-    console.log(page)
 
     return (
         <main className="flex h-full flex-col items-center justify-between p-24 text-center justify-center align-middle">
