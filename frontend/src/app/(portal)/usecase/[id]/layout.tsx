@@ -3,6 +3,7 @@ import SetupButton from "@iot-portal/frontend/app/(portal)/usecase/setup-button"
 import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
+import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     return {
         title: page.title + " - " + useCase.title,
         openGraph: {
-            images: [getStrapiURL() + useCase.thumbnail.formats.medium.url],
+            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
             url: 'https://portal.iot4h.de/usecase/'+ params.id,
             title: page.title + " - " + useCase.title,
             type: 'website',
@@ -69,7 +70,7 @@ export async function generateMetadata({ params }: {params: Params}) {
             card: 'summary_large_image',
             title: page.title,
             description: page.description,
-            images: [getStrapiURL() + useCase.thumbnail.formats.medium.url],
+            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
         }
     }
 }
@@ -108,17 +109,17 @@ export default async function UseCase(props: { children: React.ReactNode, params
     return (
         useCase && (
             <>
-                <div
+                <article
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
                             useCase.thumbnail && (
                                 <div
-                                    className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden"}
+                                    className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
                                     <GalleryImage src={getStrapiURL() + useCase.thumbnail.formats.medium.url} init={0}
-                                                  imageList={[useCase.thumbnail]}
-                                                  className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "}/>
+                                                  imageList={[useCase.thumbnail]} alt={""}
+                                                  className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             )
                         }
@@ -143,14 +144,14 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>
-                                    {useCase.devices
+                                     {useCase.devices
                                         .filter((i) => i.device.data.attributes.type == 'sensor')
                                         .map((i) => {
                                             return i.amount;
                                         }).reduce((pv, c) => {
                                             return pv + c;
                                         }, 0)
-                                    }
+                                    }<span className={"sr-only"}>Sensoren werden gebraucht.</span>
                                 </div>
                                 <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Microcontroller"}>
@@ -180,7 +181,9 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     Level {useCase.complexity}
                                 </div>
                             </div>
-                            <SetupButton></SetupButton>
+                            <Suspense fallback={<Loading />}>
+                                <SetupButton slug={useCase.slug}></SetupButton>
+                            </Suspense>
                         </div>
                     </div>
                     <div className={"pb-8"}>
@@ -190,12 +193,12 @@ export default async function UseCase(props: { children: React.ReactNode, params
                             </Suspense>
                         </div>
                         <div className={"w-full"}>
-                            <Suspense fallback={<Loading/>}>
+                            <Suspense fallback={<TextWithHeadline/>}>
                                 {props.children}
                             </Suspense>
                         </div>
                     </div>
-                </div>
+                </article>
             </>)
     );
 }

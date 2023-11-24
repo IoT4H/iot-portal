@@ -22,9 +22,9 @@ export default function Tabs() {
 
     return (
         <>
-            <Tab name={"Info"} link={`/usecase/${params.id}`}/>
-            <Tab name={"Bilder"} link={`/usecase/${params.id}/bilder`}/>
-            <Tab name={"Anleitung"} link={`/usecase/${params.id}/instructions`}/>
+            <Tab name={"Info"} link={`/usecase/${params.id}/`}/>
+            <Tab name={"Bilder"} link={`/usecase/${params.id}/bilder/`}/>
+            <Tab name={"Anleitung"} link={`/usecase/${params.id}/instructions/`}/>
         </>
     );
 }

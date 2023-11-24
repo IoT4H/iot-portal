@@ -26,12 +26,29 @@ body {
 .markdown h1 {
   font-size: 2em;
 }
+
 .markdown h2 {
   font-size: 1.75em;
 }
+.markdown h3 {
+  font-size: 1.5em;
+}
+.markdown h4 {
+  font-size: 1.25em;
+}
+.markdown h5 {
+  font-size: 1.125em;
+}
 
-.markdown h1, .markdown h2 {
+.markdown h6 {
+  font-size: 1em;
+}
+
+
+.markdown h1, .markdown h2 , .markdown h3 , .markdown h4 , .markdown h5 , .markdown h6 {
+  line-height: 2.25rem;
   margin-block: 0.5em;
+  display: inline-block;
 }
 
 .markdown ul , .markdown li {
@@ -44,13 +61,12 @@ body {
   margin-left: 2.5rem;
 }
 
-.markdown * img, .markdown img {
-  width: 60%;
-  margin-block: 2rem;
-  margin-inline: 20%;
-  aspect-ratio: initial;
-  object-fit: contain;
-  object-position: center;
+.markdown p:has(img) {
+  display: flex;
+  flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
 }
 
 .markdown pre {

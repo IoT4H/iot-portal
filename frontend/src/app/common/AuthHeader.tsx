@@ -30,7 +30,7 @@ export default function AuthHeader() {
 
     useEffect(() => {
         SetIsAuth(auth.isAuth());
-    }, []);
+    }, [auth]);
 
     useEffect(() => {
         if (isAuth) {
@@ -58,7 +58,7 @@ export default function AuthHeader() {
             {
                 isAuth ?
                     (
-                        <div className={"flex flex-row gap-3 content-center"}>
+                        <div className={"flex flex-row gap-3 content-center not:sr-only"}>
                             <div className={"flex flex-col justify-center"}>
                                 <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border"}></UserIcon>
                             </div>
@@ -73,7 +73,7 @@ export default function AuthHeader() {
                         </div>
                     ) : (
                     <Link href={`/login?return_url=${return_url}`}
-                          className="text-sm font-semibold cursor-pointer leading-6 text-gray-900 dark:text-white flex items-center gap-1">
+                          className="text-sm font-semibold cursor-pointer leading-6 text-gray-900 dark:text-white flex items-center gap-1 not:sr-only">
                         Log in <ArrowLeftOnRectangleIcon
                         className="h-6 w-6 inline-block rotate-180"></ArrowLeftOnRectangleIcon>
                     </Link>

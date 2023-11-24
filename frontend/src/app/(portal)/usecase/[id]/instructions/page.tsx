@@ -1,16 +1,11 @@
-'use client'
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
+import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
-import Link from "next/link";
-import { useContext } from "react";
 import ReactMarkdown from "react-markdown";
 
 
 function Instruction({ instructions } : { instructions: any[]}) {
-
-    const gallery = useContext(GalleryContext);
 
     return (
         <>
@@ -23,9 +18,8 @@ function Instruction({ instructions } : { instructions: any[]}) {
                                 <div
                                     key={pic.attributes.hash}
                                     className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
-                                    onClick={() => gallery(index, allPics.map(p => p.attributes))}
                                 >
-                                    <img src={getStrapiURL() + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                                    <GalleryImage  init={index} imageList={allPics.map(p => p.attributes)} src={getStrapiURL() + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                                 </div>
                             );
                         })}

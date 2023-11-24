@@ -8,10 +8,23 @@ import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 export default function Gallery({ index, pics} : { index: number; pics: any[]}) {
 
     const gallery = useContext(GalleryContext);
+
     const [currentIndex, setCurrentIndex] = useState(index);
     useEffect( () => {
         setCurrentIndex(index);
     }, [index]);
+
+    pics = pics.map((pic) => {
+        try {
+            const url = new URL(pic.url);
+            return url.pathname;
+        } catch (e) {
+
+            const url = new URL(pic);
+            return url.pathname;
+            return pic;
+        }
+    })
 
     return (
         <>
@@ -31,7 +44,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                     <ChevronLeftIcon className={"w-24 h-24"}/>
                                 </div>
                                 <div className={"max-md:order-1 order-2 flex-shrink transition-all ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
-                                    <img src={pics[currentIndex] && (getStrapiURL() + pics[currentIndex].url)} className={"min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
+                                    <img src={pics[currentIndex] && (getStrapiURL() + pics[currentIndex])} className={"min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
                                     <div className={"h-8 text-center align-middle"}>
                                         {pics[currentIndex] ? pics[currentIndex].caption : ''}
                                     </div>
