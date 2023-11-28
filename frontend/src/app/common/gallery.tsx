@@ -15,14 +15,17 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
     }, [index]);
 
     pics = pics.map((pic) => {
+        console.log(pic, "pic")
         try {
             const url = new URL(pic.url);
             return url.pathname;
         } catch (e) {
-
-            const url = new URL(pic);
-            return url.pathname;
-            return pic;
+            try {
+                const url = new URL(pic);
+                return url.pathname;
+            } catch (e) {
+                return pic.url;
+            }
         }
     })
 

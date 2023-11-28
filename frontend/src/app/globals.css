@@ -64,9 +64,15 @@ body {
 .markdown p:has(img) {
   display: flex;
   flex-wrap: wrap;
-    justify-content: space-between;
+  align-content: stretch;
+  align-items: stretch;
+    justify-content: space-evenly;
     gap: 1rem;
     padding: 1rem;
+}
+
+.markdown p img {
+  object-fit: cover;
 }
 
 .markdown pre {

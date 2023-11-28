@@ -117,8 +117,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                 <div
                                     className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
-                                    <GalleryImage src={getStrapiURL() + useCase.thumbnail.formats.medium.url} init={0}
-                                                  imageList={[useCase.thumbnail]} alt={""}
+                                    <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url} src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             )
