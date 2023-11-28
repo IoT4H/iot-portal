@@ -12,15 +12,12 @@ function Instruction({ instructions } : { instructions: any[]}) {
             { instructions && instructions.map((instruction, index) => (
                 <div key={index} className={"mx-8 border-b py-16 border-gray-500/40"} id={instruction.stepName}>
                     <a href={`#${instruction.stepName}`}><h2 className={"font-bold pb-1 text-xl inline-block mb-4"}><ChevronDoubleRightIcon className={"w-6 inline text-orange-500"}/> Schritt {index + 1}: {instruction.stepName}</h2></a><p><ReactMarkdown className={"markdown text-justify"}>{instruction.step}</ReactMarkdown></p>
-                    <div className={"grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] gap-2 py-4"}>
+                    <div className={"grid grid-cols-[repeat(auto-fill,_minmax(9rem,_1fr))] gap-2 py-4 mt-4"}>
                         { instruction.pictures && instruction.pictures.data && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
                             return (
-                                <div
-                                    key={pic.attributes.hash}
-                                    className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square"}
-                                >
-                                    <GalleryImage  init={index} imageList={allPics.map(p => p.attributes)} src={getStrapiURL() + pic.attributes.formats.thumbnail.url} className={"absolute max-w-fit max-h-fit min-w-full min-h-full "} />
-                                </div>
+                                    <GalleryImage
+                                        key={pic.attributes.hash} thumbnailSrc={getStrapiURL() + pic.attributes.formats.thumbnail.url} src={getStrapiURL() + pic.attributes.url} className={"flex relative object-cover cursor-pointer flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square max-w-fit max-h-fit min-w-full min-h-full "} />
+
                             );
                         })}
                     </div>
