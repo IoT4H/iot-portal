@@ -138,7 +138,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-400 py-4 text-justify"}> {useCase.summary}</p>
+                            <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 text-justify"}> {useCase.summary}</p>
                             <div className={"flex flex-row justify-evenly gap-8 my-4"}>
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>

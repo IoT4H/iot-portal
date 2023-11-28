@@ -61,7 +61,7 @@ body {
   margin-left: 2.5rem;
 }
 
-.markdown p:has(img) {
+.markdown p:has(img:nth-of-type(2)) {
   display: flex;
   flex-wrap: wrap;
   align-content: stretch;
@@ -69,6 +69,12 @@ body {
     justify-content: space-evenly;
     gap: 1rem;
     padding: 1rem;
+
+
+}
+
+.markdown p:has(img:nth-of-type(2)) img {
+  height: 12em;
 }
 
 .markdown p img {

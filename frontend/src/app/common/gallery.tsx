@@ -2,32 +2,41 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
-import { useContext, useEffect, useState } from "react";
+import PageBlockingSpinner, { LoadingContext } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import Spinner from "@iot-portal/frontend/app/common/spinner";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 
 export default function Gallery({ index, pics} : { index: number; pics: any[]}) {
 
     const gallery = useContext(GalleryContext);
 
+    const [picUrls, SetPicUrls] = useState<string[]>([]);
+
     const [currentIndex, setCurrentIndex] = useState(index);
     useEffect( () => {
+        SetCanPlay(false);
         setCurrentIndex(index);
-    }, [index]);
 
-    pics = pics.map((pic) => {
-        console.log(pic, "pic")
-        try {
-            const url = new URL(pic.url);
-            return url.pathname;
-        } catch (e) {
+        SetPicUrls(pics.map((pic) => {
             try {
-                const url = new URL(pic);
+                const url = new URL(pic.url);
                 return url.pathname;
             } catch (e) {
-                return pic.url;
+                try {
+                    const url = new URL(pic);
+                    return url.pathname;
+                } catch (e) {
+                    return pic.url;
+                }
             }
-        }
-    })
+        }))
+    }, [index, pics]);
+
+
+
+    const [canPlay, SetCanPlay] = useState<boolean>(false);
+
 
     return (
         <>
@@ -46,15 +55,16 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                 }>
                                     <ChevronLeftIcon className={"w-24 h-24"}/>
                                 </div>
-                                <div className={"max-md:order-1 order-2 flex-shrink transition-all ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
-                                    <img src={pics[currentIndex] && (getStrapiURL() + pics[currentIndex])} className={"min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
+                                <div className={"max-md:order-1 order-2 flex-shrink transition-all transition-[width] ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
+                                    <img src={picUrls[currentIndex] && (getStrapiURL() + picUrls[currentIndex])} onLoad={() => SetCanPlay(true)} className={(canPlay ? "visible " :  "invisible ") + "min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
+                                    <Spinner className={canPlay ? "hidden" : "w-full"}/>
                                     <div className={"h-8 text-center align-middle"}>
                                         {pics[currentIndex] ? pics[currentIndex].caption : ''}
                                     </div>
                                 </div>
-                                <div className={`order-3 md:py-8 flex-grow-0 flex-shrink-0 max-md:w-1/2 w-24 flex flex-col items-center justify-center min-h-0  max-md:h-24 ${currentIndex >= pics.length - 1? 'opacity-0' : 'cursor-pointer '}`} onClick={
+                                <div className={`order-3 md:py-8 flex-grow-0 flex-shrink-0 max-md:w-1/2 w-24 flex flex-col items-center justify-center min-h-0  max-md:h-24 ${currentIndex >= picUrls.length - 1? 'opacity-0' : 'cursor-pointer '}`} onClick={
                                     () =>  {
-                                        if(currentIndex < pics.length - 1) {
+                                        if(currentIndex < picUrls.length - 1) {
                                             setCurrentIndex(currentIndex + 1);
                                         }
                                     }

@@ -34,7 +34,7 @@ export default async function RootLayout(props: any) {
 
     return (
         <html lang="de">
-        <body className={`${inter.className} min-h-screen h-max flex flex-col`}>
+        <body className={`${inter.className} min-h-screen h-max flex flex-col dark:bg-black bg-orange-100/5`}>
         <PageBlockingSpinner />
         <div className={'flex flex-1 flex-col '}>
             <Header/>

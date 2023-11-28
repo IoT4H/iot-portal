@@ -19,7 +19,7 @@ export default function CustomMarkdown({children, className, ...rest} : { childr
                 }
                 const thumbnail = rest.src.replace("/uploads/", "/uploads/thumbnail_")
 
-                return  <GalleryImage  {...rest} src={rest.src}  thumbnailSrc={thumbnail} className={"h-[12em]"}/>;
+                return  <GalleryImage  {...rest} src={rest.src} />;
             }
         }
     } {...rest} >{ children }</ReactMarkdown>
