@@ -8,10 +8,11 @@ export default function GalleryImage({src,thumbnailSrc, className,  alt, caption
 
     const gallery = useContext(GalleryContext);
 
-    const image = <img src={thumbnailSrc || src} data-src={src} className={className + " cursor-pointer"} title={caption} onClick={(event) => {
+    const image = <img src={thumbnailSrc || src} data-src={src} className={className ? className : ""  + " cursor-pointer gallery-image"} title={caption} onClick={(event) => {
 
         const list: string[] = [];
         if(!imageList || !init) {
+            // @ts-ignore
             const collection: HTMLCollection = (event.target.parentElement.getElementsByTagName("img"));
 
             for (let i = 0; i < collection.length; i++) {

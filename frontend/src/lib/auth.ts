@@ -9,6 +9,8 @@ export class Auth {
     constructor() {
     }
 
+
+    public onLogin = () => {};
     async getUser() {
 
         if(!this.isAuth()) {
@@ -42,6 +44,10 @@ export class Auth {
         return this.isAuth() && localStorage.getItem(ID_ITEM_NAME);
     }
 
+    toString() {
+        return this.getUser();
+    }
+
     async login(username: string, password: string) {
 
         try {
@@ -61,6 +67,7 @@ export class Auth {
 
             if(raw.jwt) {
                 localStorage.setItem(ID_ITEM_NAME, raw.jwt);
+                this.onLogin();
             }
         } catch (e) {
 
