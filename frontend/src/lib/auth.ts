@@ -1,20 +1,27 @@
 "use client"
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 
+export type User = {
 
-const ID_ITEM_NAME = "token";
+    auth: Auth;
+    firstname: string;
+    middlename: string;
+    lastname: string;
+    firm: {  name: string };
+
+
+}
 
 export class Auth {
 
-    constructor() {
-    }
+    static #ID_ITEM_NAME = "token";
 
+    static onUserChange = () => {};
 
-    public onLogin = () => {};
-    async getUser() {
+    static async getUser(): Promise<User | undefined> {
 
         if(!this.isAuth()) {
-            throw new Error("not logged in");
+            return undefined;
         }
 
         const qsPara =
@@ -28,27 +35,23 @@ export class Auth {
                 "Authorization": "Bearer " + this.getToken()
             }
         }));
-        console.info(u)
-        return u;
+
+        return { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
 
-    isAuth(): boolean {
+    static isAuth(): boolean {
         try {
-            return localStorage.getItem(ID_ITEM_NAME) !== null;
+            return localStorage.getItem(Auth.#ID_ITEM_NAME) !== null;
         } catch (e) {
             return false;
         }
     }
 
-    getToken() {
-        return this.isAuth() && localStorage.getItem(ID_ITEM_NAME);
+    static getToken() {
+        return this.isAuth() && localStorage.getItem(Auth.#ID_ITEM_NAME);
     }
 
-    toString() {
-        return this.getUser();
-    }
-
-    async login(username: string, password: string) {
+    static async login(username: string, password: string) {
 
         try {
 
@@ -66,18 +69,19 @@ export class Auth {
             const raw = await response.json();
 
             if(raw.jwt) {
-                localStorage.setItem(ID_ITEM_NAME, raw.jwt);
-                this.onLogin();
+                localStorage.setItem(Auth.#ID_ITEM_NAME, raw.jwt);
             }
         } catch (e) {
 
+        } finally {
+            Auth.onUserChange();
         }
 
     }
 
-    async logout() {
-        localStorage.removeItem(ID_ITEM_NAME)
+     static async logout() {
+        localStorage.removeItem(Auth.#ID_ITEM_NAME);
+        Auth.onUserChange();
     }
-
 
 }

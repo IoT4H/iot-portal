@@ -86,7 +86,7 @@ img.gallery-image {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 30%;
-  animation: skeleton-loading 1s linear infinite alternate;
+  /* animation: skeleton-loading 1s linear infinite alternate; */
 }
 
 

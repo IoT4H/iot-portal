@@ -1,16 +1,16 @@
 "use client"
 
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
-import { Auth } from "@iot-portal/frontend/lib/auth";
+import { Auth, User } from "@iot-portal/frontend/lib/auth";
 import { useState } from "react";
 export default function AuthWrapper ({children} : {children: any}) {
 
-    const [auth, SetAuth] = useState<Auth>(new Auth())
+    const [user, SetUser] = useState<User | undefined>(undefined);
 
-    auth.onLogin = () => {
-        SetAuth(auth);
+    Auth.onUserChange = () => {
+        Auth.getUser().then((u) => SetUser(u));
     }
 
-    return <AuthContext.Provider value={auth}>
+    return <AuthContext.Provider value={user}>
             {children}</AuthContext.Provider>
 }

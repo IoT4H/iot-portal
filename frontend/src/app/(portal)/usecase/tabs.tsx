@@ -11,7 +11,7 @@ function Tab({Icon, className, name, link} : {Icon?: HeroIcon; className?: strin
     const pathname = usePathname();
 
     return (
-        <Link href={link}>
+        <Link href={link} prefetch={true} replace scroll={false}>
             <button className={`${className} flex-row flex gap-4 items-center uppercase mx-4 px-4 py-4 border-b-2 ${ link === pathname ? 'border-orange-500 hover:border-orange-500' : 'border-transparent hover:border-orange-500/50' }`}>{ Icon && (<Icon className={"h-4"}/>)} {name}</button>
         </Link>
     );

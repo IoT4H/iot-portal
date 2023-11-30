@@ -1,6 +1,7 @@
 "use client"
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -12,14 +13,11 @@ export default function Login() {
     const [username, SetUsername] = useState<string | undefined>("");
     const [password, SetPassword] = useState<string | undefined>("");
 
-
-    const auth = useContext(AuthContext);
-
     const router = useRouter();
 
     const login = () => {
         if( username && password ) {
-            auth.login(username, password).then(() => {
+            Auth.login(username, password).then(() => {
                 router.back();
             });
         }
