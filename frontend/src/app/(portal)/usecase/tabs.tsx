@@ -6,7 +6,7 @@ type HeroIcon = React.ForwardRefExoticComponent<Omit<React.SVGProps<SVGSVGElemen
 
 
 
-function Tab({Icon, className, name, link} : {Icon?: HeroIcon; className?: string; name: string; link: string }){
+export function Tab({Icon, className, name, link} : {Icon?: HeroIcon; className?: string; name: string; link: string }){
 
     const pathname = usePathname();
 

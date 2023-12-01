@@ -1,7 +1,10 @@
 'use client'
 
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import Gallery from "@iot-portal/frontend/app/common/gallery";
+import { getStrapiURL } from "@iot-portal/frontend/lib/api";
+import Link from "next/link";
 import { useState } from 'react';
 
 const links: {
@@ -37,10 +40,21 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             <div className="bg-orange-100 dark:bg-zinc-900 sticky top-16 h-16">
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 h-full flex flex-row items-center">
                     {
-                        links.map((link) =>
-                            (
-                                <a key={link.title} href={!link.deactive ? link.href : undefined} className={`rounded px-4 py-2 ${ !link.deactive && 'hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactive && 'text-gray-500'}`}>{ link.title }</a>
-                            )
+                        links.map((link) => {
+                                let samePage = true;
+                                try {
+                                    samePage = (new URL(link.href)).host === getStrapiURL();
+                                } catch (e) {
+
+                                }
+
+                                return (
+                                    <Link key={link.title} href={!link.deactive ? link.href : "#"}
+                                          className={`rounded flex items-center gap-2 px-4 py-2 ${!link.deactive && 'hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactive && 'text-gray-500'}`}>{link.title}
+                                        {!samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline"}/>}
+                                    </Link>
+                                )
+                            }
                         )
                     }
                 </div>

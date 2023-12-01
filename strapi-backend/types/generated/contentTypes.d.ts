@@ -845,6 +845,29 @@ export interface ApiFirmFirm extends Schema.CollectionType {
   };
 }
 
+export interface ApiPagePage extends Schema.CollectionType {
+  collectionName: 'pages';
+  info: {
+    singularName: 'page';
+    pluralName: 'pages';
+    displayName: 'Seiten';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Attribute.Blocks & Attribute.Required;
+    title: Attribute.String & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPortalEinstellungenPortalEinstellungen
   extends Schema.SingleType {
   collectionName: 'portal_einstellungens';
@@ -1036,6 +1059,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::device.device': ApiDeviceDevice;
       'api::firm.firm': ApiFirmFirm;
+      'api::page.page': ApiPagePage;
       'api::portal-einstellungen.portal-einstellungen': ApiPortalEinstellungenPortalEinstellungen;
       'api::startpage.startpage': ApiStartpageStartpage;
       'api::tag.tag': ApiTagTag;

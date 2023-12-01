@@ -69,14 +69,14 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             <div className="flex flex-row items-center pb-2 z-10">
                                 <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
                             </div>
-                            <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
-                            <div className="flex flex-row gap-2 mt-4 flex-wrap">
+                            <div className="flex flex-row gap-2 mb-4 flex-wrap">
                                 {
                                      [...useCase.devices.map((i :any) => {
                                          return i.device.data && i.device.data.attributes.name;
                                      }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
+                            <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
                             <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
                                 {
                                     useCase.firms.map((f :any) => f.Logo && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
