@@ -25,7 +25,6 @@ export default async function Header() {
 
     const menus = ((await fetchAPI("/menus/", Para)).data.filter((m: any) => m.attributes.slug === "menu"))[0] || null;
 
-    console.log(menus.attributes.items.data[0].attributes.children.data);
 
     return (
         <header className="sticky top-0 h-16 z-40 bg-orange-100 dark:bg-zinc-900 backdrop-blur-sm">
@@ -62,9 +61,9 @@ export default async function Header() {
                                                 } catch (e) {
 
                                                 }
-                                                return (<Link key={child.id} href={child.attributes.url} className={`group/link flex w-full flex-row text-white grid-cols-2 items-center gap-2 border-gray-300/40 border-l-4 px-4 py-2 bg-gray-300/20 hover:border-orange-500  hover:text-white`} target={child.attributes.target}>{ child.attributes.title }
+                                                return (<Link key={child.id} href={child.attributes.url} className={`group/link flex w-full flex-row text-black dark:text-white grid-cols-2 items-center gap-2 border-gray-300/40 border-l-4 px-4 py-2 bg-gray-300/20 hover:border-orange-500`} target={child.attributes.target}>{ child.attributes.title }
                                                     {!samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline "}/>}
-                                                    <ChevronDoubleRightIcon className={"w-6 inline ml-auto text-white group-hover/link:text-orange-500"}/>
+                                                    <ChevronDoubleRightIcon className={"w-6 inline ml-auto text-black dark:text-white group-hover/link:text-orange-500"}/>
                                                 </Link>)
                                             })
                                         }

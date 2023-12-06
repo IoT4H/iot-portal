@@ -53,7 +53,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
 
     return (
         <>
-            <li className="flex justify-between gap-x-6 py-5">
+            <li className="flex justify-between gap-x-6 py-5 snap-center">
                 <Link href={"/usecase/" + useCase.slug} className={"w-full"}>
                     <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
                         <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>

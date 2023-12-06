@@ -1,5 +1,6 @@
 import './globals.css'
 import AuthWrapper from "@iot-portal/frontend/app/common/AuthWrapper";
+import Footer from "@iot-portal/frontend/app/common/Footer";
 import Header from "@iot-portal/frontend/app/common/Header";
 import PageBlockingSpinner from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -34,7 +35,7 @@ export default async function RootLayout(props: any) {
 
     return (
         <html lang="de">
-        <body className={`${inter.className} min-h-screen h-max flex flex-col dark:bg-black bg-orange-100/5`}>
+        <body className={`${inter.className} min-h-screen h-max flex flex-col dark:bg-black bg-orange-100/20`}>
             <AuthWrapper>
                 <PageBlockingSpinner />
                 <div className={'flex flex-1 flex-col '}>
@@ -42,6 +43,7 @@ export default async function RootLayout(props: any) {
                     {props.children}
                     {props.auth}
                     {props.setup}
+                    <Footer />
                 </div>
             </AuthWrapper>
         </body>
