@@ -26,6 +26,9 @@
       ],
       "default": "sensor",
       "required": true
+    },
+    "test": {
+      "type": "blocks"
     }
   }
 }

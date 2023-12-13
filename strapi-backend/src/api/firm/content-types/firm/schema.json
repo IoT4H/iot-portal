@@ -33,6 +33,13 @@
       "type": "component",
       "repeatable": true,
       "component": "firm.firm-roles"
+    },
+    "TenentUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "required": true
     }
   }
 }

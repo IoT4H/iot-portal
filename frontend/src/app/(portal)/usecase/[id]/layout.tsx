@@ -107,6 +107,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
     });
 
     return (
+        <Suspense> {
         useCase && (
             <>
                 <article
@@ -198,6 +199,9 @@ export default async function UseCase(props: { children: React.ReactNode, params
                         </div>
                     </div>
                 </article>
+
             </>)
+        }
+        </Suspense>
     );
 }

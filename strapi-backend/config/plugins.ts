@@ -5,5 +5,9 @@ export default {
     config: {
       maxDepth: 2,
     },
-  }
-}
+  },
+  'thingsboard-plugin': {
+    enabled: true,
+    resolve: './src/plugins/thingsboard-plugin'
+  },
+};

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "page",
     "pluralName": "pages",
-    "displayName": "Seiten"
+    "displayName": "Seiten",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -12,12 +13,12 @@
   "pluginOptions": {},
   "attributes": {
     "content": {
-      "type": "blocks",
-      "required": true
+      "type": "richtext"
     },
-    "title": {
+    "url": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     }
   }
 }

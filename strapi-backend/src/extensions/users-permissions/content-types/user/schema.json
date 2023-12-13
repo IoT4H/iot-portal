@@ -19,6 +19,13 @@
       "configurable": false,
       "required": true
     },
+    "thingsboardUserId": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "required": true
+    },
     "email": {
       "type": "email",
       "minLength": 6,

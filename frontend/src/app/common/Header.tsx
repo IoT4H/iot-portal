@@ -2,6 +2,7 @@ import { ArrowTopRightOnSquareIcon, ChevronDoubleRightIcon } from "@heroicons/re
 import AuthHeader from "@iot-portal/frontend/app/common/AuthHeader";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
+import { Suspense } from "react";
 
 function Logo() {
     return (
@@ -35,6 +36,7 @@ export default async function Header() {
                     <Logo/>
                 </div>
                 <div className={"ml-4 mr-auto flex flex-row gap-2"}>
+                    <Suspense>
                     {
                         menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
 
@@ -72,6 +74,7 @@ export default async function Header() {
                             </div>) } </Link>)
                         })
                     }
+                    </Suspense>
                 </div>
                 <div className="flex flex-1 justify-end">
                     <AuthHeader/>

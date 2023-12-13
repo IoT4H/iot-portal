@@ -6,6 +6,7 @@ import PageBlockingSpinner from "@iot-portal/frontend/app/common/pageBlockingSpi
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -40,7 +41,9 @@ export default async function RootLayout(props: any) {
                 <PageBlockingSpinner />
                 <div className={'flex flex-1 flex-col '}>
                     <Header/>
-                    {props.children}
+                    <div className={"mb-auto"}>
+                        {props.children}
+                    </div>
                     {props.auth}
                     {props.setup}
                     <Footer />

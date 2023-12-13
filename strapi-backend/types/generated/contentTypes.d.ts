@@ -576,6 +576,7 @@ export interface PluginContentReleasesReleaseAction
 export interface PluginMenusMenu extends Schema.CollectionType {
   collectionName: 'menus';
   info: {
+    name: 'Menu';
     displayName: 'Menu';
     singularName: 'menu';
     pluralName: 'menus';
@@ -620,6 +621,7 @@ export interface PluginMenusMenu extends Schema.CollectionType {
 export interface PluginMenusMenuItem extends Schema.CollectionType {
   collectionName: 'menu_items';
   info: {
+    name: 'MenuItem';
     displayName: 'Menu Item';
     singularName: 'menu-item';
     pluralName: 'menu-items';
@@ -782,6 +784,10 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 3;
       }>;
+    thingsboardUserId: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     email: Attribute.Email &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
@@ -893,6 +899,7 @@ export interface ApiDeviceDevice extends Schema.CollectionType {
     type: Attribute.Enumeration<['sensor', 'microcontroller', 'computer']> &
       Attribute.Required &
       Attribute.DefaultTo<'sensor'>;
+    test: Attribute.Blocks;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -926,6 +933,10 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     Logo: Attribute.Media;
     verified: Attribute.Boolean & Attribute.DefaultTo<false>;
     roles: Attribute.Component<'firm.firm-roles', true>;
+    TenentUID: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -942,13 +953,14 @@ export interface ApiPagePage extends Schema.CollectionType {
     singularName: 'page';
     pluralName: 'pages';
     displayName: 'Seiten';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    content: Attribute.Blocks & Attribute.Required;
-    title: Attribute.String & Attribute.Required;
+    content: Attribute.RichText;
+    url: Attribute.String & Attribute.Required & Attribute.Unique;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
