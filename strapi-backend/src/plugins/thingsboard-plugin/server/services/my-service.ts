@@ -1,5 +1,7 @@
 import { Strapi } from '@strapi/strapi';
+import axios from "axios";
 import pluginId from "../../admin/src/pluginId";
+import fetch from 'node-fetch';
 
 export default ({ strapi }: { strapi: Strapi }) => ({
   getWelcomeMessage() {
@@ -9,9 +11,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return strapi.plugin(pluginId).config('thingsboardUrl')
   },
   async getTenants() {
-    await fetch(strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login", {
-      method: 'POST',
-      body: null
-    }).then((response) => response.json()).then((j) => console.log(j));
+    axios({method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login"})
+      .then((response) => JSON.parse(response.data)).then((j) => console.log(j));
   }
 });

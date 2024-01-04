@@ -621,7 +621,6 @@ export interface PluginMenusMenu extends Schema.CollectionType {
 export interface PluginMenusMenuItem extends Schema.CollectionType {
   collectionName: 'menu_items';
   info: {
-    name: 'MenuItem';
     displayName: 'Menu Item';
     singularName: 'menu-item';
     pluralName: 'menu-items';
