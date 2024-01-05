@@ -12,6 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "TenentUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "deactivate": true,
+      "required": false
+    },
     "name": {
       "type": "string",
       "required": true,
@@ -27,18 +35,14 @@
     },
     "verified": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "required": true
     },
-    "roles": {
+    "Adress": {
+      "displayName": "Adresse",
       "type": "component",
-      "repeatable": true,
-      "component": "firm.firm-roles"
-    },
-    "TenentUID": {
-      "type": "customField",
-      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
-      "unique": true,
-      "configurable": false,
+      "repeatable": false,
+      "component": "general.adresse",
       "required": true
     }
   }

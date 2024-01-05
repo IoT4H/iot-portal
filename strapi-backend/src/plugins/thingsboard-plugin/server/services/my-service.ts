@@ -65,8 +65,48 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     "email": string,
     "additionalInfo": any
   }> {
-    console.warn("TRYING TO CREATE A TENANT", JSON.stringify(params))
+    strapi.log.warn("CREATING A NEW Thingsboard TENANT")
     return this.axiosAsSysAdmin({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/tenant", headers: {
+        'Content-Type': 'application/json'
+      }, data: JSON.stringify(params)}).then((response) => response.data);
+  },
+  async createUser(params : {
+    "tenantId"?: {
+      "id": string,
+      "entityType": "TENANT"
+    },
+    "customerId"?: {
+      "id": string,
+      "entityType": "CUSTOMER"
+    },
+    "firstName": string,
+    "lastName": string,
+    "authority": string
+    "phone": string,
+    "email": string,
+    "additionalInfo": any
+  }): Promise<{
+    "id": {
+      "id": string,
+      "entityType": "USER"
+    },
+    "tenantId"?: {
+      "id": string,
+      "entityType": "TENANT"
+    },
+      "customerId"?: {
+        "id": string,
+        "entityType": "CUSTOMER"
+      },
+      "firstName": string,
+      "lastName": string,
+      "authority": string
+      "phone": string,
+      "email": string,
+      "additionalInfo": any
+  }> {
+    strapi.log.warn("CREATING A NEW Thingsboard USER", JSON.stringify(params));
+    return this.axiosAsSysAdmin({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/user?sendActivationMail=false", headers: {
         'Content-Type': 'application/json'
       }, data: JSON.stringify(params)}).then((response) => response.data);
   }

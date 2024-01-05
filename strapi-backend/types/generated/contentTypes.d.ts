@@ -848,22 +848,22 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToOne',
       'plugin::users-permissions.role'
-    > &
-      Attribute.DefaultTo<'Authenticated'>;
+    >;
     merkliste: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
       'api::use-case.use-case'
     >;
     profilPic: Attribute.Media;
-    lastname: Attribute.String;
-    firstname: Attribute.String;
+    lastname: Attribute.String & Attribute.Required;
+    firstname: Attribute.String & Attribute.Required;
     middlename: Attribute.String;
     firm: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToOne',
       'api::firm.firm'
     >;
+    phone: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -927,14 +927,15 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required & Attribute.Unique;
-    Logo: Attribute.Media;
-    verified: Attribute.Boolean & Attribute.DefaultTo<false>;
-    roles: Attribute.Component<'firm.firm-roles', true>;
     TenentUID: Attribute.String &
-      Attribute.Required &
       Attribute.Unique &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    Logo: Attribute.Media;
+    verified: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    Adress: Attribute.Component<'general.adresse'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -957,8 +958,8 @@ export interface ApiPagePage extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    content: Attribute.RichText;
     url: Attribute.String & Attribute.Required & Attribute.Unique;
+    content: Attribute.Blocks & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

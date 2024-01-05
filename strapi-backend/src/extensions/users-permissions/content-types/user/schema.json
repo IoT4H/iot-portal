@@ -70,8 +70,7 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
-      "configurable": false,
-      "default": "Authenticated"
+      "configurable": false
     },
     "merkliste": {
       "type": "relation",
@@ -87,18 +86,28 @@
       ]
     },
     "lastname": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "configurable": false
     },
     "firstname": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "configurable": false
     },
     "middlename": {
-      "type": "string"
+      "type": "string",
+      "configurable": false
     },
     "firm": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::firm.firm"
+      "target": "api::firm.firm",
+      "configurable": false
+    },
+    "phone": {
+      "type": "string",
+      "configurable": false
     }
   }
 }

@@ -12,13 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "content": {
-      "type": "richtext"
-    },
     "url": {
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "content": {
+      "type": "blocks",
+      "required": true
     }
   }
 }
