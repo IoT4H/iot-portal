@@ -24,7 +24,7 @@
       "customField": "plugin::thingsboard-plugin.thingsboardUserId",
       "unique": true,
       "configurable": false,
-      "required": true
+      "required": false
     },
     "email": {
       "type": "email",
@@ -70,7 +70,8 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
-      "configurable": false
+      "configurable": false,
+      "default": "Authenticated"
     },
     "merkliste": {
       "type": "relation",

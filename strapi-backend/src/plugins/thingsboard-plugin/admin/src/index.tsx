@@ -9,7 +9,7 @@ const name = pluginPkg.strapi.name;
 
 export default {
   register(app: any) {
-    app.addMenuLink({
+    /* app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
@@ -28,12 +28,12 @@ export default {
         //   subject: null,
         // },
       ],
-    });
+    }); */
 
     app.customFields.register({
       name: "thingsboardUserId",
-      pluginId: pluginId, // the custom field is created by a color-picker plugin
-      type: "string", // the color will be stored as a string
+      pluginId: pluginId,
+      type: "string",
       intlLabel: {
         id: "thingsboard-plugin.thingsboardUserId.label",
         defaultMessage: "Thingsboard UID",
