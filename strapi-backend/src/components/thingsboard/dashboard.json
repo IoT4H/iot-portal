@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_thingsboard_dashboards",
+  "info": {
+    "displayName": "Dashboard",
+    "icon": "dashboard",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Reference": {
+      "type": "customField",
+      "options": {
+        "type": "Dashboard"
+      },
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    }
+  }
+}

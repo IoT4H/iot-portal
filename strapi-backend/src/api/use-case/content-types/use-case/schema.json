@@ -86,6 +86,20 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::firm.firm"
+    },
+    "components": {
+      "type": "dynamiczone",
+      "components": [
+        "thingsboard.asset-profile",
+        "thingsboard.component",
+        "thingsboard.dashboard",
+        "thingsboard.rule-chain"
+      ]
+    },
+    "Dashboards": {
+      "type": "component",
+      "repeatable": false,
+      "component": "thingsboard.dashboard"
     }
   }
 }

@@ -13,4 +13,16 @@ export default ({ strapi }: { strapi: Strapi }) => {
       isResizable: true,
     },
   });
+
+
+  strapi.customFields.register({
+    name: "thingsboardComponent",
+    plugin: pluginId,
+    type: "json",
+    inputSize: {
+      // optional
+      default: 12,
+      isResizable: false,
+    },
+  });
 };

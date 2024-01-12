@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_thingsboard_asset_profiles",
+  "info": {
+    "displayName": "Asset Profile",
+    "icon": "chartBubble"
+  },
+  "options": {},
+  "attributes": {
+    "Reference": {
+      "type": "customField",
+      "options": {
+        "type": "AssetProfile"
+      },
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    }
+  }
+}

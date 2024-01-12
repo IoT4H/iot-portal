@@ -63,6 +63,76 @@ export interface InstructionsInstructions extends Schema.Component {
   };
 }
 
+export interface ThingsboardAssetProfile extends Schema.Component {
+  collectionName: 'components_thingsboard_asset_profiles';
+  info: {
+    displayName: 'Asset Profile';
+    icon: 'chartBubble';
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.thingsboardComponent',
+        {
+          type: 'AssetProfile';
+        }
+      >;
+  };
+}
+
+export interface ThingsboardComponent extends Schema.Component {
+  collectionName: 'components_general_components';
+  info: {
+    displayName: 'Device Profile';
+    description: '';
+    icon: 'server';
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.thingsboardComponent',
+        {
+          type: 'DeviceProfile';
+        }
+      >;
+  };
+}
+
+export interface ThingsboardDashboard extends Schema.Component {
+  collectionName: 'components_thingsboard_dashboards';
+  info: {
+    displayName: 'Dashboard';
+    icon: 'dashboard';
+    description: '';
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.thingsboardComponent',
+        {
+          type: 'Dashboard';
+        }
+      >;
+  };
+}
+
+export interface ThingsboardRuleChain extends Schema.Component {
+  collectionName: 'components_thingsboard_rule_chains';
+  info: {
+    displayName: 'Rule Chain';
+    icon: 'link';
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.thingsboardComponent',
+        {
+          type: 'RuleChain';
+        }
+      >;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
@@ -70,6 +140,10 @@ declare module '@strapi/types' {
       'firmware.test': FirmwareTest;
       'general.adresse': GeneralAdresse;
       'instructions.instructions': InstructionsInstructions;
+      'thingsboard.asset-profile': ThingsboardAssetProfile;
+      'thingsboard.component': ThingsboardComponent;
+      'thingsboard.dashboard': ThingsboardDashboard;
+      'thingsboard.rule-chain': ThingsboardRuleChain;
     }
   }
 }

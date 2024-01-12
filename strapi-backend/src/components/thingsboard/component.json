@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_general_components",
+  "info": {
+    "displayName": "Device Profile",
+    "description": "",
+    "icon": "server"
+  },
+  "options": {},
+  "attributes": {
+    "Reference": {
+      "type": "customField",
+      "options": {
+        "type": "DeviceProfile"
+      },
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    }
+  }
+}

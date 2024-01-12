@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_thingsboard_rule_chains",
+  "info": {
+    "displayName": "Rule Chain",
+    "icon": "link"
+  },
+  "options": {},
+  "attributes": {
+    "Reference": {
+      "type": "customField",
+      "options": {
+        "type": "RuleChain"
+      },
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    }
+  }
+}

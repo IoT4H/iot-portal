@@ -3,7 +3,8 @@
   "info": {
     "displayName": "firm_roles"
   },
-  "options": {},
+  "options": {
+  },
   "attributes": {
     "user": {
       "type": "relation",

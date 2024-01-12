@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "deployments",
+  "info": {
+    "singularName": "deployment",
+    "pluralName": "deployments",
+    "displayName": "Setups"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "use_case": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::use-case.use-case"
+    },
+    "firm": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::firm.firm"
+    },
+    "uuid": {
+      "type": "uid"
+    }
+  }
+}

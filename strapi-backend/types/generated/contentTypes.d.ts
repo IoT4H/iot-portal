@@ -881,6 +881,45 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiDeploymentDeployment extends Schema.CollectionType {
+  collectionName: 'deployments';
+  info: {
+    singularName: 'deployment';
+    pluralName: 'deployments';
+    displayName: 'Setups';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    use_case: Attribute.Relation<
+      'api::deployment.deployment',
+      'oneToOne',
+      'api::use-case.use-case'
+    >;
+    firm: Attribute.Relation<
+      'api::deployment.deployment',
+      'oneToOne',
+      'api::firm.firm'
+    >;
+    uuid: Attribute.UID;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::deployment.deployment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::deployment.deployment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDeviceDevice extends Schema.CollectionType {
   collectionName: 'devices';
   info: {
@@ -1123,6 +1162,15 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
       'oneToMany',
       'api::firm.firm'
     >;
+    components: Attribute.DynamicZone<
+      [
+        'thingsboard.asset-profile',
+        'thingsboard.component',
+        'thingsboard.dashboard',
+        'thingsboard.rule-chain'
+      ]
+    >;
+    Dashboards: Attribute.Component<'thingsboard.dashboard'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1161,6 +1209,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::deployment.deployment': ApiDeploymentDeployment;
       'api::device.device': ApiDeviceDevice;
       'api::firm.firm': ApiFirmFirm;
       'api::page.page': ApiPagePage;
