@@ -95,11 +95,6 @@
         "thingsboard.dashboard",
         "thingsboard.rule-chain"
       ]
-    },
-    "Dashboards": {
-      "type": "component",
-      "repeatable": false,
-      "component": "thingsboard.dashboard"
     }
   }
 }

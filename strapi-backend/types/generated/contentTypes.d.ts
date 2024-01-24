@@ -1186,7 +1186,6 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'thingsboard.rule-chain'
       ]
     >;
-    Dashboards: Attribute.Component<'thingsboard.dashboard'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
