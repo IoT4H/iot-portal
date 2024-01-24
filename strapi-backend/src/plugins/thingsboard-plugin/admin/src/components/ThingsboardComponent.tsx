@@ -1,6 +1,5 @@
 import { ContentBox } from "@strapi/helper-plugin";
 import axios from "axios";
-import { UUID } from "crypto";
 import { useEffect, useState } from "react";
 import * as React from "react";
 
@@ -54,6 +53,34 @@ import {
 import { NavLink } from "react-router-dom";
 
 
+class ErrorBoundary extends React.Component {
+
+  state: any;
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    // You can also log the error to an error reporting service
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+
 const TBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
   const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
@@ -78,7 +105,13 @@ const TBIDInput = React.forwardRef((props, ref) => {
     }
   }
 
-  const getOrgValue = (): any[] => value ? JSON.parse(value) : [];
+  const getOrgValue = (): any[] => {
+    try {
+      return JSON.parse(value) || [];
+    } catch (e) {
+      return [];
+    }
+  };
 
   const [isVisible, setIsVisible] = useState(false);
   const [selectTenant, setSelectTenant] = useState(true);
@@ -91,8 +124,11 @@ const TBIDInput = React.forwardRef((props, ref) => {
   const [componentsLoading, SetComponentsLoading] = useState<boolean>(true);
 
   const [openTenant, SetOpenTenant] = useState<string>("");
+  const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
 
   const [currentValue, SetCurrentValue] = useState(getOrgValue());
+
+  const { get } = useFetchClient();
 
   useEffect(() => {
 
@@ -110,22 +146,27 @@ const TBIDInput = React.forwardRef((props, ref) => {
     if(isVisible) {
       SetTenants(tenantsInit);
       SetTenantsLoading(true);
-      axios
-        .get("http://localhost:1337/thingsboard-plugin/tenants", {params: {page: 0, pageSize: 30}})
-        .then((response) => {
+      setErrorDisplay(false);
+      get("http://localhost:1337/thingsboard-plugin/tenants", {params: {page: 0, pageSize: 30}})
+        .then((response: any) => {
+          console.log(response)
           SetTenants(response.data);
+        }).catch((e: any) => {
+          setErrorDisplay(true);
         }).finally(() => {
-        SetTenantsLoading(false);
-      });
+          SetTenantsLoading(false);
+        }
+      );
     }
   }, [selectTenant, isVisible])
 
   useEffect(() => {
     SetComponents(componentsInit);
     SetComponentsLoading(true);
-    openTenant.length !== 0 && axios
-      .get(`http://localhost:1337/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
-      .then((response) => {
+    openTenant.length !== 0 &&
+    get(`http://localhost:1337/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
+      .then((response: any) => {
+        console.log(response)
         SetComponents(response.data);
       }).finally(() => {
         SetComponentsLoading(false);
@@ -145,10 +186,12 @@ const TBIDInput = React.forwardRef((props, ref) => {
     console.log(currentValue);
   }, [currentValue])
 
-  const currentSelectionContains = (id: UUID) => { return currentValue.findIndex((value) => value.id === id) !== -1};
+  const currentSelectionContains = (id: string) => { return currentValue.findIndex((value) => value.id === id) !== -1};
 
   return (
   <>
+    <ErrorBoundary>
+      <Field name={ label } >
       <KeyboardNavigable >
         <Grid gap={"1rem"} col={12}>
         {
@@ -166,9 +209,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
                     <CardTitle>{ attribute.options.type.split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() }</CardTitle>
                     <CardSubtitle>{ e.id }</CardSubtitle>
                   </CardContent>
-                  <CardAction>
-                    <button>TEst</button>
-                  </CardAction>
                 </CardBody>
               </Card>
               </GridItem>
@@ -182,11 +222,12 @@ const TBIDInput = React.forwardRef((props, ref) => {
           }
         </Grid>
     </KeyboardNavigable>
-    <Box marginTop={6}>
+      </Field>
+      { !disabled && (<Box marginTop={6}>
       <Button fullWidth  variant="secondary" startIcon={<Pencil />} onClick={() => setIsVisible(prev => !prev)}>
         Auswahl bearbeiten
       </Button>
-    </Box>
+    </Box> ) }
 
 
 
@@ -213,7 +254,8 @@ const TBIDInput = React.forwardRef((props, ref) => {
           (selectTenant && tenantsLoading || !selectTenant && componentsLoading) ?
             <Flex alignItems={"center"}  justifyContent={"center"} direction={"row"}><Loader>Loading content...</Loader></Flex> :
           ( <Grid gap={3} col={12}>
-          {selectTenant && tenants.data.map((t: any, index: number) => {
+
+          {selectTenant ? tenants.data.map((t: any, index: number) => {
             return (
               <GridItem col={6}>
                 <Card key={`box-${index}`} background="neutral100" cursor={"pointer"} onClick={() => {
@@ -237,7 +279,8 @@ const TBIDInput = React.forwardRef((props, ref) => {
                 </Card>
               </GridItem>
             );
-          })}
+          }) : <></>
+          }
 
           {!selectTenant && components.data.map((c: any, index: number) => {
             return (
@@ -245,7 +288,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
                 <Card key={`box-${index}`} background="neutral100">
                   <CardHeader>
                     <CardCheckbox onClick={() => {
-                      currentSelectionContains(c.id.id) ? SetCurrentValue(currentValue.filter((e: any) => e.id != c.id.id)) : SetCurrentValue([...currentValue, c.id])
+                      currentSelectionContains(c.id.id) ? SetCurrentValue(currentValue.filter((e: any) => e.id != c.id.id)) : SetCurrentValue([...currentValue, Object.assign(c.id, {"tenantId": { "id" : openTenant}})])
                     }} checked={currentSelectionContains(c.id.id)}></CardCheckbox>
                   </CardHeader>
                   <CardBody marginLeft={6}>
@@ -261,7 +304,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
 
             {(!selectTenant && components.data.length === 0 || selectTenant && tenants.data.length === 0) &&
               (<GridItem col={12}>
-                <EmptyStateLayout content="Es wurde nichts gefunden." padddingTop={3} paddingBottom={3} />
+                <EmptyStateLayout content={errorDisplay ? "Es ist ein Fehler aufgetreten." : "Es wurde nichts gefunden."} padddingTop={3} paddingBottom={3} />
               </GridItem>)
             }
         </Grid> )
@@ -277,8 +320,11 @@ const TBIDInput = React.forwardRef((props, ref) => {
         <Button onClick={() => { confirmChange(); setIsVisible(prev => !prev);}}>Übernehmen</Button>
       </>} />
     </ModalLayout>}
+    </ErrorBoundary>
   </>
   );
 });
 
 export default TBIDInput;
+
+

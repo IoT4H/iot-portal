@@ -4,25 +4,56 @@
   "info": {
     "singularName": "deployment",
     "pluralName": "deployments",
-    "displayName": "Setups"
+    "displayName": "Setups",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "content-type-builder": {
+      "visible": true
+    }
+  },
   "attributes": {
+    "name": {
+      "type": "string"
+    },
     "use_case": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::use-case.use-case"
+      "target": "api::use-case.use-case",
+      "configurable": false
     },
     "firm": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::firm.firm"
+      "target": "api::firm.firm",
+      "configurable": false
     },
-    "uuid": {
-      "type": "uid"
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "created",
+        "deploying",
+        "deployed"
+      ],
+      "default": "created",
+      "required": true,
+      "configurable": false
+    },
+    "sync": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "configurable": false
+    },
+    "deployed": {
+      "type": "customField",
+      "options": {
+        "type": "Dashboard"
+      },
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
     }
   }
 }

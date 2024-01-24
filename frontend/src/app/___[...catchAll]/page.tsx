@@ -34,11 +34,11 @@ export default async function Page({params}: { params: any & { catchAll: string 
     }> = (props) => {
 console.log(props)
         return (
-            <>
+            <>/*
                 <figure className={"y-2"}>
                     <GalleryImage src={getStrapiURL() + props.data.file.url} className={props.data.stretched === true ? "relative -left-16 max-w-[calc(100%_+_8rem)]" : "" }/>
-                    <caption className={"mt-2 block center"}>{props.data.caption}</caption>
-                </figure>
+                    <caption className={"mt-2 block center"}>{props.data.caption }</caption>
+                </figure>*/
             </>
         )
     }

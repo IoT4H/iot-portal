@@ -9,7 +9,7 @@ export default ({ strapi }: { strapi: Strapi }) => {
     async beforeCreate(event: any) {
       const { data, where, select, populate } = event.params;
       const firm = data.firm.connect.length > 0 && await strapi.query('api::firm.firm').findOne({ where: { id: data.firm.connect[0].id}})
-      const tenant = await strapi.plugin('thingsboard-plugin').service('myService').createUser({
+      const tenant = await strapi.plugin('thingsboard-plugin').service('thingsboardService').createUser({
         "firstName": data.firstname,
         "lastName": data.lastname,
         "phone": data.phone,
@@ -29,24 +29,24 @@ export default ({ strapi }: { strapi: Strapi }) => {
   strapi.db.lifecycles.subscribe({
     models: ['api::firm.firm'], // optional;
 
-    async beforeCreate(event: any) {
+    async afterCreate(event: any) {
       const { data, where, select, populate } = event.params;
-      const address = await strapi.query('general.addresse').findOne({ where: { id: data.Address.id}})
-      const tenant = await strapi.plugin('thingsboard-plugin').service('myService').createTenant({
-        "title": data.name,
-        "region": "",
-        "country": address.Country || "",
-        "state": address.State || "",
-        "city": address.City || "",
-        "address": address.Address || "",
-        "address2": address.Address_2 || "",
-        "zip": address.Postal_code || "",
-        "phone": "",
-        "email": "",
-        "additionalInfo": {}
-      });
-      data.TenentUID = tenant.id.id;
+     // await strapi.plugin('thingsboard-plugin').service('strapiService').createTenantForBetrieb(data.id);
     },
   });
+
+  strapi.db.lifecycles.subscribe({
+    models: ['api::deployment.deployment'], // optional;
+
+    async afterCreate(event: any) {
+      const data = event.result;
+      strapi.plugin('thingsboard-plugin').service('strapiService').deploySetup(Number(data.id)).then(() => {
+        console.log('deployed')
+      });
+    },
+  });
+
+
+
 
 };

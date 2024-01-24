@@ -1,9 +1,8 @@
 {
-  "collectionName": "components_general_adresses",
+  "collectionName": "components_general_addresses",
   "info": {
     "displayName": "Address",
-    "icon": "pinMap",
-    "description": ""
+    "icon": "pinMap"
   },
   "options": {},
   "attributes": {
@@ -15,20 +14,18 @@
       "type": "string"
     },
     "City": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "Postal_code": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "State": {
       "type": "string"
     },
     "Country": {
       "type": "string",
-      "default": "Germany",
-      "required": true
+      "required": true,
+      "default": "Germany"
     }
   }
 }

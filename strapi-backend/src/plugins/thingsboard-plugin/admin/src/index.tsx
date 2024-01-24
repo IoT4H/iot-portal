@@ -1,10 +1,11 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
-
+import { Information } from "@strapi/icons";
+import { Button } from '@strapi/design-system';
 import pluginPkg from '../../package.json';
+import createTenantButton from "./components/createTenantButton";
 import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
-import yup from 'yup'
 
 const name = pluginPkg.strapi.name;
 
@@ -177,7 +178,9 @@ export default {
     app.registerPlugin(plugin);
   },
 
-  bootstrap(app: any) {},
+  bootstrap(app: any) {
+    app.injectContentManagerComponent('editView', 'right-links', { name: 'createTenant', Component: () => createTenantButton()})
+  },
 
   async registerTrads(app: any) {
     const { locales } = app;

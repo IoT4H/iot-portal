@@ -25,4 +25,22 @@ export default [
       auth: false
     },
   },
+  {
+    method: 'GET',
+    path: '/firm/:firmId/createTenant',
+    handler: 'myController.createTenantForFirm',
+    config: {
+      policies: [],
+      auth: false
+    },
+  },
+  {
+    method: 'GET',
+    path: '/firm/:firmId/setup/deploy/:useCaseId',
+    handler: 'myController.newDeployment',
+    config: {
+      policies: [],
+      auth: false
+    },
+  },
 ];

@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -38,11 +38,10 @@
       "default": false,
       "required": true
     },
-    "Adress": {
-      "displayName": "Adresse",
+    "Address": {
       "type": "component",
       "repeatable": false,
-      "component": "general.adresse",
+      "component": "general.address",
       "required": true
     }
   }

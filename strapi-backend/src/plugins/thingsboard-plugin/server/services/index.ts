@@ -1,5 +1,7 @@
-import myService from './my-service';
+import strapiService from "./strapi-service";
+import thingsboardService from './thingsboard-service';
 
 export default {
-  myService,
+  strapiService,
+  thingsboardService
 };

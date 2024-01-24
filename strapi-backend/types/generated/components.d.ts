@@ -32,18 +32,17 @@ export interface FirmwareTest extends Schema.Component {
   };
 }
 
-export interface GeneralAdresse extends Schema.Component {
-  collectionName: 'components_general_adresses';
+export interface GeneralAddress extends Schema.Component {
+  collectionName: 'components_general_addresses';
   info: {
     displayName: 'Address';
     icon: 'pinMap';
-    description: '';
   };
   attributes: {
     Address: Attribute.String & Attribute.Required;
     Address_2: Attribute.String;
-    City: Attribute.String & Attribute.Required;
-    Postal_code: Attribute.String & Attribute.Required;
+    City: Attribute.String;
+    Postal_code: Attribute.String;
     State: Attribute.String;
     Country: Attribute.String &
       Attribute.Required &
@@ -138,7 +137,7 @@ declare module '@strapi/types' {
     export interface Components {
       'firm.firm-roles': FirmFirmRoles;
       'firmware.test': FirmwareTest;
-      'general.adresse': GeneralAdresse;
+      'general.address': GeneralAddress;
       'instructions.instructions': InstructionsInstructions;
       'thingsboard.asset-profile': ThingsboardAssetProfile;
       'thingsboard.component': ThingsboardComponent;

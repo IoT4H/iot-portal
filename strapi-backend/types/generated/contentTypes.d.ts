@@ -887,11 +887,18 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
     singularName: 'deployment';
     pluralName: 'deployments';
     displayName: 'Setups';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
+  pluginOptions: {
+    'content-type-builder': {
+      visible: true;
+    };
+  };
   attributes: {
+    name: Attribute.String;
     use_case: Attribute.Relation<
       'api::deployment.deployment',
       'oneToOne',
@@ -902,7 +909,17 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       'oneToOne',
       'api::firm.firm'
     >;
-    uuid: Attribute.UID;
+    status: Attribute.Enumeration<['created', 'deploying', 'deployed']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'created'>;
+    sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    deployed: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.thingsboardComponent',
+        {
+          type: 'Dashboard';
+        }
+      >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -963,7 +980,7 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     TenentUID: Attribute.String &
@@ -974,10 +991,9 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     verified: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    Adress: Attribute.Component<'general.adresse'> & Attribute.Required;
+    Address: Attribute.Component<'general.address'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
