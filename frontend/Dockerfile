@@ -31,10 +31,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ARG NEXT_PUBLIC_STRAPI_API_URL=/api
 ENV NEXT_PUBLIC_STRAPI_API_URL=${NEXT_PUBLIC_STRAPI_API_URL}
 
-RUN yarn build
+# RUN yarn build
 
 # If using npm comment out above and use below instead
-# RUN npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
