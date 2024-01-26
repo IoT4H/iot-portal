@@ -81,6 +81,43 @@ class ErrorBoundary extends React.Component {
 }
 
 
+const Icons = (type: string) => {
+  switch(type) {
+    case "Dashboard":
+    case "DASHBOARD":
+      return <Dashboard />;
+    case "DeviceProfile":
+      return <Server />;
+    case "AssetProfile":
+      return <ChartBubble />;
+    case "RuleChain":
+      return <Link />;
+  }
+}
+
+const ComponantItem  = (e: { id: string, type: string}) => {
+  return (
+    <>
+      <GridItem col={6}>
+        <Card id="tirdth">
+          <CardBody>
+            <Box padding={2} background="primary100">
+              {
+                Icons((e.type || ""))
+              }
+            </Box>
+            <CardContent paddingLeft={2}>
+              <CardTitle bold>{ (e.type || "").split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() }</CardTitle>
+              <CardSubtitle>{ e.id }</CardSubtitle>
+            </CardContent>
+          </CardBody>
+        </Card>
+      </GridItem>
+    </>
+  );
+}
+
+
 const TBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
   const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
@@ -88,22 +125,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
 
   const { formatMessage } = useIntl();
 
-  // @ts-ignore
 
-
-
-  function Icons(type: string) {
-    switch(attribute.options.type) {
-      case "Dashboard":
-        return <Dashboard />;
-      case "DeviceProfile":
-        return <Server />;
-      case "AssetProfile":
-        return <ChartBubble />;
-      case "RuleChain":
-        return <Link />;
-    }
-  }
 
   const getOrgValue = (): any[] => {
     try {
@@ -195,24 +217,8 @@ const TBIDInput = React.forwardRef((props, ref) => {
       <KeyboardNavigable >
         <Grid gap={"1rem"} col={12}>
         {
-          getOrgValue().map((e: { id: string, type: string}) => {
-            return (
-              <GridItem col={6}>
-              <Card id="tirdth">
-                <CardBody>
-                  <Box padding={2} background="primary100">
-                    {
-                      Icons(attribute.options.type)
-                    }
-                  </Box>
-                  <CardContent paddingLeft={2}>
-                    <CardTitle>{ attribute.options.type.split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() }</CardTitle>
-                    <CardSubtitle>{ e.id }</CardSubtitle>
-                  </CardContent>
-                </CardBody>
-              </Card>
-              </GridItem>
-              );
+          getOrgValue().map((e: { id: string, entityType: string}) => {
+            return (<ComponantItem id={e.id} type={e.entityType} />);
           })
         }
           {

@@ -7,7 +7,7 @@ export default ({ strapi }: { strapi: Strapi }) => {
     models: ['plugin::users-permissions.user'], // optional;
 
     async beforeCreate(event: any) {
-      const { data, where, select, populate } = event.params;
+      const { data, where, select, populate, result } = event.params;
       const firm = data.firm.connect.length > 0 && await strapi.query('api::firm.firm').findOne({ where: { id: data.firm.connect[0].id}})
       const tenant = await strapi.plugin('thingsboard-plugin').service('thingsboardService').createUser({
         "firstName": data.firstname,
@@ -30,9 +30,17 @@ export default ({ strapi }: { strapi: Strapi }) => {
     models: ['api::firm.firm'], // optional;
 
     async afterCreate(event: any) {
-      const { data, where, select, populate } = event.params;
-     // await strapi.plugin('thingsboard-plugin').service('strapiService').createTenantForBetrieb(data.id);
+     const { result } = event;
+     await strapi.plugin('thingsboard-plugin').service('strapiService').createTenantForBetrieb(Number(result.id));
     },
+    async beforeDelete(event: any) {
+      const firm = await strapi.query('api::firm.firm').findOne(event.params);
+      await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID);
+    },
+    async beforeDeleteMany(event: any) {
+      const firms = await strapi.query('api::firm.firm').findMany(event.params);
+      firms.forEach(async (firm: any) => await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID));
+    }
   });
 
   strapi.db.lifecycles.subscribe({
@@ -40,10 +48,17 @@ export default ({ strapi }: { strapi: Strapi }) => {
 
     async afterCreate(event: any) {
       const data = event.result;
-      strapi.plugin('thingsboard-plugin').service('strapiService').deploySetup(Number(data.id)).then(() => {
-        console.log('deployed')
-      });
+      strapi.plugin('thingsboard-plugin').service('strapiService').deploySetup(Number(data.id));
     },
+    async afterUpdate(event: any) {
+      const deployment = await strapi.query('api::deployment.deployment').findOne(event.params);
+      console.log(event.params, { ...event.params, ...{ where: { firm: { count: 0 }}}});
+    },
+    async afterUpdateMany(event: any) {
+      const deployments = await strapi.query('api::deployment.deployment').findMany(event.params);
+      console.log(event.params, deployments)
+
+    }
   });
 
 

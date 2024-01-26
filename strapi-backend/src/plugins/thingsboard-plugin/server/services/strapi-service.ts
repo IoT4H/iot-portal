@@ -7,6 +7,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
   async createTenantForBetrieb(id: number) {
     const firm: any = await strapi.entityService.findOne('api::firm.firm', id, { populate: { Address: { populate: '*'}}});
+    if(firm.TenentUID && firm.TenentUID.length > 0) {
+      return;
+    }
     const tenant = await strapi.plugin('thingsboard-plugin').service('thingsboardService').createTenant({
       "title": firm.name,
       "region": "",
@@ -20,10 +23,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       "email": "",
       "additionalInfo": {}
     });
-    if(firm.TenentUID && firm.TenentUID.length > 0) {
-      return;
-    }
-
     return await strapi.entityService.update('api::firm.firm', id, {
       data: {
         // @ts-ignore
@@ -79,6 +78,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         sync: false
       }
     });
-    return "done";
+    return deployment;
   }
 });

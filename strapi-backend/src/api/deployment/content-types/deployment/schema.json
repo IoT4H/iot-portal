@@ -16,9 +16,6 @@
     }
   },
   "attributes": {
-    "name": {
-      "type": "string"
-    },
     "use_case": {
       "type": "relation",
       "relation": "oneToOne",
@@ -47,6 +44,9 @@
       "default": false,
       "required": true,
       "configurable": false
+    },
+    "name": {
+      "type": "string"
     },
     "deployed": {
       "type": "customField",

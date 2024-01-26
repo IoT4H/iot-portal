@@ -79,7 +79,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
                             <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
                                 {
-                                    useCase.firms.map((f :any) => f.Logo && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
+                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
                                 }
                             </div>
                         </div>

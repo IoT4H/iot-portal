@@ -898,7 +898,6 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
     };
   };
   attributes: {
-    name: Attribute.String;
     use_case: Attribute.Relation<
       'api::deployment.deployment',
       'oneToOne',
@@ -913,6 +912,7 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       Attribute.Required &
       Attribute.DefaultTo<'created'>;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    name: Attribute.String;
     deployed: Attribute.JSON &
       Attribute.CustomField<
         'plugin::thingsboard-plugin.thingsboardComponent',

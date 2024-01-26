@@ -184,4 +184,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         'Content-Type': 'application/json'
       }}).then((response) => { strapi.log.info(`Deleted User ${userID}`); return response.data});
   },
+  async deleteTenant(tenantID: string) {
+    return this.axiosAsSysAdmin({method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/${tenantID}`, headers: {
+        'Content-Type': 'application/json'
+      }}).then((response) => { strapi.log.info(`Deleted Tenant ${tenantID}`); return response.data});
+  },
 });
