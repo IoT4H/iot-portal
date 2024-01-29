@@ -13,7 +13,7 @@ import {
     ClockIcon,
     CurrencyEuroIcon,
     CpuChipIcon,
-    SignalIcon
+    SignalIcon, PhotoIcon
 } from "@heroicons/react/20/solid";
 
 export async function generateMetadata({ params }: {params: Params}) {
@@ -114,13 +114,15 @@ export default async function UseCase(props: { children: React.ReactNode, params
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
-                            useCase.thumbnail && (
+                            useCase.thumbnail ? (
                                 <div
                                     className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
                                     <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url} src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
+                            ) : (
+                                <div className={" w-full flex items-center justify-center aspect-video bg-black/20 max-w-[50%] "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
                         }
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
@@ -139,8 +141,8 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 text-justify"}> {useCase.summary}</p>
-                            <div className={"flex flex-row justify-evenly gap-8 my-4"}>
+                            <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
+                            <div className={"flex flex-row justify-evenly gap-8 my-4 mt-auto"}>
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>

@@ -35,7 +35,7 @@ export default async function Home() {
 
     return (
         <div className="flex flex-row content-stretch gap-12">
-            <ListUseCase title={"Beispiel Use-Cases"}>
+            <ListUseCase title={"Use-Cases"}>
                 {
                     useCases.length > 0 && useCases.map((u: UseCase) =>
                         <ListItemUseCase key={u.id} useCase={u}/>

@@ -22,7 +22,7 @@ export default function SetupButton({ slug } : { slug: string}) {
 
 
     return isAuth && user && link ? (
-        <Link href={link}  className={" mt-auto cursor-pointer w-full text-center ml-auto bg-orange-500/80 hover:bg-orange-500 text-white flex-row flex gap-4 justify-center items-center uppercase mx-4 px-4 py-4"}>
+        <Link href={link}  className={" mt-4 cursor-pointer w-full text-center ml-auto bg-orange-500/80 hover:bg-orange-500 text-white flex-row flex gap-4 justify-center items-center uppercase mx-4 px-4 py-4"}>
             <PlayIcon className={"h-6"}/>Setup einrichten
         </Link>
     ) : null;
