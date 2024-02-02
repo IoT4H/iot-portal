@@ -45,7 +45,7 @@ export default async function Instructions({params}: { params: { id: number } })
         }
     ;
 
-    const useCase = await fetchAPI('/use-cases', qsPara).then((data) => {
+    const useCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
         return mapUseCase(data.data[0]);
     });
 

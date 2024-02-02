@@ -29,7 +29,7 @@ export default async function Home() {
         }
     ;
 
-    const useCases = (await fetchAPI('/use-cases', qsPara)).data.map(
+    const useCases = (await fetchAPI('/api/use-cases', qsPara)).data.map(
         (useCase: any): UseCase => (mapUseCase(useCase)));
 
 

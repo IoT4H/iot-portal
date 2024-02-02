@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const page = (await fetchAPI("/portal-einstellungen", pageQsPara)).data.attributes || null;
+    const page = (await fetchAPI("/api/portal-einstellungen", pageQsPara)).data.attributes || null;
 
     return {
         title: page.title ,

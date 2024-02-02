@@ -19,7 +19,7 @@ export default async function Page({params}: { params: any & { catchAll: string 
         }
     ;
 
-    const page = await (fetchAPI('/pages', qsPara)).then((result) => {
+    const page = await (fetchAPI('/api/pages', qsPara)).then((result) => {
         return JSON.parse(result.data[0].attributes.content);
     });
 

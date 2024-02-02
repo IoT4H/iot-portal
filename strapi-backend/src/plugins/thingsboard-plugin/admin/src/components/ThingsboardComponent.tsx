@@ -53,6 +53,13 @@ import {
 import { NavLink } from "react-router-dom";
 
 
+const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
+
+const formatter = (s: string) => {
+  return s
+}
+
+
 class ErrorBoundary extends React.Component {
 
   state: any;
@@ -83,14 +90,14 @@ class ErrorBoundary extends React.Component {
 
 const Icons = (type: string) => {
   switch(type) {
-    case "Dashboard":
+    case "dashboard":
     case "DASHBOARD":
       return <Dashboard />;
-    case "DeviceProfile":
+    case "DEVICE_PROFILE":
       return <Server />;
-    case "AssetProfile":
+    case "ASSET_PROFILE":
       return <ChartBubble />;
-    case "RuleChain":
+    case "RULE_CHAIN":
       return <Link />;
   }
 }
@@ -107,7 +114,7 @@ const ComponantItem  = (e: { id: string, type: string}) => {
               }
             </Box>
             <CardContent paddingLeft={2}>
-              <CardTitle bold>{ (e.type || "").split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() }</CardTitle>
+              <CardTitle bold>{ (e.type || "").split(SplittingRegEx).join(" ").trim() }</CardTitle>
               <CardSubtitle>{ e.id }</CardSubtitle>
             </CardContent>
           </CardBody>
@@ -169,7 +176,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
       SetTenants(tenantsInit);
       SetTenantsLoading(true);
       setErrorDisplay(false);
-      get("http://localhost:1337/thingsboard-plugin/tenants", {params: {page: 0, pageSize: 30}})
+      get("/thingsboard-plugin/tenants", {params: {page: 0, pageSize: 30}})
         .then((response: any) => {
           console.log(response)
           SetTenants(response.data);
@@ -186,7 +193,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
     SetComponents(componentsInit);
     SetComponentsLoading(true);
     openTenant.length !== 0 &&
-    get(`http://localhost:1337/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
+    get(`/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
       .then((response: any) => {
         console.log(response)
         SetComponents(response.data);
@@ -241,10 +248,10 @@ const TBIDInput = React.forwardRef((props, ref) => {
       <ModalHeader>
         <Typography as="h2">
           <Typography fontWeight="bold" textColor="neutral800" id="title" style={{paddingRight: '0.5rem'}}>
-            Choose { attribute.options.type.split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() + "s" } from Thingsboard
+            Choose { attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" } from Thingsboard
           </Typography>
           <Typography textColor="neutral700">
-           ({currentValue.length } { attribute.options.type.split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() + "s" } selected)
+           ({currentValue.length } { attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" } selected)
           </Typography>
         </Typography>
       </ModalHeader>
@@ -253,7 +260,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
           <Breadcrumbs>
             <Crumb>Select</Crumb>
             <Crumb><span style={{cursor: "pointer !important"}} onClick={() => setSelectTenant(true)}>Tenant</span></Crumb>
-            { !selectTenant && <Crumb>{ attribute.options.type.split(/([A-Z][a-z]*|[0-9]+)/g).join(" ").trim() + "s" }</Crumb> }
+            { !selectTenant && <Crumb>{ attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" }</Crumb> }
           </Breadcrumbs>
         </Flex>
         {
@@ -273,7 +280,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
                       <User />
                     </Box>
                     <CardContent paddingLeft={2}>
-                      <CardTitle>{ t.title }</CardTitle>
+                      <CardTitle>{ t.name }</CardTitle>
                       <CardSubtitle>{ t.id.id }</CardSubtitle>
                     </CardContent>
                     <Box padding={2} marginLeft={"auto"}>
@@ -299,7 +306,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
                   </CardHeader>
                   <CardBody marginLeft={6}>
                     <CardContent paddingRight={2}>
-                      <CardTitle>{ c.title }</CardTitle>
+                      <CardTitle>{ c.name }</CardTitle>
                       <CardSubtitle>{ c.id.id }</CardSubtitle>
                     </CardContent>
                   </CardBody>

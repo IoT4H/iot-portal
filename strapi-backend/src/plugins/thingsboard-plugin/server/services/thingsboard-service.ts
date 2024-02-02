@@ -16,18 +16,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response) => response.data);
   },
   async getThingsboardComponents(tenantId: string, componentType: string, params : { page: number, pageSize: number, sortOrder: string, sortProperty: string, textSearch: string}) {
-    const component = () => {
       switch (componentType) {
         case "dashboard":
-          return "dashboards";
+          return this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/dashboards`, params: params})
+            .then((response: any) => {
+              return response.data
+            });
+        case "assetprofile":
+          return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfiles`, params: params})
+            .then((response: any) => {
+              return response.data
+            })
+        case "deviceprofile":
+          return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfiles`, params: params})
+            .then((response: any) => {
+              return response.data
+            })
+        case "rulechain":
+          return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChains`, params: params})
+            .then((response: any) => {
+              return response.data
+            })
       }
-    }
-    console.log("STILL WORKS HERE", { "TEST": "WEIRD"}, JSON.stringify({ "TEST": "WEIRD"}));
-    return this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/dashboards`, params: params})
-      .then((response: any) => {
-        console.log("CHECK THIS: ", response.data  );
-        return response.data
-      });
+
   },
   async getThingsboardComponent(componentId: string, componentType: string, tenantId: string) {
       switch (componentType) {
@@ -37,28 +48,184 @@ export default ({ strapi }: { strapi: Strapi }) => ({
             url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${componentId}`
           })
             .then((response: any) => response.data));
+        case "assetprofile":
+          return (await this.axiosAsTenant(tenantId, {
+            method: 'get',
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${componentId}`
+          })
+            .then((response: any) => response.data));
+        case "deviceprofile":
+          return (await this.axiosAsTenant(tenantId, {
+            method: 'get',
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${componentId}`
+          })
+            .then((response: any) => response.data));
+        case "rulechain":
+          return (await this.axiosAsTenant(tenantId, {
+            method: 'get',
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${componentId}`
+          })
+            .then((response: any) => response.data));
+
+        case "rulechain_metadata":
+          return (await this.axiosAsTenant(tenantId, {
+            method: 'get',
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${componentId}/metadata`
+          })
+            .then((response: any) => response.data));
       }
   },
-  async createThingsboardComponentForTenant(tenantId: string, componentType: string, data: any) {
-    data.id = null;
-    data.tenantId = null;
-    data.createdTime = null;
-    data.assignedCustomers = null;
+  async createDummytThingsboardComponentForTenant(tenantId: string, componentType: string) {
+    let data: any = {
+      name: "temp dummy name " + randomUUID()
+    };
 
+    switch (componentType) {
+      case "dashboard":
+        data.title = data.name;
+      case "deviceprofile":
+        data.type = "DEFAULT";
+        data.transportType = "DEFAULT";
+        data.provisionType = "DISABLED";
+        data.profileData = {
+                            configuration: { type: "DEFAULT"},
+                            transportConfiguration: { type:"DEFAULT"},
+                            provisionConfiguration: { type:"DISABLED"}
+                           }
+      default:
+    }
+
+    return this.createThingsboardComponentForTenant(tenantId, componentType, data);
+  },
+  async createThingsboardComponentForTenant(tenantId: string, componentType: string, data: any) {
+    delete  data.id;
+    delete  data.tenantId;
+    delete  data.createdTime;
+
+    switch (componentType) {
+      case "dashboard":
+        data.assignedCustomers = null;
+        break;
+      case "assetprofile":
+        data.defaultRuleChainId = null;
+        data.defaultEdgeRuleChainId = null;
+        break;
+      case "deviceprofile":
+        data.defaultRuleChainId = null;
+        data.defaultEdgeRuleChainId = null;
+        break;
+      case "rulechain_metadata":
+        data.firstRuleNodeId = null;
+        break;
+      default:
+        break;
+    }
+
+    return this.updateThingsboardComponentForTenant(tenantId, componentType, data);
+  },
+  async updateThingsboardComponentForTenant(tenantId: string, componentType: string, data: any) {
     switch (componentType) {
       case "dashboard":
         return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard`,headers: {
             'Content-Type': 'application/json'
           }, data: JSON.stringify(data)})
-          .then((response: any) => { console.log("CREATE::", response?.data); return response?.data } );
+          .then((response: any) => response?.data);
+
+      case "assetprofile":
+        return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile`,headers: {
+            'Content-Type': 'application/json'
+          }, data: JSON.stringify(data)})
+          .then((response: any) => response?.data);
+
+      case "deviceprofile":
+        return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile`,headers: {
+            'Content-Type': 'application/json'
+          }, data: JSON.stringify(data)})
+          .then((response: any) => response?.data);
+
+      case "rulechain":
+        return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain`,headers: {
+            'Content-Type': 'application/json'
+          }, data: JSON.stringify(data)})
+          .then((response: any) => response?.data);
+
+      case "rulechain_metadata":
+        data.nodes = data.nodes.map((n) => {
+          delete n.id;
+          delete n.ruleChainId;
+          return n;
+        })
+        return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata`, params: { updateRelated: true }, headers: {
+            'Content-Type': 'application/json'
+          }, data: JSON.stringify(data)})
+          .then((response: any) => response?.data);
     }
   },
-  async copyThingsboardComponentForTenant(componentId: string, componentType: string, fromTenantId: string, toTenantId: string) {
+  async syncThingsboardComponentForTenant(fromComponentId: string, fromTenantId: string , toComponentId: string, toTenantId: string, componentType: string, replacementDictionary: any) {
+
+    let template = await this.getThingsboardComponent(fromComponentId, componentType, fromTenantId);
+
+    if(template.id) {
+      template.id.id = toComponentId;
+    }
+    if(template.tenantId) {
+      template.tenantId.id = toTenantId;
+    }
+
+    try {
+      template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+        return replacementDictionary[matched]
+      }));
+    } catch (e) {
+      console.error(e)
+    }
+
+    if(componentType === "rulechain") {
+      try {
+        this.syncThingsboardComponentForTenant(fromComponentId, fromTenantId, toComponentId, toTenantId, "rulechain_metadata", replacementDictionary);
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    return this.updateThingsboardComponentForTenant(toTenantId, componentType, template);
+  },
+  /*async copyThingsboardComponentForTenant(componentId: string, componentType: string, fromTenantId: string, toTenantId: string) {
     switch (componentType) {
-      case "dashboard":
+      case "rulechain":
+        const gotRuleChain = await this.getThingsboardComponent(componentId, componentType, fromTenantId);
+        return this.createThingsboardComponentForTenant(toTenantId, componentType, gotRuleChain).then((response) => {
+
+          this.getThingsboardComponent(componentId, "rulechain_metadata", fromTenantId).then((metadata) => {
+
+            metadata.ruleChainId = { id: response.id.id, entityType: response.id.entityType };
+            metadata.nodes = metadata.nodes.map((n) => {
+              n.id = null;
+              n.ruleChainId = null;
+              return n;
+            })
+
+            this.axiosAsTenant(toTenantId, {
+              method: 'post',
+              url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata`,
+              params: {updateRelated: true},
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              data: JSON.stringify(metadata)
+            });
+
+          });
+
+
+          //TODO remove. Code is unused now.
+
+          return response;
+        });
+      default:
         return this.createThingsboardComponentForTenant(toTenantId, componentType, await this.getThingsboardComponent(componentId, componentType, fromTenantId));
     }
-  },
+  },*/
   async getSysAdminToken() {
     return axios({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login",headers: {
         'Content-Type': 'application/json'
@@ -87,14 +254,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       "additionalInfo": {}
     });
     let response: any = null;
+    let error: any = null;
     try {
       response = await this.axiosAsUser(uNew.id.id, params);
     } catch (e) {
-        console.error(e)
+      error = e;
     }
     const delUser: any = await this.deleteUser(uNew.id.id);
-    return new Promise((resolve) => {
-      resolve(response);
+    return new Promise((resolve, reject) => {
+      if ( !error ) {
+        resolve(response);
+      } else {
+        reject(error)
+      }
     })
   },
   async axiosAsUser(userId: string, params) {

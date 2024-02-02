@@ -30,7 +30,7 @@ export class Auth {
             }
         ;
 
-        const u = (await fetchAPI("/users/me", qsPara, {
+        const u = (await fetchAPI("/api/users/me", qsPara, {
             headers: {
                 "Authorization": "Bearer " + this.getToken()
             }

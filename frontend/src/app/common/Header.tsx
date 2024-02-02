@@ -24,7 +24,7 @@ export default async function Header() {
         }
     ;
 
-    const menus = ((await fetchAPI("/menus/", Para)).data.filter((m: any) => m.attributes.slug === "menu"))[0] || null;
+    const menus = ((await fetchAPI("/api/menus/", Para)).data.filter((m: any) => m.attributes.slug === "menu"))[0] || null;
 
 
     return (

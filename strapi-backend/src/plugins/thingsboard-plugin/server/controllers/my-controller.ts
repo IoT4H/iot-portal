@@ -34,6 +34,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       ctx.body = s;
   },
   async newDeployment(ctx) {
+    console.log(ctx);
+    //TODO get firm id from User who requested the deployment
     const s = await strapi.plugin(pluginId)
       .service('strapiService').createNewDeployment(Number(ctx.params.useCaseId), Number(ctx.params.firmId));
     ctx.body = s;

@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/use-cases', qsPara).then((data) => {
+    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
         return mapUseCase(data.data[0]);
     });
 
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const page = (await fetchAPI('/portal-einstellungen', pageQsPara)).data.attributes || null;
+    const page = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data.attributes || null;
 
     return {
         title: page.title + " - " + useCase.title,
@@ -102,7 +102,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/use-cases', qsPara).then((data) => {
+    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
         return mapUseCase(data.data[0]);
     });
 

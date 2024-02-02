@@ -13,7 +13,7 @@ export default async function LandingPage() {
         }
     ;
 
-    const load = (await fetchAPI('/startpage', qsPara));
+    const load = (await fetchAPI('/api/startpage', qsPara));
     const page = load ? load.data.attributes : null;
 
     return (

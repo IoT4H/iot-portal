@@ -46,15 +46,36 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
       const firm: any = deployment.firm;
 
-      const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
+      let deployDict: any = {};
+
+     await Promise.allSettled(useCase.components.flatMap((c) =>
+      c.Reference.map((r) => {
+        return strapi.plugin(pluginId)
+          .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
+            deployDict[r.id] = response.id.id;
+
+            return response
+          });
+      })
+    ));
+
+      console.warn("ID ARRAY", deployDict);
+
+      const allCopies = useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
-            .service('thingsboardService').copyThingsboardComponentForTenant(r.id, r.entityType.toLowerCase(), r.tenantId.id, firm.TenentUID).then((response) => {
+            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict).then((response) => {
               return response;
             });
         })
-      ));
-      const constructJson = allCopies.map((result: any) => Object.assign(result.value.id, { tenantId: result.value.tenantId } ));
+      );
+
+      const constructJson = (await Promise.allSettled(allCopies)).map((result: any) => {
+        if(result.status === 'fulfilled') {
+          return Object.assign(result.value.id, { tenantId: result.value.tenantId } );
+        }
+        return null;
+      });
     console.log(JSON.stringify(constructJson));
 
 

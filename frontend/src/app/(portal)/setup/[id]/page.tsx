@@ -1,13 +1,7 @@
 import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 
-function Info({ description } : { description: string; }) {
-    return (<CustomMarkdown className={"markdown mx-8 text-justify"}>{description}</CustomMarkdown>);
-}
-
-
-export default async function UseCasePage({params}: { params: { id: number } }) {
+export default async function SetupPage({params}: { params: { id: number } }) {
 
 
     const qsPara =
@@ -26,5 +20,9 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
     });
 
 
-    return (<Info description={useCase.description}/>);
+    return (
+        <>
+
+        </>
+    );
 }

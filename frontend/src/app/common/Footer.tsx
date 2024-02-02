@@ -12,7 +12,7 @@ export default async function Footer() {
         }
     ;
 
-    const menus = ((await fetchAPI("/menus/", Para)).data.filter((m: any) => m.attributes.slug === "footer"))[0] || null;
+    const menus = ((await fetchAPI("/api/menus/", Para)).data.filter((m: any) => m.attributes.slug === "footer"))[0] || null;
 
 
     return (
