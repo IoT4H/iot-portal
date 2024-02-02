@@ -4,6 +4,7 @@ import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { useState, useEffect } from "react";
 import { InformationCircleIcon } from "@heroicons/react/16/solid";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 export default function Start({params}: { params: { id: number } }) {
 
     const [title, setTitle] = useState<string>();
@@ -30,7 +31,12 @@ export default function Start({params}: { params: { id: number } }) {
 
 
     const setupStart = () => {
-        useCase && fetchAPI(`/thingsboard-plugin/firm/28/setup/deploy/${useCase.id}`, { title: title, description: description }).then((data) => {
+        useCase && fetchAPI(`/api/thingsboard-plugin/usecase/${useCase.id}/setup/deploy`, { title: title, description: description }, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Auth.getToken()}`
+            }
+        }).then((data) => {
             console.log(data);
         })
     }

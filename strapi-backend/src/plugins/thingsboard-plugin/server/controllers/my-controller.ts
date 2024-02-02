@@ -34,10 +34,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       ctx.body = s;
   },
   async newDeployment(ctx) {
-    console.log(ctx);
+    const user: any = await strapi.entityService.findOne('plugin::users-permissions.user', ctx.state.user.id, {
+      populate: "*",
+    });
     //TODO get firm id from User who requested the deployment
     const s = await strapi.plugin(pluginId)
-      .service('strapiService').createNewDeployment(Number(ctx.params.useCaseId), Number(ctx.params.firmId));
+      .service('strapiService').createNewDeployment(Number(ctx.params.useCaseId), Number(user.firm.id));
     ctx.body = s;
   },
   async deploySetup(ctx) {

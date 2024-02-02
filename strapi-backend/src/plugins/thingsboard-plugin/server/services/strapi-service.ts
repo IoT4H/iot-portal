@@ -61,16 +61,16 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
       console.warn("ID ARRAY", deployDict);
 
-      const allCopies = useCase.components.flatMap((c) =>
+      const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
             .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict).then((response) => {
               return response;
             });
         })
-      );
+      ));
 
-      const constructJson = (await Promise.allSettled(allCopies)).map((result: any) => {
+      const constructJson = allCopies.map((result: any) => {
         if(result.status === 'fulfilled') {
           return Object.assign(result.value.id, { tenantId: result.value.tenantId } );
         }
