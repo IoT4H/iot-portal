@@ -161,7 +161,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           .then((response: any) => response?.data);
     }
   },
-  async syncThingsboardComponentForTenant(fromComponentId: string, fromTenantId: string , toComponentId: string, toTenantId: string, componentType: string, replacementDictionary: any) {
+  async syncThingsboardComponentForTenant(fromComponentId: string, fromTenantId: string , toComponentId: string, toTenantId: string, componentType: string, replacementDictionary: any, title?: string) {
 
     let template = await this.getThingsboardComponent(fromComponentId, componentType, fromTenantId);
 
@@ -171,6 +171,21 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     if(template.tenantId) {
       template.tenantId.id = toTenantId;
     }
+
+    console.warn("title", title, template, template.name);
+
+    if(title) {
+      if(template.title) {
+        template.title = title + " | " + template.title;
+      }
+
+      if(template.name) {
+        template.name = title + " | " + template.name;
+      }
+
+    }
+
+    console.info("title", title, template);
 
     try {
       template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
@@ -182,7 +197,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     if(componentType === "rulechain") {
       try {
-        this.syncThingsboardComponentForTenant(fromComponentId, fromTenantId, toComponentId, toTenantId, "rulechain_metadata", replacementDictionary);
+        this.syncThingsboardComponentForTenant(fromComponentId, fromTenantId, toComponentId, toTenantId, "rulechain_metadata", replacementDictionary, title);
       } catch (e) {
         console.error(e)
       }

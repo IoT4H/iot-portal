@@ -19,8 +19,8 @@ const links: {
     },
     {
         title: "Meine Use-Cases",
-        href: "/home",
-        deactive: true,
+        href: "/mine",
+        deactive: false,
     }
 ];
 

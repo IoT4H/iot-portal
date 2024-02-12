@@ -67,7 +67,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                         </div>
                         <div className={"flex-grow w-full"}>
                             <div className="flex flex-row items-center pb-2 z-10">
-                                <h3 className={"font-bold text-inherit"}>{ useCase.title }</h3>
+                                <h3 className={"font-bold text-inherit text-2xl"}>{ useCase.title }</h3>
                             </div>
                             <div className="flex flex-row gap-2 mb-4 flex-wrap">
                                 {
@@ -99,7 +99,7 @@ export function ListUseCase ({  title,
     return (
         <>
             <div className="flex-auto rounded bg-white dark:bg-zinc-800 p-4 shadow max-h-full sticky top-0">
-                <h2 className={"dark:text-white font-bold text-xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 "}>{ title }</h2>
+                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 ml-[1em] mt-[1em] py-1 border-orange-500 "}>{ title }</h2>
                 <ul role="list" className="divide-y dark:divide-gray-100/10">
                     { children }
                 </ul>

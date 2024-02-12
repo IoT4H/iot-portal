@@ -1,5 +1,5 @@
-import myController from './my-controller';
+import deployment from './deployment';
 
 export default {
-  myController
+  deployment
 };

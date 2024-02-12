@@ -54,6 +54,9 @@
         "type": "Dashboard"
       },
       "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }

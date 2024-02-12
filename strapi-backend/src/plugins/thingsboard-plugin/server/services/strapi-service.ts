@@ -1,7 +1,5 @@
 import { Strapi } from "@strapi/strapi";
-import { responses } from "@strapi/strapi/dist/middlewares/responses";
 import pluginId from "../../admin/src/pluginId";
-import { faker } from '@faker-js/faker';
 
 export default ({ strapi }: { strapi: Strapi }) => ({
 
@@ -64,7 +62,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
-            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict).then((response) => {
+            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.title).then((response) => {
               return response;
             });
         })
@@ -88,11 +86,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     });
 
   },
-  async createNewDeployment(useCaseId: number, firmID: number) {
+  async createNewDeployment(useCaseId: number, firmID: number, title: string, description: string) {
 
     const deployment: any = await strapi.entityService.create('api::deployment.deployment',{
       data: {
-        name: faker.word.words(3),
+        name: title || "unnamed setup",
+        description: description || "Fehlende Beschreibung",
         use_case:  { connect: [ { id: useCaseId }]},
         firm:  { connect: [ { id: firmID }]},
         status: 'created',
@@ -100,5 +99,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
     });
     return deployment;
-  }
+  },
+  async getDashboardsFromDeployment(deploymentId: number) {
+
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      fields: ["deployed"]
+    });
+
+    return deployment.deployed.filter((comp) => {
+      return comp.entityType === "DASHBOARD";
+    }).map((comp) => {
+      delete comp.tenantId;
+      return comp;
+    });
+  },
 });

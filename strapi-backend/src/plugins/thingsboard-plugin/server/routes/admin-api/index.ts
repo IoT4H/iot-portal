@@ -6,7 +6,7 @@ export default {
     {
       method: 'GET',
       path: '/tenants',
-      handler: `plugin::${pluginId}.myController.tenants`,
+      handler: `plugin::${pluginId}.deployment.tenants`,
       config: {
         policies: [],
         auth: false
@@ -15,7 +15,7 @@ export default {
     {
       method: 'GET',
       path: '/tenant/:tenantId/:component',
-      handler: `plugin::${pluginId}.myController.components`,
+      handler: `plugin::${pluginId}.deployment.components`,
       config: {
         policies: [],
         auth: false
@@ -24,7 +24,7 @@ export default {
     {
       method: 'GET',
       path: '/firm/:firmId/createTenant',
-      handler: `plugin::${pluginId}.myController.createTenantForFirm`,
+      handler: `plugin::${pluginId}.deployment.createTenantForFirm`,
       config: {
         policies: [],
         auth: false

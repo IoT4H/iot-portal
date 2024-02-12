@@ -920,6 +920,7 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
           type: 'Dashboard';
         }
       >;
+    description: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
