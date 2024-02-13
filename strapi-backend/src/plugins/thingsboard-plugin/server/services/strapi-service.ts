@@ -46,7 +46,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
       let deployDict: any = {};
 
-     await Promise.allSettled(useCase.components.flatMap((c) =>
+     const allDummies = await Promise.allSettled(useCase.components.flatMap((c) =>
       c.Reference.map((r) => {
         return strapi.plugin(pluginId)
           .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
@@ -62,7 +62,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
-            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.title).then((response) => {
+            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.name).then((response) => {
+              console.warn(response)
               return response;
             });
         })
@@ -73,11 +74,13 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           return Object.assign(result.value.id, { tenantId: result.value.tenantId } );
         }
         return null;
+      }).filter((result) => {
+        return result !== null;
       });
     console.log(JSON.stringify(constructJson));
 
 
-    return strapi.entityService.update('api::deployment.deployment', deploymentId,{
+    strapi.entityService.update('api::deployment.deployment', deploymentId,{
       data: {
         id: deploymentId,
         deployed: constructJson,

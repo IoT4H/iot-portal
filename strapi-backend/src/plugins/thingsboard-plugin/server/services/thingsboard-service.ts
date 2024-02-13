@@ -75,6 +75,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
             .then((response: any) => response.data));
       }
   },
+  async getThingsboardDashboardInfo(componentId: string,  tenantId: string) {
+    return (await this.axiosAsTenant(tenantId, {
+      method: 'get',
+      url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/info/${componentId}`
+    })
+      .then((response: any) => response.data));
+  }
+  ,
   async createDummytThingsboardComponentForTenant(tenantId: string, componentType: string) {
     let data: any = {
       name: "temp dummy name " + randomUUID()
@@ -245,14 +253,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return axios({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login",headers: {
         'Content-Type': 'application/json'
       }, data: JSON.stringify({username: "sysadmin@thingsboard.org", password: "sysadmin"})})
-      .then((response): string => response.data.token);
+      .then((response:any) => response.data);
   },
   async getUserToken(userId: string) {
+    console.warn("get user token");
     return this.axiosAsSysAdmin({method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
-      .then((response): string => response.data.token);
+      .then((response):any => response.data);
   },
   async axiosAsSysAdmin(params) {
-    params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + await this.getSysAdminToken()});
+    params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getSysAdminToken()).token});
     return axios(params);
   },
   async axiosAsTenant(tenantId: string, params) {
@@ -285,7 +294,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
   },
   async axiosAsUser(userId: string, params) {
-    params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + await this.getUserToken(userId)});
+    params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getUserToken(userId)).token});
     return axios(params);
   },
   async createTenant(params : {

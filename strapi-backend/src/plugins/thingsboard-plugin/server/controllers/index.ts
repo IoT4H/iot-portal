@@ -1,5 +1,7 @@
 import deployment from './deployment';
+import thingsboard from "./thingsboard";
 
 export default {
-  deployment
+  thingsboard,
+  deployment,
 };
