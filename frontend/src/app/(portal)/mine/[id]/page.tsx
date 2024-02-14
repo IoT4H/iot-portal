@@ -1,5 +1,5 @@
 "use client"
-import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import React, { useEffect, useState, useRef, MutableRefObject } from "react";
@@ -59,45 +59,44 @@ export function ListItemDashboard({setup, dashboard}: {setup: number, dashboard:
     }, [])
 
 
+    const IFRAME_LOGIN_READY = "iframeReady";
+    const PARENT_LOGIN_READY = "parentReady";
+    const REQUEST_LOGIN_TOKEN = "requestLoginToken";
+    const SENDING_LOGIN_TOKEN = "sendingLoginToken";
 
-/*
-    useEffect(() => {
-        setInterval(() => {
+    const transmitToken = (iframe: any) => {
+        window.addEventListener('message', message => {
 
-            if(iFrame && iFrame.current) {
-                console.info("send " + JSON.stringify({ login: "test2"}) );
+            if(message.data === IFRAME_LOGIN_READY && iframe.contentWindow) {
+                console.log(message.data)
+                iframe.contentWindow.postMessage(PARENT_LOGIN_READY, message.origin);
+            }
+
+            if(message.data === REQUEST_LOGIN_TOKEN && iframe.contentWindow) {
+                console.log(message.data)
+                iframe.contentWindow.postMessage(SENDING_LOGIN_TOKEN, message.origin);
+
+                console.log(message.data)
                 try {
-
-                iFrame.current?.contentWindow.postMessage(JSON.stringify({ login: "test2"}), "*");
+                    fetchAPI("/api/thingsboard-plugin/login/token", {} ,{
+                        headers: {
+                            Authorization: `Bearer ${Auth.getToken()}`
+                        }
+                    }).then((response) => {
+                        iframe.contentWindow.postMessage({login: response}, message.origin);
+                    })
                 } catch (e) {
                     console.error(e);
                 }
             }
-        }, 1000)
 
-        console.warn(iFrame)
-    }, [iFrame])
-
-*/
-
-    const transmitToken = (iframe: any) => {
-        try {
-            fetchAPI("/api/thingsboard-plugin/login/token", {} ,{
-                headers: {
-                    Authorization: `Bearer ${Auth.getToken()}`
-                }
-            }).then((response) => {
-                iframe.contentWindow.postMessage({login: response.data}, "*");
-            })
-        } catch (e) {
-            console.error(e);
-        }
+        });
     }
 
     return (
         <>
             <li className="flex justify-between gap-x-6 py-5 snap-center">
-                <Link href={`http://localhost:8080/dashboards/${dashboard.id}`} className={"w-full"}>
+                <div className={"w-full"}>
                     <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
                         <div className={"flex-grow w-9/12"}>
                             <div className="flex flex-row items-center pb-2 z-10">
@@ -106,8 +105,10 @@ export function ListItemDashboard({setup, dashboard}: {setup: number, dashboard:
                             <p className={"dark:text-gray-300 text-sm text-justify"}>{ description }</p>
                         </div>
                     </div>
-                    <iframe src={`http://localhost:8080/dashboards/${dashboard.id}`} onLoad={(event) => { transmitToken(event.currentTarget);}} width={"100%"} height={"800px"}></iframe>
-                </Link>
+
+                    <iframe src={getStrapiURL(
+                    `/api/thingsboard-plugin/url?url=/login-portal?redirectUri=/dashboards/${dashboard.id}`)} onLoad={(event) => { transmitToken(event.currentTarget);}} width={"100%"} height={"800px"}></iframe>
+                </div>
             </li>
         </>
     );

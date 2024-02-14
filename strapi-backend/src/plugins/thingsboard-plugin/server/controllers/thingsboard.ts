@@ -18,4 +18,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     ctx.body = tokens;
   },
+  url(ctx) {
+    return null;
+  }
 });

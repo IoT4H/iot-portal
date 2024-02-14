@@ -1,1 +1,5 @@
-export default {};
+import url from "./url";
+
+export default {
+  url
+};

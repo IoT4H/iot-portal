@@ -16,5 +16,14 @@ export default [
         }
       ]
     },
+  },
+  {
+    method: 'GET',
+    path: '/url',
+    handler: `plugin::${pluginId}.thingsboard.url`,
+    config: {
+      auth: false,
+      middlewares: [`plugin::${pluginId}.url`],
+    }
   }
 ]
