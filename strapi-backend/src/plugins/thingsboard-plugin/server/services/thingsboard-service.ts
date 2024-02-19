@@ -375,10 +375,40 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         'Content-Type': 'application/json'
       }, data: JSON.stringify(params)}).then((response) => response.data);
   },
+  async createCustomer(tenantID: string, params: {
+    "id"?: {
+      "id": string,
+      "entityType": string
+    },
+    "title": string,
+    "tenantId"?: {
+      "id": string,
+      "entityType": string
+    },
+    "country": string,
+    "state": string,
+    "city": string,
+    "address": string,
+    "address2": string,
+    "zip": string,
+    "phone": string,
+    "email": string,
+    "additionalInfo": any
+  }) {
+    strapi.log.warn("CREATING A NEW Thingsboard Customer", params);
+    return this.axiosAsTenant(tenantID, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/customer", headers: {
+        'Content-Type': 'application/json'
+      }, data: JSON.stringify(params)}).then((response) => response.data);
+  },
   async deleteUser(userID: string) {
     return this.axiosAsSysAdmin({method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userID}`, headers: {
         'Content-Type': 'application/json'
       }}).then((response) => { strapi.log.info(`Deleted User ${userID}`); return response.data});
+  },
+  async deleteCustomer(tenantID: string, userID: string) {
+    return this.axiosAsTenant(tenantID, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/customer/${userID}`, headers: {
+        'Content-Type': 'application/json'
+      }}).then((response) => { strapi.log.info(`Deleted Customer ${userID}`); return response.data});
   },
   async deleteTenant(tenantID: string) {
     return this.axiosAsSysAdmin({method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/${tenantID}`, headers: {
