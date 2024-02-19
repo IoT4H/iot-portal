@@ -1,8 +1,10 @@
 "use client"
+import Loading from "@iot-portal/frontend/app/common/loading";
+import { LoadingContext, LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
-import React, { useEffect, useState, useRef, MutableRefObject } from "react";
+import React, { useEffect, useState, useRef, MutableRefObject, useContext } from "react";
 
 
 export type Dashboard = {
@@ -137,12 +139,14 @@ export default async function MyDeploymentPage({params}: { params: { id: number 
 
     useEffect(() => {
 
+        LoadingState.startLoading();
         fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/dashboards`, {} ,{
             headers: {
                 Authorization: `Bearer ${Auth.getToken()}`
             }
         }).then((dashboards) => {
             setDashboards(dashboards);
+            LoadingState.endLoading();
         })
     }, []);
 

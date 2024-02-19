@@ -1,10 +1,11 @@
 "use client"
 import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
-import { Suspense} from "react";
+import { Suspense, useEffect } from "react";
 import {
     AcademicCapIcon,
     ClockIcon,
@@ -17,6 +18,9 @@ import Status from "@iot-portal/frontend/app/(portal)/deployment-status";
 
 export default async function Layout(props: { children: React.ReactNode, params: {  id: number } }) {
 
+    useEffect(() => {
+        LoadingState.startLoading();
+    }, [])
 
     const useCase: any = await fetchAPI(`/api/thingsboard-plugin/deployment/${props.params.id}`, {},
         {
@@ -24,6 +28,10 @@ export default async function Layout(props: { children: React.ReactNode, params:
                 Authorization: `Bearer ${Auth.getToken()}`
             }
         });
+
+    (() => {
+        LoadingState.endLoading();
+    })();
 
     return (
         <Suspense> {

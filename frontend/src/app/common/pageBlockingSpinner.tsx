@@ -1,47 +1,71 @@
 "use client"
+import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import { createContext, useContext } from "react";
+import { Auth, User } from "@iot-portal/frontend/lib/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export class LoadingState {
 
 
-    state = false;
+    static state = false;
 
     constructor(state?: boolean) {
         if(state !== undefined) {
-            this.SetState(state);
+            LoadingState.SetState(state);
         }
     }
 
-    public SetState(b: boolean) {
-        this.state = b;
+    static onChange = (state: boolean) => {};
+
+    static SetState(b: boolean) {
+        LoadingState.state = b;
         console.info("change to ", this.state)
     }
 
-    public isLoading() {
-        return this.state;
+    static isLoading() {
+        return LoadingState.state;
     }
 
-    public startLoading() {
-        this.SetState(true);
+    static startLoading() {
+        LoadingState.SetState(true);
+        LoadingState.onChange(LoadingState.isLoading());
     }
 
-    public endLoading() {
-        this.SetState(false);
+    static endLoading() {
+        LoadingState.SetState(false);
+        LoadingState.onChange(LoadingState.isLoading());
     }
 }
 
-export const LoadingContext = createContext(new LoadingState());
+export const LoadingContext = createContext<boolean>(false);
 
 export default function PageBlockingSpinner() {
 
-    const loading = useContext(LoadingContext);
 
-    return loading.isLoading() ?
-        <div className={"fixed w-full h-full z-[99] bg-zinc-900/80 flex flex-col items-center justify-center"}>
-            <Spinner/>
-        </div>
-     : <></>;
+
+    const isLoading = useContext(LoadingContext);
+
+    return (<>
+            { isLoading && (
+                <div className={"fixed w-full h-full z-[99] bg-zinc-900/80 flex flex-col items-center justify-center"}>
+                    <Spinner/>
+                </div> ) }
+    </>);
 }
 
 
+export function LoadingWrapper ({children} : {children: any}) {
+
+    const [loading, SetLoading] = useState<boolean>(false);
+
+    LoadingState.onChange = (state) => {
+        SetLoading(state);
+    }
+
+    useEffect(() => {
+        SetLoading(LoadingState.isLoading())
+    }, [])
+
+    return <LoadingContext.Provider value={loading}>
+        {children}</LoadingContext.Provider>
+}

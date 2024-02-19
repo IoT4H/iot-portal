@@ -2,12 +2,12 @@
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
+import { LoadingContext, LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 
-;
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { InformationCircleIcon } from "@heroicons/react/16/solid";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 export default function Start({params}: { params: { id: number } }) {
@@ -40,13 +40,13 @@ export default function Start({params}: { params: { id: number } }) {
     }, [params.id])
 
 
-
     const [toDeployedSetupLink, SettoDeployedSetupLink] = useState("")
 
     const toDeployedSetup = useRef<HTMLAnchorElement>();
 
 
     const setupStart = () => {
+        LoadingState.startLoading();
         useCase && fetchAPI(`/api/thingsboard-plugin/usecase/${useCase.id}/setup/deploy`, { title: title, description: description }, {
             headers: {
                 "Content-Type": "application/json",
@@ -54,16 +54,20 @@ export default function Start({params}: { params: { id: number } }) {
             }
         }).then((data) => {
             SettoDeployedSetupLink(`/mine/${data.id}/`);
-            if(toDeployedSetup && toDeployedSetup.current) {
-                // @ts-ignore
-                toDeployedSetup.current?.click();
-            }
         })
     }
 
     useEffect(() => {
        setCorrectPathname(pathname);
+
     }, [])
+
+    useEffect(() => {
+        if(toDeployedSetupLink !== "" && toDeployedSetup && toDeployedSetup.current) {
+            // @ts-ignore
+            toDeployedSetup.current?.click();
+        }
+    }, [toDeployedSetupLink, toDeployedSetup])
 
 
     return correctPathname === usePathname() && (
