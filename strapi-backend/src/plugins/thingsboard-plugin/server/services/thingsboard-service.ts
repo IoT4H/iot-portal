@@ -260,6 +260,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return this.axiosAsSysAdmin({method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
       .then((response):any => response.data);
   },
+  async getCustomerToken(tenantId: string, userId: string) {
+    console.warn("get user token");
+    return this.axiosAsTenant(tenantId, {method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
+      .then((response):any => response.data);
+  },
   async axiosAsSysAdmin(params) {
     params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getSysAdminToken()).token});
     return axios(params);
