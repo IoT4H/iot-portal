@@ -30,5 +30,14 @@ export default {
         auth: false
       },
     },
+    {
+      method: 'GET',
+      path: '/firm/:firmId/createCustomer',
+      handler: `plugin::${pluginId}.deployment.createCustomerForFirm`,
+      config: {
+        policies: [],
+        auth: false
+      },
+    },
   ]
 }

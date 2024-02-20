@@ -6,7 +6,7 @@ import { TextInput } from "@strapi/design-system"
 
 const TBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
-  const { attribute,  name, onChange, value, contentTypeUID, type, required, disabled } =
+  const { attribute, label, name, onChange, value, contentTypeUID, type, required, disabled } =
     props; // these are just some of the props passed by the content-manager
 
   const { formatMessage } = useIntl();
@@ -19,7 +19,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
   };
 
   return (
-      <TextInput placeholder="This is a Thingsboard ID placeholder" label={"Thingsboard ID"} type={type} contentTypeUID={contentTypeUID} name={name} hint="ID in Thingsboard" value={value} required={required} disabled={disabled} />
+      <TextInput placeholder="This is a Thingsboard ID placeholder" label={label || name} type={type} contentTypeUID={contentTypeUID} name={name} hint="ID in Thingsboard" value={value} required={required} disabled={disabled} onChange={handleChange} />
   );
 });
 

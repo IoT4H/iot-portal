@@ -178,7 +178,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
       setErrorDisplay(false);
       get("/thingsboard-plugin/tenants", {params: {page: 0, pageSize: 30}})
         .then((response: any) => {
-          console.log(response)
           SetTenants(response.data);
         }).catch((e: any) => {
           setErrorDisplay(true);
@@ -195,7 +194,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
     openTenant.length !== 0 &&
     get(`/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
       .then((response: any) => {
-        console.log(response)
         SetComponents(response.data);
       }).finally(() => {
         SetComponentsLoading(false);
@@ -210,10 +208,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
       setSelectTenant(true);
     }
   }, [isVisible])
-
-  useEffect(() => {
-    console.log(currentValue);
-  }, [currentValue])
 
   const currentSelectionContains = (id: string) => { return currentValue.findIndex((value) => value.id === id) !== -1};
 

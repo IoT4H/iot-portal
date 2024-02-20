@@ -9,13 +9,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     const userId: any = await strapi.entityService.findOne('plugin::users-permissions.user', Number(ctx.state.user.id), {
       fields: ["thingsboardUserId"],
+      populate: { firm: { fields: ["TenentUID","CustomerUID", "CustomerUserUID"]}}
     });
-
     const tokens = await strapi
       .plugin(pluginId)
       .service('thingsboardService')
-      .getUserToken(userId.thingsboardUserId);
-
+      .getCustomerUserToken(userId.firm.TenentUID, userId.firm.CustomerUserUID);
     ctx.body = tokens;
   },
   url(ctx) {

@@ -70,15 +70,12 @@ export function ListItemDashboard({setup, dashboard}: {setup: number, dashboard:
         window.addEventListener('message', message => {
 
             if(message.data === IFRAME_LOGIN_READY && iframe.contentWindow) {
-                console.log(message.data)
                 iframe.contentWindow.postMessage(PARENT_LOGIN_READY, message.origin);
             }
 
             if(message.data === REQUEST_LOGIN_TOKEN && iframe.contentWindow) {
-                console.log(message.data)
                 iframe.contentWindow.postMessage(SENDING_LOGIN_TOKEN, message.origin);
 
-                console.log(message.data)
                 try {
                     fetchAPI("/api/thingsboard-plugin/login/token", {} ,{
                         headers: {

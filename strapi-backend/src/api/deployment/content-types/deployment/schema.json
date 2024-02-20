@@ -57,6 +57,14 @@
     },
     "description": {
       "type": "text"
+    },
+    "CustomerUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "deactivate": true,
+      "required": false
     }
   }
 }

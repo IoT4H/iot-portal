@@ -921,6 +921,9 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
         }
       >;
     description: Attribute.Text;
+    CustomerUID: Attribute.String &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -985,6 +988,12 @@ export interface ApiFirmFirm extends Schema.CollectionType {
   };
   attributes: {
     TenentUID: Attribute.String &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+    CustomerUID: Attribute.String &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+    CustomerUserUID: Attribute.String &
       Attribute.Unique &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     name: Attribute.String & Attribute.Required & Attribute.Unique;

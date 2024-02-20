@@ -33,6 +33,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .service('strapiService').createTenantForBetrieb(Number(ctx.params.firmId)));
       ctx.body = s;
   },
+  async createCustomerForFirm(ctx) {
+    const s = JSON.stringify(await strapi.plugin(pluginId)
+      .service('strapiService').createCustomerForBetrieb(Number(ctx.params.firmId)));
+    ctx.body = s;
+  },
   async create(ctx) {
     const user: any = await strapi.entityService.findOne('plugin::users-permissions.user', ctx.state.user.id, {
       populate: "*",
@@ -88,9 +93,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async getDashboardInfo(ctx) {
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
-    console.warn(te);
     const tenentUID = te.firm.TenentUID;
-    console.log(tenentUID)
     ctx.body = await strapi.plugin(pluginId)
       .service('thingsboardService').getThingsboardDashboardInfo(ctx.params.id, tenentUID);
   }

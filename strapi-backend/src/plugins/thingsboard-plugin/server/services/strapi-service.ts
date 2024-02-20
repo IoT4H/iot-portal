@@ -1,4 +1,5 @@
 import { Strapi } from "@strapi/strapi";
+import { randomUUID } from "crypto";
 import pluginId from "../../admin/src/pluginId";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
@@ -28,6 +29,54 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
     });
   },
+  async createCustomerForBetrieb(id: number) {
+    const firm: any = await strapi.entityService.findOne('api::firm.firm', id, { populate: { Address: { populate: '*'}}});
+    if(firm.CustomerUID && firm.CustomerUID.length > 0) {
+      return;
+    }
+    const customer = await strapi.plugin('thingsboard-plugin').service('thingsboardService').createCustomer(firm.TenentUID, {
+      "title": "Portal",
+      "region": "",
+      "country": firm.Address.Country || "",
+      "state": firm.Address.State || "",
+      "city": firm.Address.City || "",
+      "address": firm.Address.Address || "",
+      "address2": firm.Address.Address_2 || "",
+      "zip": firm.Address.Postal_code || "",
+      "phone": "",
+      "email": "",
+      "additionalInfo": {}
+    });
+    let updatedFirmState = await strapi.entityService.update('api::firm.firm', id, {
+      data: {
+        // @ts-ignore
+        CustomerUID: customer.id.id
+      }
+    });
+    try {
+      const customerUser = await strapi.plugin('thingsboard-plugin').service('thingsboardService').createCustomerUser(firm.TenentUID, {
+        "firstName": "Portal",
+        "lastName": "Default",
+        "phone": "",
+        "email": customer.id.id + "_" + randomUUID() + "-system@system.local",
+        "authority": "CUSTOMER_USER",
+        "customerId": {
+          "id": customer.id.id,
+          "entityType": "CUSTOMER"
+        },
+        "additionalInfo": {}
+      });
+      updatedFirmState = await strapi.entityService.update('api::firm.firm', id, {
+        data: {
+          // @ts-ignore
+          CustomerUserUID: customerUser.id.id
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    return updatedFirmState;
+  },
   async deploySetup(deploymentId: number) {
 
      const deployment: any = await strapi.entityService.update('api::deployment.deployment', deploymentId,{
@@ -51,7 +100,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         return strapi.plugin(pluginId)
           .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
             deployDict[r.id] = response.id.id;
-
             return response
           });
       })
@@ -64,6 +112,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           return strapi.plugin(pluginId)
             .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.name).then((response) => {
               console.warn(response)
+              if(response.id.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase() === "dashboard") {
+                strapi.plugin(pluginId)
+                  .service('thingsboardService').assignCustomerToDashboard(firm.TenentUID, firm.CustomerUID, response.id.id).then(() => {
+                  console.log("Dashboard Assigned")
+                })
+              }
               return response;
             });
         })

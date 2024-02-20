@@ -32,7 +32,6 @@ export default async function Page({params}: { params: any & { catchAll: string 
     const ImageFn: RenderFn<{
         items: string[]
     }> = (props) => {
-console.log(props)
         return (
             <>{ /*
                 <figure className={"y-2"}>

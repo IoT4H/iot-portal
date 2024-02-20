@@ -112,18 +112,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     switch (componentType) {
       case "dashboard":
-        data.assignedCustomers = null;
+        delete data.assignedCustomers;
         break;
       case "assetprofile":
-        data.defaultRuleChainId = null;
-        data.defaultEdgeRuleChainId = null;
+        delete data.defaultRuleChainId;
+        delete data.defaultEdgeRuleChainId;
         break;
       case "deviceprofile":
-        data.defaultRuleChainId = null;
-        data.defaultEdgeRuleChainId = null;
+        delete data.defaultRuleChainId;
+        delete data.defaultEdgeRuleChainId;
         break;
       case "rulechain_metadata":
-        data.firstRuleNodeId = null;
+        delete data.firstRuleNodeId;
         break;
       default:
         break;
@@ -180,8 +180,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       template.tenantId.id = toTenantId;
     }
 
-    console.warn("title", title, template, template.name);
-
     if(title) {
       if(template.title) {
         template.title = title + " | " + template.title;
@@ -193,7 +191,24 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     }
 
-    console.info("title", title, template);
+    switch (componentType) {
+      case "dashboard":
+        delete template.assignedCustomers;
+        break;
+      case "assetprofile":
+        delete template.defaultRuleChainId;
+        delete template.defaultEdgeRuleChainId;
+        break;
+      case "deviceprofile":
+        delete template.defaultRuleChainId;
+        delete template.defaultEdgeRuleChainId;
+        break;
+      case "rulechain_metadata":
+        delete template.firstRuleNodeId;
+        break;
+      default:
+        break;
+    }
 
     try {
       template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
@@ -213,57 +228,21 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return this.updateThingsboardComponentForTenant(toTenantId, componentType, template);
   },
-  /*async copyThingsboardComponentForTenant(componentId: string, componentType: string, fromTenantId: string, toTenantId: string) {
-    switch (componentType) {
-      case "rulechain":
-        const gotRuleChain = await this.getThingsboardComponent(componentId, componentType, fromTenantId);
-        return this.createThingsboardComponentForTenant(toTenantId, componentType, gotRuleChain).then((response) => {
-
-          this.getThingsboardComponent(componentId, "rulechain_metadata", fromTenantId).then((metadata) => {
-
-            metadata.ruleChainId = { id: response.id.id, entityType: response.id.entityType };
-            metadata.nodes = metadata.nodes.map((n) => {
-              n.id = null;
-              n.ruleChainId = null;
-              return n;
-            })
-
-            this.axiosAsTenant(toTenantId, {
-              method: 'post',
-              url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata`,
-              params: {updateRelated: true},
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              data: JSON.stringify(metadata)
-            });
-
-          });
-
-
-          //TODO remove. Code is unused now.
-
-          return response;
-        });
-      default:
-        return this.createThingsboardComponentForTenant(toTenantId, componentType, await this.getThingsboardComponent(componentId, componentType, fromTenantId));
-    }
-  },*/
   async getSysAdminToken() {
     return axios({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login",headers: {
         'Content-Type': 'application/json'
       }, data: JSON.stringify({username: "sysadmin@thingsboard.org", password: "sysadmin"})})
-      .then((response:any) => response.data);
+      .then((response:any): any => response.data);
   },
   async getUserToken(userId: string) {
     console.warn("get user token");
     return this.axiosAsSysAdmin({method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
-      .then((response):any => response.data);
+      .then((response: any):any => response.data);
   },
-  async getCustomerToken(tenantId: string, userId: string) {
+  async getCustomerUserToken(tenantId: string, userId: string) {
     console.warn("get user token");
     return this.axiosAsTenant(tenantId, {method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
-      .then((response):any => response.data);
+      .then((response: any):any => response.data);
   },
   async axiosAsSysAdmin(params) {
     params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getSysAdminToken()).token});
@@ -298,8 +277,41 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
     })
   },
+  async axiosAsCustomer(tenantId: string, customerId: string, params) {
+    const uNew: any = await this.createCustomerUser(tenantId, {
+      "customerId": {
+        "id": customerId,
+        "entityType": "CUSTOMER"
+      },
+      "firstName": "system",
+      "lastName": "",
+      "authority": "CUSTOMER_USER",
+      "phone": "",
+      "email": customerId + "_" + randomUUID() + "-system@system.local",
+      "additionalInfo": {}
+    });
+    let response: any = null;
+    let error: any = null;
+    try {
+      response = await this.axiosAsCustomerUser(tenantId, uNew.id.id, params);
+    } catch (e) {
+      error = e;
+    }
+    const delUser: any = await this.deleteCustomerUser(tenantId, uNew.id.id);
+    return new Promise((resolve, reject) => {
+      if ( !error ) {
+        resolve(response);
+      } else {
+        reject(error)
+      }
+    })
+  },
   async axiosAsUser(userId: string, params) {
     params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getUserToken(userId)).token});
+    return axios(params);
+  },
+  async axiosAsCustomerUser(tenantId: string, userId: string, params) {
+    params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getCustomerUserToken(tenantId, userId)).token});
     return axios(params);
   },
   async createTenant(params : {
@@ -338,16 +350,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     strapi.log.warn("CREATING A NEW Thingsboard TENANT")
     return this.axiosAsSysAdmin({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/tenant", headers: {
         'Content-Type': 'application/json'
-      }, data: JSON.stringify(params)}).then((response) => response.data);
+      }, data: JSON.stringify(params)}).then((response: any) => response.data);
   },
   async createUser(params : {
     "tenantId"?: {
       "id": string,
       "entityType": "TENANT"
-    },
-    "customerId"?: {
-      "id": string,
-      "entityType": "CUSTOMER"
     },
     "firstName": string,
     "lastName": string,
@@ -378,18 +386,42 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     strapi.log.warn("CREATING A NEW Thingsboard USER", params);
     return this.axiosAsSysAdmin({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/user?sendActivationMail=false", headers: {
         'Content-Type': 'application/json'
-      }, data: JSON.stringify(params)}).then((response) => response.data);
+      }, data: JSON.stringify(params)}).then((response: any) => response.data);
+  },
+  async createCustomerUser(tenantID: string, params : {
+    "customerId"?: {
+      "id": string,
+      "entityType": "CUSTOMER"
+    },
+    "firstName": string,
+    "lastName": string,
+    "authority": "CUSTOMER_USER"
+    "phone": string,
+    "email": string,
+    "additionalInfo": any
+  }): Promise<{
+    "id": {
+      "id": string,
+      "entityType": "USER"
+    }
+    "customerId"?: {
+      "id": string,
+      "entityType": "CUSTOMER"
+    },
+    "firstName": string,
+    "lastName": string,
+    "authority": string
+    "phone": string,
+    "email": string,
+    "additionalInfo": any
+  }> {
+    strapi.log.warn("CREATING A NEW Thingsboard USER", params);
+    return this.axiosAsTenant(tenantID, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/user?sendActivationMail=false", headers: {
+        'Content-Type': 'application/json'
+      }, data: JSON.stringify(params)}).then((response: any) => response.data);
   },
   async createCustomer(tenantID: string, params: {
-    "id"?: {
-      "id": string,
-      "entityType": string
-    },
     "title": string,
-    "tenantId"?: {
-      "id": string,
-      "entityType": string
-    },
     "country": string,
     "state": string,
     "city": string,
@@ -403,21 +435,31 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     strapi.log.warn("CREATING A NEW Thingsboard Customer", params);
     return this.axiosAsTenant(tenantID, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/customer", headers: {
         'Content-Type': 'application/json'
-      }, data: JSON.stringify(params)}).then((response) => response.data);
+      }, data: JSON.stringify(params)}).then((response: any) => response.data);
   },
   async deleteUser(userID: string) {
     return this.axiosAsSysAdmin({method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userID}`, headers: {
         'Content-Type': 'application/json'
-      }}).then((response) => { strapi.log.info(`Deleted User ${userID}`); return response.data});
+      }}).then((response: any) => { strapi.log.info(`Deleted User ${userID}`); return response.data});
+  },
+  async deleteCustomerUser(tenantId: string, userID: string) {
+    return this.axiosAsTenant(tenantId, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userID}`, headers: {
+        'Content-Type': 'application/json'
+      }}).then((response: any) => { strapi.log.info(`Deleted User ${userID}`); return response.data});
   },
   async deleteCustomer(tenantID: string, userID: string) {
     return this.axiosAsTenant(tenantID, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/customer/${userID}`, headers: {
         'Content-Type': 'application/json'
-      }}).then((response) => { strapi.log.info(`Deleted Customer ${userID}`); return response.data});
+      }}).then((response: any) => { strapi.log.info(`Deleted Customer ${userID}`); return response.data});
   },
   async deleteTenant(tenantID: string) {
     return this.axiosAsSysAdmin({method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/${tenantID}`, headers: {
         'Content-Type': 'application/json'
-      }}).then((response) => { strapi.log.info(`Deleted Tenant ${tenantID}`); return response.data});
+      }}).then((response: any) => { strapi.log.info(`Deleted Tenant ${tenantID}`); return response.data});
   },
+  async assignCustomerToDashboard(tenantId: string, customerId: string, dashboardId: string) {
+      return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${dashboardId}/customers/add`, headers: {
+          'Content-Type': 'application/json'
+        },data: JSON.stringify([customerId])}).then((response: any) => { strapi.log.info(`Assigned Customer ${customerId} to Dashbaord ${dashboardId} ${JSON.stringify([customerId])}`); return response.data});
+  }
 });

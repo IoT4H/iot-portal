@@ -2,6 +2,7 @@ import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import { Information } from "@strapi/icons";
 import { Button } from '@strapi/design-system';
 import pluginPkg from '../../package.json';
+import createCustomerButton from "./components/createCustomerButton";
 import createTenantButton from "./components/createTenantButton";
 import pluginId from './pluginId';
 import Initializer from './components/Initializer';
@@ -180,6 +181,7 @@ export default {
 
   bootstrap(app: any) {
     app.injectContentManagerComponent('editView', 'right-links', { name: 'createTenant', Component: () => createTenantButton()})
+    app.injectContentManagerComponent('editView', 'right-links', { name: 'createCustomer', Component: () => createCustomerButton()})
   },
 
   async registerTrads(app: any) {

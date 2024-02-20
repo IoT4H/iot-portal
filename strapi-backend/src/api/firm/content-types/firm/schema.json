@@ -20,6 +20,22 @@
       "deactivate": true,
       "required": false
     },
+    "CustomerUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "deactivate": true,
+      "required": false
+    },
+    "CustomerUserUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "deactivate": true,
+      "required": false
+    },
     "name": {
       "type": "string",
       "required": true,
