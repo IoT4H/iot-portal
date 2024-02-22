@@ -157,17 +157,23 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     });
     return deployment;
   },
-  async getDashboardsFromDeployment(deploymentId: number) {
-
+  async getDashboardsFromDeployment(deploymentId: number)  {
+    return this.getComponentsFromDeployment(deploymentId, ["DASHBOARD"]);
+  },
+  async getDevicesFromDeployment(deploymentId: number) {
+    return this.getComponentsFromDeployment(deploymentId, ["ASSET_PROFILE", "DEVICE_PROFILE"]);
+  },
+  async getComponentsFromDeployment(deploymentId: number, types: string[] = ["DASHBOARD","RULE_CHAIN","ASSET_PROFILE", "DEVICE_PROFILE"]): Promise<any[]> {
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ["deployed"]
     });
-
-    return deployment.deployed.filter((comp) => {
-      return comp.entityType === "DASHBOARD";
+    const comps = (deployment.deployed || []).filter((comp) => {
+      return types.includes(comp.entityType);
     }).map((comp) => {
       delete comp.tenantId;
       return comp;
     });
-  },
+    console.log(comps)
+    return comps
+  }
 });

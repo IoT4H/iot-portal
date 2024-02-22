@@ -41,6 +41,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
   },
   async getThingsboardComponent(componentId: string, componentType: string, tenantId: string) {
+    componentType = componentType.toLowerCase().replace(/[_ ]/gim, '');
       switch (componentType) {
         case "dashboard":
           return (await this.axiosAsTenant(tenantId, {
@@ -67,7 +68,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           })
             .then((response: any) => response.data));
 
-        case "rulechain_metadata":
+        case "rulechainmetadata":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
             url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${componentId}/metadata`
@@ -122,7 +123,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         delete data.defaultRuleChainId;
         delete data.defaultEdgeRuleChainId;
         break;
-      case "rulechain_metadata":
+      case "rulechainmetadata":
         delete data.firstRuleNodeId;
         break;
       default:
@@ -157,7 +158,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           }, data: JSON.stringify(data)})
           .then((response: any) => response?.data);
 
-      case "rulechain_metadata":
+      case "rulechainmetadata":
         data.nodes = data.nodes.map((n) => {
           delete n.id;
           delete n.ruleChainId;
@@ -203,7 +204,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         delete template.defaultRuleChainId;
         delete template.defaultEdgeRuleChainId;
         break;
-      case "rulechain_metadata":
+      case "rulechainmetadata":
         delete template.firstRuleNodeId;
         break;
       default:
@@ -220,7 +221,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     if(componentType === "rulechain") {
       try {
-        this.syncThingsboardComponentForTenant(fromComponentId, fromTenantId, toComponentId, toTenantId, "rulechain_metadata", replacementDictionary, title);
+        this.syncThingsboardComponentForTenant(fromComponentId, fromTenantId, toComponentId, toTenantId, "rulechainmetadata", replacementDictionary, title);
       } catch (e) {
         console.error(e)
       }
@@ -461,5 +462,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${dashboardId}/customers/add`, headers: {
           'Content-Type': 'application/json'
         },data: JSON.stringify([customerId])}).then((response: any) => { strapi.log.info(`Assigned Customer ${customerId} to Dashbaord ${dashboardId} ${JSON.stringify([customerId])}`); return response.data});
-  }
+  },
+
 });

@@ -116,16 +116,16 @@ export default async function UseCase(props: { children: React.ReactNode, params
                         {
                             useCase.thumbnail ? (
                                 <div
-                                    className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
+                                    className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
                                     <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url} src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             ) : (
-                                <div className={" w-full flex items-center justify-center aspect-video bg-black/20 max-w-[50%] "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                                <div className={" flex items-center justify-center aspect-video bg-black/20  w-full md:w-6/12 min-w-6/12 "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
                         }
-                        <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
+                        <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12"}>
                             <div className={"pr-12 relative"}>
                                 <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
                                     title: (await generateMetadata({params: props.params})).title,

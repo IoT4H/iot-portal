@@ -101,6 +101,22 @@ export default [
   },
   {
     method: 'GET',
+    path: '/deployment/:setupId/deviceTypes',
+    handler: `plugin::${pluginId}.deployment.getDevices`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
     path: '/deployment/:setupId/dashboard/:id',
     handler: `plugin::${pluginId}.deployment.getDashboardInfo`,
     config: {

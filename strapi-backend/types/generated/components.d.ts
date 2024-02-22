@@ -54,11 +54,13 @@ export interface InstructionsInstructions extends Schema.Component {
   collectionName: 'components_instructions_instructions';
   info: {
     displayName: 'instructions';
+    description: '';
   };
   attributes: {
     stepName: Attribute.String;
     pictures: Attribute.Media;
     step: Attribute.RichText & Attribute.Required;
+    action: Attribute.JSON;
   };
 }
 
@@ -79,6 +81,20 @@ export interface ThingsboardAssetProfile extends Schema.Component {
   };
 }
 
+export interface ThingsboardComponentLink extends Schema.Component {
+  collectionName: 'components_thingsboard_component_links';
+  info: {
+    displayName: 'componentLink';
+    icon: 'oneWay';
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardComponent'>;
+    deployedComponent: Attribute.JSON &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardComponent'>;
+  };
+}
+
 export interface ThingsboardComponent extends Schema.Component {
   collectionName: 'components_general_components';
   info: {
@@ -94,6 +110,7 @@ export interface ThingsboardComponent extends Schema.Component {
           type: 'DeviceProfile';
         }
       >;
+    steps: Attribute.Component<'instructions.instructions', true>;
   };
 }
 
@@ -140,6 +157,7 @@ declare module '@strapi/types' {
       'general.address': GeneralAddress;
       'instructions.instructions': InstructionsInstructions;
       'thingsboard.asset-profile': ThingsboardAssetProfile;
+      'thingsboard.component-link': ThingsboardComponentLink;
       'thingsboard.component': ThingsboardComponent;
       'thingsboard.dashboard': ThingsboardDashboard;
       'thingsboard.rule-chain': ThingsboardRuleChain;

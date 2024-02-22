@@ -912,6 +912,9 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       Attribute.Required &
       Attribute.DefaultTo<'created'>;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    CustomerUID: Attribute.String &
+      Attribute.Unique &
+      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     name: Attribute.String;
     deployed: Attribute.JSON &
       Attribute.CustomField<
@@ -921,9 +924,7 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
         }
       >;
     description: Attribute.Text;
-    CustomerUID: Attribute.String &
-      Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+    deployedComponents: Attribute.DynamicZone<['thingsboard.component-link']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

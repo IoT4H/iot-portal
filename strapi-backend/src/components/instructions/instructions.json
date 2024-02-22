@@ -1,7 +1,8 @@
 {
   "collectionName": "components_instructions_instructions",
   "info": {
-    "displayName": "instructions"
+    "displayName": "instructions",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -9,18 +10,22 @@
       "type": "string"
     },
     "pictures": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
     },
     "step": {
       "type": "richtext",
       "required": true
+    },
+    "action": {
+      "type": "json"
     }
   }
 }

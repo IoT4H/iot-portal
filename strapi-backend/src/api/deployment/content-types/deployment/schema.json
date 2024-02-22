@@ -45,6 +45,14 @@
       "required": true,
       "configurable": false
     },
+    "CustomerUID": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
+      "unique": true,
+      "configurable": false,
+      "deactivate": true,
+      "required": false
+    },
     "name": {
       "type": "string"
     },
@@ -58,13 +66,11 @@
     "description": {
       "type": "text"
     },
-    "CustomerUID": {
-      "type": "customField",
-      "customField": "plugin::thingsboard-plugin.thingsboardUserId",
-      "unique": true,
-      "configurable": false,
-      "deactivate": true,
-      "required": false
+    "deployedComponents": {
+      "type": "dynamiczone",
+      "components": [
+        "thingsboard.component-link"
+      ]
     }
   }
 }

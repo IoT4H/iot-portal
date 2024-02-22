@@ -96,6 +96,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const tenentUID = te.firm.TenentUID;
     ctx.body = await strapi.plugin(pluginId)
       .service('thingsboardService').getThingsboardDashboardInfo(ctx.params.id, tenentUID);
+  },
+  async getDevices(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    const devices = await strapi.plugin(pluginId)
+      .service('strapiService').getDevicesFromDeployment(ctx.params.setupId);
+    const completeDevices = await Promise.all(devices.map((d) => {
+        return strapi.plugin(pluginId)
+          .service('thingsboardService').getThingsboardComponent(d.id, d.entityType, tenentUID)
+      }));
+    console.log(completeDevices)
+    ctx.body = completeDevices;
   }
 
 });
