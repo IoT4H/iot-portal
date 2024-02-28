@@ -105,7 +105,7 @@ const Icons = (type: string) => {
   }
 }
 
-export const ComponantItem  = (e: { id: string, type: string}) => {
+export const ComponentItem  = (e: { id?: string, type?: string}) => {
   return (
     <>
         <Card id="tirdth">
@@ -217,7 +217,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
     <ErrorBoundary>
       <Field name={ label } >
         {
-           <ComponantItem id={getOrgValue().id} type={getOrgValue().entityType} />
+           <ComponentItem id={getOrgValue().id} type={getOrgValue().entityType} />
         }
       </Field>
       { !disabled && (<Box marginTop={6}>

@@ -51,7 +51,7 @@ import {
   ArrowLeft
 } from '@strapi/icons';
 import { NavLink } from "react-router-dom";
-import { ComponantItem } from "./SingleThingsboardComponent";
+import { ComponentItem } from "./SingleThingsboardComponent";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -107,7 +107,7 @@ const GridComponantItem  = (e: { id: string, type: string}) => {
   return (
     <>
       <GridItem col={6}>
-        <ComponantItem id={e.id} type={e.type} key={e.id} />
+        <ComponentItem id={e.id} type={e.type} key={e.id} />
       </GridItem>
     </>
   );
