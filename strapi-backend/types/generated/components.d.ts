@@ -64,6 +64,38 @@ export interface InstructionsInstructions extends Schema.Component {
   };
 }
 
+export interface InstructionsSetupInstruction extends Schema.Component {
+  collectionName: 'components_instructions_setup_instructions';
+  info: {
+    displayName: 'setupInstruction';
+    icon: 'bulletList';
+    description: '';
+  };
+  attributes: {
+    text: Attribute.Blocks;
+    thingsboard_profile: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        {
+          type: 'AssetProfile';
+        }
+      >;
+    name: Attribute.String;
+  };
+}
+
+export interface InstructionsTextInstruction extends Schema.Component {
+  collectionName: 'components_instructions_text_instructions';
+  info: {
+    displayName: 'textInstruction';
+    icon: 'bulletList';
+  };
+  attributes: {
+    text: Attribute.Blocks;
+    name: Attribute.String;
+  };
+}
+
 export interface ThingsboardAssetProfile extends Schema.Component {
   collectionName: 'components_thingsboard_asset_profiles';
   info: {
@@ -81,17 +113,20 @@ export interface ThingsboardAssetProfile extends Schema.Component {
   };
 }
 
-export interface ThingsboardComponentLink extends Schema.Component {
-  collectionName: 'components_thingsboard_component_links';
+export interface ThingsboardComponentDescription extends Schema.Component {
+  collectionName: 'components_thingsboard_component_descriptions';
   info: {
-    displayName: 'componentLink';
-    icon: 'oneWay';
+    displayName: 'Component Description';
+    icon: 'information';
   };
   attributes: {
-    Reference: Attribute.JSON &
+    Component: Attribute.JSON &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardComponent'>;
-    deployedComponent: Attribute.JSON &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardComponent'>;
+    device: Attribute.Relation<
+      'thingsboard.component-description',
+      'oneToOne',
+      'api::device.device'
+    >;
   };
 }
 
@@ -156,8 +191,10 @@ declare module '@strapi/types' {
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
       'instructions.instructions': InstructionsInstructions;
+      'instructions.setup-instruction': InstructionsSetupInstruction;
+      'instructions.text-instruction': InstructionsTextInstruction;
       'thingsboard.asset-profile': ThingsboardAssetProfile;
-      'thingsboard.component-link': ThingsboardComponentLink;
+      'thingsboard.component-description': ThingsboardComponentDescription;
       'thingsboard.component': ThingsboardComponent;
       'thingsboard.dashboard': ThingsboardDashboard;
       'thingsboard.rule-chain': ThingsboardRuleChain;

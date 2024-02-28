@@ -61,11 +61,11 @@ export default {
       type: "json",
       intlLabel: {
         id: "thingsboard-plugin.thingsboardComponent.label",
-        defaultMessage: "Thingsboard Component",
+        defaultMessage: "Multiple Thingsboard Component",
       },
       intlDescription: {
         id: "thingsboard-plugin.thingsboardComponent.description",
-        defaultMessage: "Choose a component from ThingsBoard",
+        defaultMessage: "Choose multiple component from ThingsBoard",
       },
       icon: PluginIcon, // don't forget to create/import your icon component
       components: {
@@ -149,6 +149,123 @@ export default {
         ]
       }
     }
+    );
+
+    app.customFields.register({
+        name: "singleThingsboardComponent",
+        pluginId: pluginId,
+        type: "json",
+        intlLabel: {
+          id: "thingsboard-plugin.singleThingsboardComponent.label",
+          defaultMessage: "Thingsboard Component",
+        },
+        intlDescription: {
+          id: "thingsboard-plugin.singleThingsboardComponent.description",
+          defaultMessage: "Choose a component from ThingsBoard",
+        },
+        icon: PluginIcon, // don't forget to create/import your icon component
+        components: {
+          Input: async () =>
+            import(/* webpackChunkName: "input-component" */ "./components/SingleThingsboardComponent"),
+        },
+        options: {
+          // declare options here
+          base: [
+            {
+              sectionTitle: {
+                // Add a "Format" settings section
+                id: "thingsboard-plugin.singleThingsboardComponent.type",
+                defaultMessage: "Type",
+              },
+              items: [
+                // Add settings items to the section
+                {
+                  /*
+                    Add a "Color format" dropdown
+                    to choose between 2 different format options
+                    for the color value: hexadecimal or RGBA
+                  */
+                  intlLabel: {
+                    id: "thingsboard-plugin.singleThingsboardComponent.type.label",
+                    defaultMessage: "Thingsboard Component Type",
+                  },
+                  name: "options.type",
+                  type: "select",
+                  value: "Dashboard", // option selected by default
+                  options: [
+                    // List all available "Color format" options
+                    {
+                      key: "Dashboard",
+                      defaultValue: "Dashboard",
+                      value: "Dashboard",
+                      metadatas: {
+                        intlLabel: {
+                          id: "thingsboard-plugin.singleThingsboardComponent.type.Dashboard",
+                          defaultMessage: "Dashboard",
+                        },
+                      },
+                    },
+                    {
+                      key: "Device Profile",
+                      defaultValue: "DeviceProfile",
+                      value: "DeviceProfile",
+                      metadatas: {
+                        intlLabel: {
+                          id: "thingsboard-plugin.singleThingsboardComponent.type.DeviceProfile",
+                          defaultMessage: "Device Profile",
+                        },
+                      },
+                    },
+                    {
+                      key: "Asset Profile",
+                      defaultValue: "AssetProfile",
+                      value: "AssetProfile",
+                      metadatas: {
+                        intlLabel: {
+                          id: "thingsboard-plugin.singleThingsboardComponent.type.AssetProfile",
+                          defaultMessage: "Asset Profile",
+                        },
+                      },
+                    },
+                    {
+                      key: "Rule Chain",
+                      defaultValue: "RuleChain",
+                      value: "RuleChain",
+                      metadatas: {
+                        intlLabel: {
+                          id: "thingsboard-plugin.singleThingsboardComponent.type.RuleChain",
+                          defaultMessage: "Rule Chain",
+                        },
+                      },
+                    }
+                  ],
+                }
+              ]
+            }
+          ]
+        }
+      }
+    );
+
+
+    app.customFields.register({
+        name: "componentLinksComponent",
+        pluginId: pluginId,
+        type: "json",
+        intlLabel: {
+          id: "thingsboard-plugin.componentLinksComponent.label",
+          defaultMessage: "Thingsboard Component Mapping",
+        },
+        intlDescription: {
+          id: "thingsboard-plugin.componentLinksComponent.description",
+          defaultMessage: "Shows Thingsboard Component ID Map",
+        },
+        icon: PluginIcon, // don't forget to create/import your icon component
+        components: {
+          Input: async () =>
+            import(/* webpackChunkName: "input-component" */ "./components/ComponentLinksComponent"),
+        },
+      }
     );
 
     app.createSettingSection(

@@ -48,10 +48,10 @@ import {
   Server,
   CollectionType,
   User,
-  ArrowLeft
+  ArrowLeft,
+  Question
 } from '@strapi/icons';
 import { NavLink } from "react-router-dom";
-import { ComponantItem } from "./SingleThingsboardComponent";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -100,21 +100,33 @@ const Icons = (type: string) => {
       return <ChartBubble />;
     case "RULE_CHAIN":
       return <Link />;
+    default:
+      return <Question />;
   }
 }
 
-const GridComponantItem  = (e: { id: string, type: string}) => {
+export const ComponantItem  = (e: { id: string, type: string}) => {
   return (
     <>
-      <GridItem col={6}>
-        <ComponantItem id={e.id} type={e.type} key={e.id} />
-      </GridItem>
+        <Card id="tirdth">
+          <CardBody>
+            <Box padding={2} background="primary100">
+              {
+                Icons((e.type || ""))
+              }
+            </Box>
+            <CardContent paddingLeft={2}>
+              <CardTitle bold>{ e.type ? (e.type || "").split(SplittingRegEx).join(" ").trim() : "UNDEFINED"}</CardTitle>
+              <CardSubtitle>{ e.id || "ID missing" }</CardSubtitle>
+            </CardContent>
+          </CardBody>
+        </Card>
     </>
   );
 }
 
 
-const TBIDInput = React.forwardRef((props, ref) => {
+const singleTBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
   const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
     props; // these are just some of the props passed by the content-manager
@@ -123,9 +135,9 @@ const TBIDInput = React.forwardRef((props, ref) => {
 
 
 
-  const getOrgValue = (): any[] => {
+  const getOrgValue = (): any => {
     try {
-      return JSON.parse(value) || [];
+      return JSON.parse(value) || {id: undefined, type: undefined};
     } catch (e) {
       return [];
     }
@@ -198,26 +210,15 @@ const TBIDInput = React.forwardRef((props, ref) => {
     }
   }, [isVisible])
 
-  const currentSelectionContains = (id: string) => { return currentValue.findIndex((value) => value.id === id) !== -1};
+  const currentSelectionContains = (id: string) => { return currentValue.findIndex((value: any) => value.id === id) !== -1};
 
   return (
   <>
     <ErrorBoundary>
       <Field name={ label } >
-      <KeyboardNavigable >
-        <Grid gap={"1rem"} col={12}>
         {
-          getOrgValue().map((e: { id: string, entityType: string}) => {
-            return (<GridComponantItem id={e.id} type={e.entityType} />);
-          })
+           <ComponantItem id={getOrgValue().id} type={getOrgValue().entityType} />
         }
-          {
-            getOrgValue().length === 0 && (<GridItem col={12}>
-              <EmptyStateLayout content="Es wurde bisher keine Auswahl getroffen." padddingTop={3} paddingBottom={3} />
-            </GridItem>)
-          }
-        </Grid>
-    </KeyboardNavigable>
       </Field>
       { !disabled && (<Box marginTop={6}>
       <Button fullWidth  variant="secondary" startIcon={<Pencil />} onClick={() => setIsVisible(prev => !prev)}>
@@ -321,6 +322,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
   );
 });
 
-export default TBIDInput;
+export default singleTBIDInput;
 
 

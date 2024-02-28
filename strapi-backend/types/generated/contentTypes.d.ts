@@ -916,15 +916,9 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       Attribute.Unique &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
     name: Attribute.String;
-    deployed: Attribute.JSON &
-      Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
-        {
-          type: 'Dashboard';
-        }
-      >;
     description: Attribute.Text;
-    deployedComponents: Attribute.DynamicZone<['thingsboard.component-link']>;
+    deployed: Attribute.JSON &
+      Attribute.CustomField<'plugin::thingsboard-plugin.componentLinksComponent'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -954,11 +948,17 @@ export interface ApiDeviceDevice extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    name: Attribute.String & Attribute.Required;
     type: Attribute.Enumeration<['sensor', 'microcontroller', 'computer']> &
       Attribute.Required &
       Attribute.DefaultTo<'sensor'>;
-    test: Attribute.Blocks;
+    ComponentReference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        {
+          type: 'Dashboard';
+        }
+      >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1196,6 +1196,13 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'thingsboard.dashboard',
         'thingsboard.rule-chain'
       ]
+    >;
+    setupInstructions: Attribute.Component<
+      'instructions.setup-instruction',
+      true
+    >;
+    steps: Attribute.DynamicZone<
+      ['instructions.setup-instruction', 'instructions.text-instruction']
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
