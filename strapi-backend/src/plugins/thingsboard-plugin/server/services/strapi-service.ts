@@ -94,12 +94,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       const firm: any = deployment.firm;
 
       let deployDict: any = {};
+      let fullReference: Array<{ reference: any, template: any}> = [];
 
      const allDummies = await Promise.allSettled(useCase.components.flatMap((c) =>
       c.Reference.map((r) => {
         return strapi.plugin(pluginId)
           .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
             deployDict[r.id] = response.id.id;
+            fullReference.push({reference: response.id, template: r});
             return response
           });
       })
@@ -123,9 +125,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         })
       ));
 
+      const findTemplate = (id: any) => {
+        const f = fullReference.find((v) => {
+          return v.reference.id === id.id;
+        })
+        if(f) {
+          return f.template;
+        }
+        return {}
+      }
+
       const constructJson = allCopies.map((result: any) => {
         if(result.status === 'fulfilled') {
-          return Object.assign(result.value.id, { tenantId: result.value.tenantId } );
+          return Object.assign(result.value.id, { tenantId: result.value.tenantId, template: findTemplate(result.value.id) } );
         }
         return null;
       }).filter((result) => {
