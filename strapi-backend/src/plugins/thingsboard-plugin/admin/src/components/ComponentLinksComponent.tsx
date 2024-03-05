@@ -2,13 +2,8 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 
 import { useIntl } from "react-intl";
-import { Grid, GridItem } from '@strapi/design-system';
+import { Grid, GridItem, Field, FieldLabel, Box, Flex, EmptyStateLayout } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/helper-plugin';
-import { Field} from '@strapi/design-system';
-import {
-  Flex
-} from '@strapi/design-system';
-import { EmptyStateLayout } from '@strapi/design-system';
 import { ComponentItem } from "./SingleThingsboardComponent";
 
 
@@ -120,7 +115,9 @@ const TBIDInput = React.forwardRef((props, ref) => {
   return (
   <>
     <ErrorBoundary>
-      <Field name={ label } >
+      <Field>
+        <FieldLabel>{ label || name }</FieldLabel>
+        <Box>
         <Grid gap={"2rem"} col={12}>
         {
           getOrgValue().map((link: ComponentStructure) => {
@@ -133,6 +130,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
             </GridItem>)
           }
         </Grid>
+        </Box>
       </Field>
     </ErrorBoundary>
   </>

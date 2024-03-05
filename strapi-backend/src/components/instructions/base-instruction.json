@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_instructions_base_instructions",
+  "info": {
+    "displayName": "baseInstruction",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "blocks",
+      "required": true
+    }
+  }
+}

@@ -108,6 +108,24 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }));
     console.log(completeDevices)
     ctx.body = completeDevices;
+  },
+  async getStepsFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsFromDeployment(ctx.params.setupId)
+  },
+  async getStepsProgressFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsProgressFromDeployment(ctx.params.setupId)
+  },
+  async updateStepsProgressFromDeployment(ctx) {
+    const step = ctx.body.step;
+    const progress = ctx.body.progress;
+    return strapi.plugin(pluginId)
+      .service('strapiService').updateInstructionStepsProgressFromDeployment(ctx.params.setupId, step, progress)
+  },
+  async stepAction(ctx) {
+    console.warn(JSON.parse(ctx.request.body));
+    return strapi.plugin(pluginId).service('strapiService').stepAction(ctx.params.setupId, JSON.parse(ctx.request.body));
   }
 
 });

@@ -23,9 +23,6 @@
     "step": {
       "type": "richtext",
       "required": true
-    },
-    "action": {
-      "type": "json"
     }
   }
 }

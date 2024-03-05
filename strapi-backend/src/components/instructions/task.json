@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_instructions_tasks",
+  "info": {
+    "displayName": "Task",
+    "icon": "bulletList",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

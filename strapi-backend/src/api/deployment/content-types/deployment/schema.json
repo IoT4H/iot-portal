@@ -56,21 +56,15 @@
     "name": {
       "type": "string"
     },
-    "deployed": {
-      "type": "customField",
-      "options": {
-        "type": "Dashboard"
-      },
-      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
-    },
     "description": {
       "type": "text"
     },
-    "deployedComponents": {
-      "type": "dynamiczone",
-      "components": [
-        "thingsboard.component-link"
-      ]
+    "deployed": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.componentLinksComponent"
+    },
+    "stepStatus": {
+      "type": "json"
     }
   }
 }

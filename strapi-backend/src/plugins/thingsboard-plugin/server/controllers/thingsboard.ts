@@ -6,7 +6,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     ctx.body = "index";
   },
   async token(ctx) {
-
     const userId: any = await strapi.entityService.findOne('plugin::users-permissions.user', Number(ctx.state.user.id), {
       fields: ["thingsboardUserId"],
       populate: { firm: { fields: ["TenentUID","CustomerUID", "CustomerUserUID"]}}

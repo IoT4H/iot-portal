@@ -131,4 +131,69 @@ export default [
       ]
     },
   },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/steps',
+    handler: `plugin::${pluginId}.deployment.getStepsFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/steps/progress',
+    handler: `plugin::${pluginId}.deployment.getStepsProgressFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'POST',
+    path: '/deployment/:setupId/steps/progress',
+    handler: `plugin::${pluginId}.deployment.updateStepsProgressFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'POST',
+    path: '/deployment/:setupId/steps/action',
+    handler: `plugin::${pluginId}.deployment.stepAction`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+
 ]

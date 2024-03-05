@@ -187,5 +187,75 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     });
     console.log(comps)
     return comps
+  },
+  async getInstructionStepsFromDeployment(deploymentId: number) {
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      populate: { use_case : { populate: { setupSteps: { populate: '*'}}}}
+    });
+    let replacementDictionary: Array<string> = new Array<string>();
+    Array.of(...deployment.deployed).forEach((deployed) => {
+      if(deployed.id && deployed.template) {
+        replacementDictionary[deployed.template.id] = deployed.id;
+        replacementDictionary[deployed.template.tenantId.id] = deployed.tenantId.id;
+      }
+    })
+    const constructedModSteps = JSON.stringify(deployment.use_case.setupSteps).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+      return replacementDictionary[matched]
+    })
+    return JSON.parse(constructedModSteps);
+
+    //TODO: CHECK CODE FOR BUGS
+  },
+  async getInstructionStepsProgressFromDeployment(deploymentId: number) {
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      fields: ['stepStatus']
+    });
+    console.warn(deployment.stepStatus);
+    return deployment.stepStatus;
+  },
+  async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
+    "id": number}, progress: number) {
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      fields: ['stepStatus']
+    });
+
+    let currenStatus = (deployment.stepStatus || []);
+    let posIndex = currenStatus.findIndex((e, i ,a) => {
+      return e.__component === step.__component && e.id === step.id
+    });
+
+    if(posIndex !== -1) {
+      currenStatus[posIndex].progress = progress;
+    } else {
+      currenStatus.push(Object.assign(step, { progress: progress }));
+    }
+
+  },
+  async stepAction(deploymentId: number, data: any) {
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      populate: { firm: {fields: ['id', 'TenentUID', 'CustomerUID', 'CustomerUserUID']}, use_case: { populate: '*' }}
+    });
+
+    console.warn(" ----- ");
+    console.warn(deployment);
+    console.warn(" ----- ");
+
+    switch (data.step.data.__component) {
+      case "instructions.setup-instruction":
+        return strapi.plugin(pluginId)
+          .service('thingsboardService').setupThingsboardDeviceAsset(
+            deployment.firm.TenentUID,
+            deployment.firm.CustomerUID,
+            data.step.data.thingsboard_profile,
+            {
+              name: data.parameter.name,
+              label: data.parameter.label
+            }
+          )
+        break;
+      default:
+        return ;
+    }
+
   }
 });

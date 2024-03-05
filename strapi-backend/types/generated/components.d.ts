@@ -50,6 +50,18 @@ export interface GeneralAddress extends Schema.Component {
   };
 }
 
+export interface InstructionsBaseInstruction extends Schema.Component {
+  collectionName: 'components_instructions_base_instructions';
+  info: {
+    displayName: 'baseInstruction';
+    icon: 'file';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    text: Attribute.Blocks & Attribute.Required;
+  };
+}
+
 export interface InstructionsInstructions extends Schema.Component {
   collectionName: 'components_instructions_instructions';
   info: {
@@ -60,7 +72,19 @@ export interface InstructionsInstructions extends Schema.Component {
     stepName: Attribute.String;
     pictures: Attribute.Media;
     step: Attribute.RichText & Attribute.Required;
-    action: Attribute.JSON;
+  };
+}
+
+export interface InstructionsListInstruction extends Schema.Component {
+  collectionName: 'components_instructions_list_instructions';
+  info: {
+    displayName: 'ListInstruction';
+    icon: 'bulletList';
+    description: '';
+  };
+  attributes: {
+    meta: Attribute.Component<'instructions.base-instruction'>;
+    tasks: Attribute.Component<'instructions.task', true>;
   };
 }
 
@@ -72,7 +96,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
     description: '';
   };
   attributes: {
-    text: Attribute.Blocks;
+    meta: Attribute.Component<'instructions.base-instruction'>;
     thingsboard_profile: Attribute.JSON &
       Attribute.CustomField<
         'plugin::thingsboard-plugin.singleThingsboardComponent',
@@ -80,7 +104,21 @@ export interface InstructionsSetupInstruction extends Schema.Component {
           type: 'AssetProfile';
         }
       >;
-    name: Attribute.String;
+    form_alternative_label: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'Name'>;
+  };
+}
+
+export interface InstructionsTask extends Schema.Component {
+  collectionName: 'components_instructions_tasks';
+  info: {
+    displayName: 'Task';
+    icon: 'bulletList';
+    description: '';
+  };
+  attributes: {
+    text: Attribute.String & Attribute.Required;
   };
 }
 
@@ -88,11 +126,12 @@ export interface InstructionsTextInstruction extends Schema.Component {
   collectionName: 'components_instructions_text_instructions';
   info: {
     displayName: 'textInstruction';
-    icon: 'bulletList';
+    icon: 'arrowRight';
+    description: '';
   };
   attributes: {
-    text: Attribute.Blocks;
-    name: Attribute.String;
+    meta: Attribute.Component<'instructions.base-instruction'> &
+      Attribute.Required;
   };
 }
 
@@ -190,8 +229,11 @@ declare module '@strapi/types' {
       'firm.firm-roles': FirmFirmRoles;
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
+      'instructions.base-instruction': InstructionsBaseInstruction;
       'instructions.instructions': InstructionsInstructions;
+      'instructions.list-instruction': InstructionsListInstruction;
       'instructions.setup-instruction': InstructionsSetupInstruction;
+      'instructions.task': InstructionsTask;
       'instructions.text-instruction': InstructionsTextInstruction;
       'thingsboard.asset-profile': ThingsboardAssetProfile;
       'thingsboard.component-description': ThingsboardComponentDescription;

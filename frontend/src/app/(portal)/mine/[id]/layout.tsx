@@ -1,6 +1,4 @@
 "use client"
-
-import DeviceSetupModal from "@iot-portal/frontend/app/(portal)/mine/[id]/device-setup-modal";
 import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -97,7 +95,6 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
         }
 
         </Suspense>
-            { setup && setupDevice && <DeviceSetupModal setup={setup} onClose={stopSetupDevice}></DeviceSetupModal> }
     </>
     );
 }

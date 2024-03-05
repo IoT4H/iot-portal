@@ -919,6 +919,7 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
     description: Attribute.Text;
     deployed: Attribute.JSON &
       Attribute.CustomField<'plugin::thingsboard-plugin.componentLinksComponent'>;
+    stepStatus: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1197,13 +1198,17 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'thingsboard.rule-chain'
       ]
     >;
-    setupInstructions: Attribute.Component<
-      'instructions.setup-instruction',
-      true
-    >;
-    steps: Attribute.DynamicZone<
-      ['instructions.setup-instruction', 'instructions.text-instruction']
-    >;
+    setupSteps: Attribute.DynamicZone<
+      [
+        'instructions.setup-instruction',
+        'instructions.list-instruction',
+        'instructions.text-instruction'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        min: 1;
+      }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

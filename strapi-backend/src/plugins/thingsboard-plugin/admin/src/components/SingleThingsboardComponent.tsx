@@ -52,6 +52,7 @@ import {
   Question
 } from '@strapi/icons';
 import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -106,11 +107,12 @@ const Icons = (type: string) => {
 }
 
 export const ComponentItem  = (e: { id?: string, type?: string}) => {
+
   return (
     <>
-        <Card id="tirdth">
+        <Card id="tirdth" cursor={"pointer"}>
           <CardBody>
-            <Box padding={2} background="primary100">
+            <Box padding={2} background="primary100" >
               {
                 Icons((e.type || ""))
               }
@@ -137,9 +139,9 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
 
   const getOrgValue = (): any => {
     try {
-      return JSON.parse(value) || {id: undefined, type: undefined};
+      return JSON.parse(value) || undefined;
     } catch (e) {
-      return [];
+      return undefined;
     }
   };
 
@@ -156,7 +158,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
   const [openTenant, SetOpenTenant] = useState<string>("");
   const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
 
-  const [currentValue, SetCurrentValue] = useState(getOrgValue());
+  const [currentValue, SetCurrentValue] = useState<any>(getOrgValue());
 
   const { get } = useFetchClient();
 
@@ -170,6 +172,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
     onChange({
       target: { name, type: attribute.type, value: JSON.stringify(currentValue) },
     });
+    setIsVisible(false);
   }
 
   useEffect(() => {
@@ -210,21 +213,24 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
     }
   }, [isVisible])
 
+  useEffect(() =>  {
+    confirmChange();
+  }, [currentValue])
+
   const currentSelectionContains = (id: string) => { return currentValue.findIndex((value: any) => value.id === id) !== -1};
 
   return (
   <>
     <ErrorBoundary>
-      <Field name={ label } >
+      <Field >
+        <FieldLabel> { (label || name).split(".")[(label || name).split(".").length - 1] }</FieldLabel>
         {
-           <ComponentItem id={getOrgValue().id} type={getOrgValue().entityType} />
+          getOrgValue() !== undefined ?  <div onClick={() => setIsVisible(true)}><ComponentItem id={getOrgValue().id} type={getOrgValue().entityType} /></div> :
+            <EmptyStateLayout content="Es wurde bisher keine Auswahl getroffen." action={!disabled && <Button variant="secondary" startIcon={<Pencil />} onClick={() => setIsVisible(true)}>
+              Auswahl treffen
+            </Button>}/>
         }
       </Field>
-      { !disabled && (<Box marginTop={6}>
-      <Button fullWidth  variant="secondary" startIcon={<Pencil />} onClick={() => setIsVisible(prev => !prev)}>
-        Auswahl bearbeiten
-      </Button>
-    </Box> ) }
 
 
 
@@ -233,9 +239,6 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
         <Typography as="h2">
           <Typography fontWeight="bold" textColor="neutral800" id="title" style={{paddingRight: '0.5rem'}}>
             Choose { attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" } from Thingsboard
-          </Typography>
-          <Typography textColor="neutral700">
-           ({currentValue.length } { attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" } selected)
           </Typography>
         </Typography>
       </ModalHeader>
@@ -282,12 +285,11 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
           {!selectTenant && components.data.map((c: any, index: number) => {
             return (
               <GridItem col={6}>
-                <Card key={`box-${index}`} background="neutral100">
-                  <CardHeader>
-                    <CardCheckbox onClick={() => {
-                      currentSelectionContains(c.id.id) ? SetCurrentValue(currentValue.filter((e: any) => e.id != c.id.id)) : SetCurrentValue([...currentValue, Object.assign(c.id, {"tenantId": { "id" : openTenant}})])
-                    }} checked={currentSelectionContains(c.id.id)}></CardCheckbox>
-                  </CardHeader>
+                <KeyboardNavigable>
+                <Card key={`box-${index}`} background="neutral100" onClick={() => {
+                  console.warn(Object.assign(c.id, {"tenantId": { "id" : openTenant}}))
+                  SetCurrentValue(Object.assign(c.id, {"tenantId": { "id" : openTenant}}));
+                }}>
                   <CardBody marginLeft={6}>
                     <CardContent paddingRight={2}>
                       <CardTitle>{ c.name }</CardTitle>
@@ -295,6 +297,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
                     </CardContent>
                   </CardBody>
                 </Card>
+                </KeyboardNavigable>
               </GridItem>
             );
           })}
@@ -313,9 +316,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
             Zurück
           </Button>
         </>
-      } endActions={<>
-        <Button onClick={() => { confirmChange(); setIsVisible(prev => !prev);}}>Übernehmen</Button>
-      </>} />
+      }/>
     </ModalLayout>}
     </ErrorBoundary>
   </>

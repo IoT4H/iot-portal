@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_instructions_setup_instructions",
+  "info": {
+    "displayName": "setupInstruction",
+    "icon": "bulletList",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "meta": {
+      "type": "component",
+      "repeatable": false,
+      "component": "instructions.base-instruction"
+    },
+    "thingsboard_profile": {
+      "type": "customField",
+      "options": {
+        "type": "AssetProfile"
+      },
+      "customField": "plugin::thingsboard-plugin.singleThingsboardComponent"
+    },
+    "form_alternative_label": {
+      "type": "string",
+      "default": "Name",
+      "required": true
+    }
+  }
+}

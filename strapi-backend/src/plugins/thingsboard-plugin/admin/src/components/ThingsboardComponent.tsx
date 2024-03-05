@@ -88,21 +88,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-
-const Icons = (type: string) => {
-  switch(type) {
-    case "dashboard":
-    case "DASHBOARD":
-      return <Dashboard />;
-    case "DEVICE_PROFILE":
-      return <Server />;
-    case "ASSET_PROFILE":
-      return <ChartBubble />;
-    case "RULE_CHAIN":
-      return <Link />;
-  }
-}
-
 const GridComponantItem  = (e: { id: string, type: string}) => {
   return (
     <>
