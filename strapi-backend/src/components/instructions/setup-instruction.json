@@ -10,14 +10,21 @@
     "meta": {
       "type": "component",
       "repeatable": false,
-      "component": "instructions.base-instruction"
+      "component": "instructions.base-instruction",
+      "required": true
     },
     "thingsboard_profile": {
       "type": "customField",
       "options": {
-        "type": "AssetProfile"
+        "types": {
+          "dashboard": false,
+          "DeviceProfile": true,
+          "RuleChain": false,
+          "AssetProfile": true
+        }
       },
-      "customField": "plugin::thingsboard-plugin.singleThingsboardComponent"
+      "customField": "plugin::thingsboard-plugin.singleThingsboardComponent",
+      "required": true
     },
     "form_alternative_label": {
       "type": "string",

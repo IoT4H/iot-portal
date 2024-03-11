@@ -36,6 +36,11 @@ import {
   Link as LinkButton,
   Crumb,
   Loader,
+  TabGroup,
+  Tabs,
+  Tab,
+  TabPanels,
+  TabPanel
 } from '@strapi/design-system';
 import { EmptyStateLayout } from '@strapi/design-system';
 import {
@@ -93,12 +98,16 @@ class ErrorBoundary extends React.Component {
 const Icons = (type: string) => {
   switch(type) {
     case "dashboard":
+    case "Dashboard":
     case "DASHBOARD":
       return <Dashboard />;
+    case "DeviceProfile":
     case "DEVICE_PROFILE":
       return <Server />;
+    case "AssetProfile":
     case "ASSET_PROFILE":
       return <ChartBubble />;
+    case "RuleChain":
     case "RULE_CHAIN":
       return <Link />;
     default:
@@ -147,13 +156,19 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
 
   const [isVisible, setIsVisible] = useState(false);
   const [selectTenant, setSelectTenant] = useState(true);
+  const [selectComponentType, setSelectComponentType] = useState(false);
 
   const tenantsInit = { data: []};
   const [tenants, SetTenants] = useState<any>(tenantsInit);
   const [tenantsLoading, SetTenantsLoading] = useState<boolean>(true);
   const componentsInit = { data: []};
+
+
+  const [componentTypes, SetComponentTypes] = useState<any>([]);
+  const [selectedComponentType, SetSelectedComponentType] = useState<string | undefined>(undefined);
+
   const [components, SetComponents] = useState<any>(componentsInit);
-  const [componentsLoading, SetComponentsLoading] = useState<boolean>(true);
+  const [componentsLoading, SetComponentsLoading] = useState<boolean>(false);
 
   const [openTenant, SetOpenTenant] = useState<string>("");
   const [errorDisplay, setErrorDisplay] = useState<boolean>(false);
@@ -193,15 +208,33 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
   }, [selectTenant, isVisible])
 
   useEffect(() => {
-    SetComponents(componentsInit);
-    SetComponentsLoading(true);
-    openTenant.length !== 0 &&
-    get(`/thingsboard-plugin/tenant/${openTenant}/${attribute.options.type.toLowerCase()}`, { params: { page: 0, pageSize: 30} })
-      .then((response: any) => {
-        SetComponents(response.data);
-      }).finally(() => {
+    if(selectedComponentType !== undefined) {
+      SetComponents(componentsInit);
+      SetComponentsLoading(true);
+      openTenant.length !== 0 &&
+      get(`/thingsboard-plugin/tenant/${openTenant}/${selectedComponentType.toLowerCase()}`, {
+        params: {
+          page: 0,
+          pageSize: 30
+        }
+      })
+        .then((response: any) => {
+          SetComponents(response.data);
+        }).finally(() => {
         SetComponentsLoading(false);
       });
+    }
+  }, [openTenant, selectedComponentType])
+
+  useEffect(() => {
+    if(openTenant) {
+      if(componentTypes.length > 1) {
+        setSelectComponentType(true)
+      } else {
+        SetSelectedComponentType(componentTypes[0] || undefined);
+        setSelectComponentType(false)
+      }
+    }
   }, [openTenant])
 
   useEffect(() => {
@@ -217,7 +250,41 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
     confirmChange();
   }, [currentValue])
 
+
+  useEffect(() => {
+    console.warn(attribute)
+    const a: Array<string> = new Array<string>();
+
+    if(attribute.options.types.Dashboard || true) {
+      a.push("Dashboard")
+    }
+
+    if(attribute.options.types.AssetProfile || true) {
+      a.push("AssetProfile")
+    }
+
+    if(attribute.options.types.DeviceProfile || true) {
+      a.push("DeviceProfile")
+    }
+
+    if(attribute.options.types.RuleChain || true) {
+      a.push("RuleChain")
+    }
+
+    SetComponentTypes(a);
+
+  }, [attribute])
+
   const currentSelectionContains = (id: string) => { return currentValue.findIndex((value: any) => value.id === id) !== -1};
+
+  const backButton = () => {
+    if(selectedComponentType) {
+      SetSelectedComponentType(undefined);
+      setSelectComponentType(true);
+    } else {
+      setSelectTenant(true);
+    }
+  }
 
   return (
   <>
@@ -238,7 +305,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
       <ModalHeader>
         <Typography as="h2">
           <Typography fontWeight="bold" textColor="neutral800" id="title" style={{paddingRight: '0.5rem'}}>
-            Choose { attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" } from Thingsboard
+            Choose { selectedComponentType && selectedComponentType.split(SplittingRegEx).join(" ").trim() + "s" } from Thingsboard
           </Typography>
         </Typography>
       </ModalHeader>
@@ -247,11 +314,12 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
           <Breadcrumbs>
             <Crumb>Select</Crumb>
             <Crumb><span style={{cursor: "pointer !important"}} onClick={() => setSelectTenant(true)}>Tenant</span></Crumb>
-            { !selectTenant && <Crumb>{ attribute.options.type.split(SplittingRegEx).join(" ").trim() + "s" }</Crumb> }
+            { (selectComponentType || selectedComponentType) && <Crumb>Type</Crumb> }
+            { (!selectTenant && !selectComponentType) && selectedComponentType && <Crumb>{ selectedComponentType.split(SplittingRegEx).join(" ").trim() + "s" }</Crumb> }
           </Breadcrumbs>
         </Flex>
         {
-          (selectTenant && tenantsLoading || !selectTenant && componentsLoading) ?
+          (selectTenant && tenantsLoading || (!selectTenant && !selectComponentType) && componentsLoading) ?
             <Flex alignItems={"center"}  justifyContent={"center"} direction={"row"}><Loader>Loading content...</Loader></Flex> :
           ( <Grid gap={3} col={12}>
 
@@ -282,12 +350,11 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
           }) : <></>
           }
 
-          {!selectTenant && components.data.map((c: any, index: number) => {
+          {!selectTenant && !selectComponentType && components.data.map((c: any, index: number) => {
             return (
               <GridItem col={6}>
                 <KeyboardNavigable>
-                <Card key={`box-${index}`} background="neutral100" onClick={() => {
-                  console.warn(Object.assign(c.id, {"tenantId": { "id" : openTenant}}))
+                <Card key={`box-${index}`} background="neutral100" cursor={"pointer"} onClick={() => {
                   SetCurrentValue(Object.assign(c.id, {"tenantId": { "id" : openTenant}}));
                 }}>
                   <CardBody marginLeft={6}>
@@ -302,7 +369,36 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
             );
           })}
 
-            {(!selectTenant && components.data.length === 0 || selectTenant && tenants.data.length === 0) &&
+            {!selectTenant && selectComponentType && componentTypes.map((c: any, index: number) => {
+              return (
+                <GridItem col={6}>
+                  <KeyboardNavigable>
+                    <Card key={`box-${index}`} background="neutral100" cursor={"pointer"} onClick={() => {
+                      SetSelectedComponentType(c);
+                      setSelectComponentType(false)
+                    }}>
+                      <CardBody>
+                        <Box padding={2} background="primary100">
+                          {
+                            Icons(c)
+                          }
+                        </Box>
+                        <CardContent paddingLeft={2}>
+                          <CardTitle>{ c }</CardTitle>
+                        </CardContent>
+                        <Box padding={2} marginLeft={"auto"}>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width={"1rem"} height={"1rem"}>
+                            <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
+                          </svg>
+                        </Box>
+                      </CardBody>
+                    </Card>
+                  </KeyboardNavigable>
+                </GridItem>
+              );
+            })}
+
+            {(!selectTenant && !selectComponentType && components.data.length === 0 || selectTenant && tenants.data.length === 0) &&
               (<GridItem col={12}>
                 <EmptyStateLayout content={errorDisplay ? "Es ist ein Fehler aufgetreten." : "Es wurde nichts gefunden."} padddingTop={3} paddingBottom={3} />
               </GridItem>)
@@ -312,7 +408,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
       </ModalBody>
       <ModalFooter startActions={
         <>
-          <Button variant="tertiary"  startIcon={<ArrowLeft height={"1em"} width={"1em"}  cursor={"pointer"} /> } onClick={() => setSelectTenant(true)} disabled={selectTenant}>
+          <Button variant="tertiary"  startIcon={<ArrowLeft height={"1em"} width={"1em"}  cursor={"pointer"} /> } onClick={() => backButton()} disabled={selectTenant}>
             Zurück
           </Button>
         </>

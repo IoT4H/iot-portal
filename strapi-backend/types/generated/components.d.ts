@@ -83,7 +83,8 @@ export interface InstructionsListInstruction extends Schema.Component {
     description: '';
   };
   attributes: {
-    meta: Attribute.Component<'instructions.base-instruction'>;
+    meta: Attribute.Component<'instructions.base-instruction'> &
+      Attribute.Required;
     tasks: Attribute.Component<'instructions.task', true>;
   };
 }
@@ -96,12 +97,19 @@ export interface InstructionsSetupInstruction extends Schema.Component {
     description: '';
   };
   attributes: {
-    meta: Attribute.Component<'instructions.base-instruction'>;
+    meta: Attribute.Component<'instructions.base-instruction'> &
+      Attribute.Required;
     thingsboard_profile: Attribute.JSON &
+      Attribute.Required &
       Attribute.CustomField<
         'plugin::thingsboard-plugin.singleThingsboardComponent',
         {
-          type: 'AssetProfile';
+          types: {
+            dashboard: false;
+            DeviceProfile: true;
+            RuleChain: false;
+            AssetProfile: true;
+          };
         }
       >;
     form_alternative_label: Attribute.String &

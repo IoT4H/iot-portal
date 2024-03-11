@@ -10,7 +10,8 @@
     "meta": {
       "type": "component",
       "repeatable": false,
-      "component": "instructions.base-instruction"
+      "component": "instructions.base-instruction",
+      "required": true
     },
     "tasks": {
       "displayName": "Task",

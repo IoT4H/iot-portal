@@ -9,13 +9,13 @@ import * as React from "react";
 
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Simulate } from "react-dom/test-utils";
-import progress = Simulate.progress;
 
 type StepData = {
-    state: any,
+    state: number | undefined,
     viewStatus: boolean,
     deployment: number,
-    data: any
+    data: any,
+    updateState: Function
 };
 
 const StepStatus = ({color, progress, Icon} : { color: string, progress: number | undefined, Icon: any | undefined }) => {
@@ -70,12 +70,16 @@ export default function Step(stepData: StepData) {
 
     const [open, toggleOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
-    const [progress, SetProgress] = useState<number | undefined>(30);
+    const [progress, SetProgress] = useState<number | undefined>();
 
     const [color, SetColor] = useState("#f97316");
 
     const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
+
+    useEffect(() => {
+
+    } , [])
 
     const taskForm = useRef();
 
@@ -105,7 +109,7 @@ export default function Step(stepData: StepData) {
             <div className={`w-full flex flex-row group rounded-2xl bg-zinc-900/50 peer ${progress === 100 && 'done'}`}>
                 <div className={"w-16 flex-shrink-0 flex-grow-0 flex flex-col"}>
                     <div className={`w-16 aspect-square p-2 mb-0 bg-zinc-700/80 rounded-l-2xl`}>
-                        <StepStatus color={color} progress={progress} Icon={HeroIcons.ShoppingBagIcon}/>
+                        <StepStatus color={color} progress={stepData.state} Icon={HeroIcons.ShoppingBagIcon}/>
                     </div>
                     <div className={"flex-grow flex flex-row justify-center -mb-8"}>
                         <div className={`h-full border-l border-zinc-500/50 group-[:last-of-type]:hidden `} style={progress === 100 ? {borderColor: color} : {}}></div>

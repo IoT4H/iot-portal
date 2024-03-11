@@ -242,6 +242,55 @@ export default {
                 }
               ]
             }
+          ],
+          // declare options here
+          advanced: [
+            {
+              sectionTitle: {
+                // Add a "Format" settings section
+                id: "thingsboard-plugin.singleThingsboardComponent.type",
+                defaultMessage: "Type",
+              },
+              items: [
+                // Add settings items to the section
+                {
+                  intlLabel: {
+                    id: "thingsboard-plugin.singleThingsboardComponent.types.Dashboard",
+                    defaultMessage: "Dashboard selectable",
+                  },
+                  name: "options.types.dashboard",
+                  type: 'checkbox',
+                  value: true,
+                },
+                {
+                  intlLabel: {
+                    id: "thingsboard-plugin.singleThingsboardComponent.types.AssetProfile",
+                    defaultMessage: "Asset Profile selectable",
+                  },
+                  name: "options.types.AssetProfile",
+                  type: 'checkbox',
+                  value: true,
+                },
+                {
+                  intlLabel: {
+                    id: "thingsboard-plugin.singleThingsboardComponent.types.DeviceProfile",
+                    defaultMessage: "Device Profile selectable",
+                  },
+                  name: "options.types.DeviceProfile",
+                  type: 'checkbox',
+                  value: true,
+                },
+                {
+                  intlLabel: {
+                    id: "thingsboard-plugin.singleThingsboardComponent.types.RuleChain",
+                    defaultMessage: "Rule Chain selectable",
+                  },
+                  name: "options.types.RuleChain",
+                  type: 'checkbox',
+                  value: true,
+                }
+              ]
+            }
           ]
         }
       }

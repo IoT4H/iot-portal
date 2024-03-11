@@ -215,6 +215,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number}, progress: number) {
+    console.warn("UPDATED step status", deploymentId, step);
+
+
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
@@ -230,6 +233,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       currenStatus.push(Object.assign(step, { progress: progress }));
     }
 
+    return await strapi.entityService.update('api::deployment.deployment', deploymentId,{
+      fields: ['stepStatus'],
+      data: {
+        // @ts-ignore
+        stepStatus: currenStatus
+      }
+    });
+
   },
   async stepAction(deploymentId: number, data: any) {
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
@@ -240,9 +251,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     console.warn(deployment);
     console.warn(" ----- ");
 
+    let returnPromise;
+
     switch (data.step.data.__component) {
       case "instructions.setup-instruction":
-        return strapi.plugin(pluginId)
+        returnPromise = strapi.plugin(pluginId)
           .service('thingsboardService').setupThingsboardDeviceAsset(
             deployment.firm.TenentUID,
             deployment.firm.CustomerUID,
@@ -254,8 +267,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           )
         break;
       default:
-        return ;
     }
+
+    return returnPromise.then(async (response) => {
+      await strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+        id: data.step.data.id,
+        __component: data.step.data.__component
+      }, 100)
+      return response;
+    });
 
   }
 });
