@@ -1,4 +1,5 @@
 "use client"
+import { State } from "@iot-portal/frontend/app/(portal)/deployment-status";
 import Step from "@iot-portal/frontend/app/common/setup/step";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
@@ -6,22 +7,55 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function ConfigurationSteps({params}: { params: { id: number } }) {
 
-    const [steps, SetSteps] = useState<Array<any>>(Array<any>(0));
-    const [stepsProgress, SetStepsProgress] = useState<Array<any>>(Array<any>(0));
+    const ar = new Array(0);
+    const [steps, SetSteps] = useState<Array<any>>(ar);
+    const [stepsProgress, SetStepsProgress] = useState<Array<any>>(ar);
+    const [state, setState] = useState<State>(State.none);
+
+
+
+    const poll = () => {
+        fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/status`, {} ,{
+            headers: {
+                Authorization: `Bearer ${Auth.getToken()}`
+            }
+        }).then((newState) => {
+            switch (newState.status) {
+                case "deploying":
+                    setState(State.deploying);
+                    break;
+                case "deployed":
+                    setState(State.deployed);
+                    break;
+                case "created":
+                    setState(State.created);
+                    break;
+                default:
+                    break;
+            }
+        });
+    };
+
 
     useEffect(() => {
+        if(state !== State.deployed) {
+            setTimeout(poll, state === State.none ? 0 : 250);
+        }
+    }, [state])
 
-        fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
-            {
-                headers: {
-                    Authorization: `Bearer ${Auth.getToken()}`
-                }
-            }).then((stepsResponse) => {
-            SetSteps(stepsResponse);
-        })
-
-        fetchStepsProgress();
-    }, []);
+    useEffect(() => {
+        if(state === State.deployed) {
+                fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Auth.getToken()}`
+                        }
+                    }).then((stepsResponse) => {
+                    SetSteps(Array.from(stepsResponse));
+                })
+            fetchStepsProgress();
+        }
+    }, [state]);
 
 
     useEffect(() => {
@@ -56,8 +90,8 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 s.progress = stp?.progress;
             }
             return s;
-        }) : [];
-        SetSteps(s);
+        }) : new Array(0);
+        SetSteps(Array.from(s));
     }, [stepsProgress])
 
 
