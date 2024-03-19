@@ -34,6 +34,38 @@ ENV STRAPI_URL=${STRAPI_URL}
 
 RUN yarn build
 
+FROM base as depsPlugin
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev > /dev/null 2>&1
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /app/
+# Install dependencies based on the preferred package manager
+COPY src/plugins/thingsboard-plugin/package.json src/plugins/thingsboard-plugin/yarn.lock* src/plugins/thingsboard-plugin/package-lock.json* src/plugins/thingsboard-plugin/pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+RUN yarn config set network-timeout 600000 -g
+ENV PATH /app/node_modules/.bin:$PATH
+
+FROM base AS buildPlugin
+WORKDIR /app
+COPY --from=depsPlugin /app/node_modules ./node_modules
+COPY . .
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+
+ARG STRAPI_URL=localhost:1337
+ENV STRAPI_URL=${STRAPI_URL}
+
+
+RUN yarn build
+
 # Creating final production image
 FROM base as runtime
 RUN apk add --no-cache vips-dev
@@ -41,6 +73,7 @@ RUN apk add --no-cache vips-dev
 WORKDIR /opt/app
 
 COPY --from=build /app ./
+COPY --from=buildPlugin /app ./dist/src/plugins/thingsboard-plugin/
 
 ENV PATH /opt/node_modules/.bin:$PATH
 
