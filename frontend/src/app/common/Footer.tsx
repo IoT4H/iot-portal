@@ -12,8 +12,20 @@ export default async function Footer() {
         }
     ;
 
-    const menus = ((await fetchAPI("/api/menus/", Para)).data.filter((m: any) => m.attributes.slug === "footer"))[0] || null;
-
+    const menus = await (async () => {
+        try {
+            const response = await fetchAPI("/api/menus/", Para);
+            if (response) {
+                const filtered = response.data.filter((m: any) => m.attributes.slug === "footer");
+                if (filtered.length > 0) {
+                    return filtered[0];
+                }
+            }
+        } catch (e) {
+            console.warn(e);
+        }
+        return null;
+    })();
 
     return (
         <div className={"mt-auto"}>
