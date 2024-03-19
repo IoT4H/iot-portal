@@ -216,8 +216,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number, tasks?: any[]}, progress: number, subprogress?: any) {
-    console.warn("UPDATED step status", deploymentId, step);
-
 
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
@@ -285,19 +283,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               label: data.parameter.label
             }
           );
-        returnPromise = returnPromise.then(() => {
+        returnPromise = returnPromise.then((response) => {
             strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
               id: data.step.data.id,
               __component: data.step.data.__component
             }, 100, {});
-            strapi.log.warn(`${data.step.data.__component} action failed`);
-            resolve();
-        }, () => {
+            resolve(response);
+        }, (reason) => {
           strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
             id: data.step.data.id,
             __component: data.step.data.__component
           }, 1, {});
-          reject();
+          strapi.log.warn(`${data.step.data.__component} action failed`);
+          reject(reason);
         });
         break;
       case "instructions.text-instruction":
@@ -305,12 +303,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           id: data.step.data.id,
           __component: data.step.data.__component
         }, 100, {})
-        returnPromise.then(() => resolve(), () => reject());
+        returnPromise.then((response) => resolve(response), (reason) => reject(reason));
         break;
       case "instructions.list-instruction":
         console.warn("data: " + JSON.stringify(data));
         returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, data.step.data, null, data.parameter)
-        returnPromise.then(() => resolve(), () => reject());
+        returnPromise.then((response) => resolve(response), (reason) => reject(reason));
       default:
         break;
     }

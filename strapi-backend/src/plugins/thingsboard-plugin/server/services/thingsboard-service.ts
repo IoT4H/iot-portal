@@ -465,9 +465,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async setupThingsboardDeviceAsset(tenantId: string, customerId: string, profile: { id: number, entityType: string }, data: any) {
 
+    return new Promise<any>((resolve, reject) => {
 
-    if(profile.entityType === "DEVICE_PROFILE") {
-      return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device`, headers: {
+    if (profile.entityType === "DEVICE_PROFILE") {
+      this.axiosAsTenant(tenantId, {
+        method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device`, headers: {
           'Content-Type': 'application/json'
         }, data: JSON.stringify({
           tenantId: {
@@ -478,28 +480,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
             id: customerId,
             entityType: "CUSTOMER"
           },
-          name: data.name,
+          name: data.name || data.label,
           label: data.label,
           deviceProfileId: profile,
           additionalInfo: {}
-        })})
+        })
+      })
         .then(
           (response: any) => {
-            return response.data;
+            resolve(response.data);
           }, (reason: any) => {
-            console.warn(reason);
-            return reason;
+            reject(reason);
           });
 
     } else if (profile.entityType === "ASSET_PROFILE") {
-      return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset`, headers: {
+      this.axiosAsTenant(tenantId, {
+        method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset`, headers: {
           'Content-Type': 'application/json'
         }, data: JSON.stringify(
           {
             tenantId: {
-            id: tenantId,
+              id: tenantId,
               entityType: "TENANT"
-          },
+            },
             customerId: {
               id: customerId,
               entityType: "CUSTOMER"
@@ -509,20 +512,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
             assetProfileId: profile,
             additionalInfo: {}
           })
-        })
-        .then(
-          (response: any) => {
-            return response.data;
-          }, (reason: any) => {
-            console.warn(reason);
-            return reason;
-          });
+      }).then(
+        (response: any) => {
+          resolve(response.data);
+        }, (reason: any) => {
+          reject(reason);
+        });
 
     } else {
-      return new Promise<any>((resolve, reject) => {
-        reject("couldnt find correct type")
-      });
+      reject("couldnt find correct type");
     }
+  });
   }
 
 });
