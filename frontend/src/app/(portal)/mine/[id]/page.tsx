@@ -3,5 +3,7 @@ import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/mine/[id]/conf
 import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/mine/[id]/dashboards";
 
 
-const Page = async ({params}: { params: { id: number } }) => ConfigurationSteps({params});
+const Page = async ({params}: { params: { id: number } }) => {
+    return <ConfigurationSteps params={params} />;
+}
 export default Page;
