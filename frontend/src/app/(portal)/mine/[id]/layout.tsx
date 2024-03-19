@@ -67,10 +67,6 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                     <h1 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{setup.name}</h1>
                                 </div>
                                 <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 flex-grow text-justify"}> {setup.description || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
-
-                                <div  onClick={startSetupDevice} className={" mt-4 cursor-pointer w-full text-center ml-auto bg-orange-500/80 hover:bg-orange-500 text-white flex-row flex gap-4 justify-center items-center uppercase mx-4 px-4 py-4"}>
-                                    <WrenchScrewdriverIcon className={"h-6"}/>Gerät einrichten
-                                </div>
                             </div>
                         </div>
                         <div className={"pb-8"}>

@@ -1,4 +1,5 @@
 import { Strapi } from "@strapi/strapi";
+import { responses } from "@strapi/strapi/dist/middlewares/responses";
 import { randomUUID } from "crypto";
 import pluginId from "../../admin/src/pluginId";
 
@@ -214,7 +215,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return deployment.stepStatus;
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
-    "id": number}, progress: number) {
+    "id": number, tasks?: any[]}, progress: number, subprogress?: any) {
     console.warn("UPDATED step status", deploymentId, step);
 
 
@@ -227,10 +228,30 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       return e.__component === step.__component && e.id === step.id
     });
 
+
+    switch (step.__component) {
+      case "instructions.setup-instruction":
+        break;
+      case "instructions.text-instruction":
+        break;
+      case "instructions.list-instruction":
+        if(Object.keys(subprogress).length === 0) {
+          progress = 100;
+        } else {
+          if(posIndex !== -1) {
+            subprogress.tasks = subprogress.tasks.concat(currenStatus[posIndex].tasks.filter((f: any) => !(subprogress.tasks.some((t) => t.id === f.id))));
+          }
+          progress = (subprogress.tasks.filter((t: any) => t.progress === 100).length / step.tasks.length) * 100
+        }
+        break;
+      default:
+        break;
+    }
+
     if(posIndex !== -1) {
-      currenStatus[posIndex].progress = progress;
+      currenStatus[posIndex] = Object.assign(currenStatus[posIndex], { ...(progress ? { progress: progress } : {}), ...subprogress });
     } else {
-      currenStatus.push(Object.assign(step, { progress: progress }));
+      currenStatus.push(Object.assign(step, { ...(progress ? { progress: progress } : {}), ...subprogress }));
     }
 
     return await strapi.entityService.update('api::deployment.deployment', deploymentId,{
@@ -243,13 +264,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
   },
   async stepAction(deploymentId: number, data: any) {
+
+    return new Promise<void>(async (resolve, reject) => {
+
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       populate: { firm: {fields: ['id', 'TenentUID', 'CustomerUID', 'CustomerUserUID']}, use_case: { populate: '*' }}
     });
-
-    console.warn(" ----- ");
-    console.warn(deployment);
-    console.warn(" ----- ");
 
     let returnPromise;
 
@@ -264,17 +284,38 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               name: data.parameter.name,
               label: data.parameter.label
             }
-          )
+          );
+        returnPromise = returnPromise.then(() => {
+            strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+              id: data.step.data.id,
+              __component: data.step.data.__component
+            }, 100, {});
+            strapi.log.warn(`${data.step.data.__component} action failed`);
+            resolve();
+        }, () => {
+          strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+            id: data.step.data.id,
+            __component: data.step.data.__component
+          }, 1, {});
+          reject();
+        });
         break;
+      case "instructions.text-instruction":
+        returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+          id: data.step.data.id,
+          __component: data.step.data.__component
+        }, 100, {})
+        returnPromise.then(() => resolve(), () => reject());
+        break;
+      case "instructions.list-instruction":
+        console.warn("data: " + JSON.stringify(data));
+        returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, data.step.data, null, data.parameter)
+        returnPromise.then(() => resolve(), () => reject());
       default:
+        break;
     }
 
-    return returnPromise.then(async (response) => {
-      await strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-        id: data.step.data.id,
-        __component: data.step.data.__component
-      }, 100)
-      return response;
+
     });
 
   }

@@ -13,11 +13,6 @@
         "type": "DeviceProfile"
       },
       "customField": "plugin::thingsboard-plugin.thingsboardComponent"
-    },
-    "steps": {
-      "type": "component",
-      "repeatable": true,
-      "component": "instructions.instructions"
     }
   }
 }

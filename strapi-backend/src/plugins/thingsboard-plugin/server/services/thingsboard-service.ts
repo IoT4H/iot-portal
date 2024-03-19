@@ -465,56 +465,63 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async setupThingsboardDeviceAsset(tenantId: string, customerId: string, profile: { id: number, entityType: string }, data: any) {
 
-    console.warn(
-      tenantId,
-      customerId,
-      profile,
-      data);
 
     if(profile.entityType === "DEVICE_PROFILE") {
       return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device`, headers: {
           'Content-Type': 'application/json'
         }, data: JSON.stringify({
-          "tenantId": {
-            "id": tenantId,
-            "entityType": "TENANT"
+          tenantId: {
+            id: tenantId,
+            entityType: "TENANT"
           },
-          "customerId": {
-            "id": customerId,
-            "entityType": "CUSTOMER"
+          customerId: {
+            id: customerId,
+            entityType: "CUSTOMER"
           },
-          "name": data.name,
-          "label": data.label,
-          "deviceProfileId": profile,
-          "deviceData": {
-            "configuration": {},
-            "transportConfiguration": {}
-          },
-          "additionalInfo": {}
-        })}).then((response: any) => { return response.data});
+          name: data.name,
+          label: data.label,
+          deviceProfileId: profile,
+          additionalInfo: {}
+        })})
+        .then(
+          (response: any) => {
+            return response.data;
+          }, (reason: any) => {
+            console.warn(reason);
+            return reason;
+          });
 
     } else if (profile.entityType === "ASSET_PROFILE") {
       return this.axiosAsTenant(tenantId, {method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset`, headers: {
           'Content-Type': 'application/json'
         }, data: JSON.stringify(
           {
-            "tenantId": {
-            "id": tenantId,
-              "entityType": "TENANT"
+            tenantId: {
+            id: tenantId,
+              entityType: "TENANT"
           },
-            "customerId": {
-              "id": customerId,
-              "entityType": "CUSTOMER"
+            customerId: {
+              id: customerId,
+              entityType: "CUSTOMER"
             },
-            "name": data.name,
-            "label": data.label,
-            "assetProfileId": profile,
-            "additionalInfo": {}
-          }
-        )}).then((response: any) => { return response.data});
+            name: data.name,
+            label: data.label,
+            assetProfileId: profile,
+            additionalInfo: {}
+          })
+        })
+        .then(
+          (response: any) => {
+            return response.data;
+          }, (reason: any) => {
+            console.warn(reason);
+            return reason;
+          });
 
     } else {
-      return;
+      return new Promise<any>((resolve, reject) => {
+        reject("couldnt find correct type")
+      });
     }
   }
 

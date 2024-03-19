@@ -1,18 +1,21 @@
 "use client"
 
+import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import * as HeroIcons from "@heroicons/react/20/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
-import Link from "next/link";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
 
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Simulate } from "react-dom/test-utils";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 type StepData = {
     state: number | undefined,
     viewStatus: boolean,
+    locked: boolean,
     deployment: number,
     data: any,
     updateState: Function
@@ -52,15 +55,16 @@ const StepStatus = ({color, progress, Icon} : { color: string, progress: number 
     </div>);
 }
 
-export const CheckBox = ({label, init}: {label: string, init: boolean}) => {
+export const CheckBox = ({label, init, onChange}: {label: string, init: boolean, onChange?: Function}) => {
 
+    const sOnChange = (e: any) => onChange && onChange(e);
     const [check, setCheck] = useState(init);
 
     return (<label className={"relative cursor-pointer flex gap-2 flex-row items-center p-0.5 group/checkbox"}>
                                     <span className={"h-6 aspect-square border-2 border-orange-500 bg-orange-500/20 group-hover/checkbox:bg-orange-500/40 group/indicator"}>
                                         <CheckIcon className={`w-full aspect-square  ${ check ? 'visible' : 'invisible'}`} />
                                     </span>
-        <input type={"checkbox"} className={"absolute opacity-0 h-2 w-2 cursor-pointer "} checked={check} onChange={(e) => setCheck(e.currentTarget.checked)}/>
+        <input type={"checkbox"} className={"absolute opacity-0 h-2 w-2 cursor-pointer "} checked={check} onChange={(e) => {setCheck(e.currentTarget.checked); sOnChange(e);}}/>
         {label}
     </label>);
 }
@@ -76,12 +80,43 @@ export default function Step(stepData: StepData) {
 
     const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
+    const subtaskComplete = (id: number) => {
+        return stepData.data.tasks.find((f: any) => f.id === id).progress === 100;
+    }
 
     useEffect(() => {
-
-    } , [])
+            if(progress === 100 && open) {
+                toggleOpen();
+            } else if (progress !== undefined && progress >= 0 && progress < 100 && !open) {
+                toggleOpen();
+            }
+    } , [progress])
 
     const taskForm = useRef();
+
+    const performStepAction = (param: any = {}) => {
+        LoadingState.startLoading();
+        const copyStep = Object.assign({}, stepData);
+        fetchAPI(`/api/thingsboard-plugin/deployment/${stepData.deployment}/steps/action`, {}, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${Auth.getToken()}`
+            },
+            body: JSON.stringify({
+                step: copyStep,
+                parameter: param
+            })
+        }).then(() => {
+            stepData.updateState();
+        }).finally(() => {
+            LoadingState.endLoading();
+        })
+    }
+
+
+    const actionable = useCallback( (preCondition: () => boolean = () => true) => {
+        return !stepData.locked && preCondition();
+    }, [stepData.locked])
 
     useEffect(() => {
 
@@ -121,6 +156,9 @@ export default function Step(stepData: StepData) {
                             <span className={"text-xs align-bottom font-light"}>Step {stepData.data.index}</span>
                             <h1 className={"text-xl font font-bold"}>{ stepData.data.meta.name }</h1>
                         </div>
+                        { stepData.locked && <div className={" flex-grow-0 flex-shrink-0 h-16 flex flex-col justify-center items-center"}>
+                            <LockClosedIcon className={"w-6 aspect-square"}/>
+                        </div>}
                         <div className={" flex-grow-0 flex-shrink-0 h-16 aspect-square flex flex-col justify-center items-center"}>
                             { open ? <ChevronUpIcon className={"w-6 aspect-square"}></ChevronUpIcon> :
                             <ChevronDownIcon className={"w-6 aspect-square"}></ChevronDownIcon> }
@@ -136,7 +174,15 @@ export default function Step(stepData: StepData) {
                                         <span className={"pb-2 mt-4"}>Zu erledigen: </span>
                                     {
                                         stepData.data.tasks.map((task: any) => {
-                                            return <CheckBox key={task.text} label={task.text} init={false} />
+                                            return <CheckBox key={task.id} label={task.text} init={subtaskComplete(task.id) } onChange={(e: any) => {
+                                                task.progress = e.currentTarget.checked ? 100 : 0;
+                                                performStepAction({tasks: [
+                                                        {
+                                                            id: task.id,
+                                                            progress: e.currentTarget.checked ? 100 : 0
+                                                        }
+                                                    ]})
+                                            }} />
                                         })
                                     }
 
@@ -150,9 +196,11 @@ export default function Step(stepData: StepData) {
                                     ["instructions.setup-instruction"].includes(stepData.data.__component) && (
                                         <>
                                             <div className={"flex justify-center"}>
-                                                <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow"} onClick={() => toggleModalOpen()}>Einrichten</button>
+                                                { stepData.data.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"} onClick={() => toggleModalOpen()} disabled={ !actionable() }>{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Einrichten</button> }
                                             </div>
-                                            <DeviceSetupModal open={modalOpen} onClose={toggleModalOpen} config={{
+                                            <DeviceSetupModal open={modalOpen} onClose={() => { toggleModalOpen();
+                                                stepData.updateState();
+                                            }} config={{
                                                 deployment: stepData.deployment,
                                                 "thingsboard_profile":  stepData.data.thingsboard_profile,
                                                 "form_alternative_label": stepData.data.form_alternative_label,
@@ -163,11 +211,16 @@ export default function Step(stepData: StepData) {
                                 {
                                     ["instructions.text-instruction", "instructions.list-instruction"].includes(stepData.data.__component) && (
                                         <div className={"flex justify-center"}>
-                                            <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500"}
-                                            disabled={
-                                                (["instructions.list-instruction"].includes(stepData.data.__component)) ? true : false
-                                            }
-                                            >Erledigt</button>
+                                            { stepData.data.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"}
+                                            disabled={ !actionable(() => {
+                                                switch (stepData.data.__component) {
+                                                    case  "instructions.list-instruction":
+                                                        return Array.isArray(stepData.data.tasks) && Array.from(stepData.data.tasks).every((t: any) => subtaskComplete(t.id));
+                                                    default:
+                                                        return false;
+                                                }
+                                            }) } onClick={() => performStepAction({})}
+                                            >{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Erledigt </button>}
                                         </div>
                                     )
                                 }

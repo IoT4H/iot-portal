@@ -1,3 +1,4 @@
+import { de } from "@faker-js/faker";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { CheckBox } from "@iot-portal/frontend/app/common/setup/step";
@@ -9,9 +10,9 @@ import { useContext, useEffect, useState } from "react";
 const Modal = ({open, onClose, config, step } : {open: boolean, onClose?: Function, config: any, step: any}) => {
 
 
-    const [name, SetName] = useState<string | undefined>(undefined);
-    const [label, SetLabel] = useState<string | undefined>(undefined);
-    const [description, SetDescription] = useState<string | undefined>(undefined);
+    const [name, SetName] = useState<string>("");
+    const [label, SetLabel] = useState<string>("");
+    const [description, SetDescription] = useState<string>("");
     const [gateway, SetGateway] = useState<boolean>(false);
 
     const setupDevice = () => {
@@ -33,10 +34,14 @@ const Modal = ({open, onClose, config, step } : {open: boolean, onClose?: Functi
                 }
             })
         }).then(() => {
-            onClose && onClose();
         }).finally(() => {
             LoadingState.endLoading();
+            onClose && onClose();
         })
+    }
+
+    const actionable = () => {
+        return (label.length > 0) && (Array.from(["DEVICE_PROFILE"]).includes(step.data.thingsboard_profile.entityType) || name.length > 0) && (description.length > 0);
     }
 
     return open ? <ModalUI onClose={onClose}>
@@ -60,21 +65,25 @@ const Modal = ({open, onClose, config, step } : {open: boolean, onClose?: Functi
                             />
                         </div>
                     </div>
-                    <div>
-                        <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
-                            { config.form_alternative_label } *
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="name"
-                                name="name"
-                                type="text"
-                                required
-                                onChange={(event) => SetName(event.currentTarget.value)}
-                                className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
+                    {
+                        ["ASSET_PROFILE"].includes(step.data.thingsboard_profile.entityType) && (
+                            <div>
+                                <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
+                                    { config.form_alternative_label } *
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="text"
+                                        required
+                                        onChange={(event) => SetName(event.currentTarget.value)}
+                                        className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+                        )
+                    }
                     <div>
                         <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
                             Beschreibung *
@@ -91,7 +100,7 @@ const Modal = ({open, onClose, config, step } : {open: boolean, onClose?: Functi
                     </div>
                 </div>
                 <div className={"mt-8 flex flex-row justify-center"}>
-                    <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"} disabled={!(name && label && description)}
+                    <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"} disabled={!actionable()}
                     onClick={() => setupDevice()}>Anlegen</button>
                 </div>
             </div>

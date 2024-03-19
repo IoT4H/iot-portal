@@ -192,7 +192,6 @@ export interface ThingsboardComponent extends Schema.Component {
           type: 'DeviceProfile';
         }
       >;
-    steps: Attribute.Component<'instructions.instructions', true>;
   };
 }
 
