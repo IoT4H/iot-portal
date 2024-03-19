@@ -3,6 +3,8 @@ import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { headers } from "next/headers";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function LandingPage() {
     const headersList = headers()
 

@@ -5,6 +5,7 @@ import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import ReactMarkdown from "react-markdown";
 
 
+export const dynamic = 'force-dynamic';
 function Instruction({ instructions } : { instructions: any[]}) {
 
     return (

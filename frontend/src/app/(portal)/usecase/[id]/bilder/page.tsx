@@ -2,6 +2,7 @@ import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 
+export const dynamic = 'force-dynamic';
 function PictureGallery({ pictures } : {pictures?: any[]}) {
 
     return (

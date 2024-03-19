@@ -53,4 +53,4 @@ ENV STRAPI_URL=${STRAPI_URL}
 RUN chown -R node:node /opt/app
 USER node
 EXPOSE 1337
-CMD ["yarn", "start"]
+CMD ["yarn", "start "]

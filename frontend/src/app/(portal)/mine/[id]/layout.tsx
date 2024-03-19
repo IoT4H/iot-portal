@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Status from "@iot-portal/frontend/app/(portal)/deployment-status";
 
+export const dynamic = 'force-dynamic';
 
 export default function Layout(props: { children: React.ReactNode, params: {  id: number } }) {
 

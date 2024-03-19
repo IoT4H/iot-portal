@@ -11,6 +11,7 @@ import { Suspense } from "react";
 const inter = Inter({ subsets: ['latin'] })
 
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {
 
     const pageQsPara =
@@ -20,9 +21,16 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const page = (await fetchAPI("/api/portal-einstellungen", pageQsPara)).data.attributes || null;
+    const page = await (async () => {
+        try {
+            return  (await fetchAPI("/api/portal-einstellungen", pageQsPara)).data.attributes;
+        } catch (e) {
+            console.warn(e);
+        }
+        return  null;
+    })();
 
-    return {
+    return page ? {
         title: page.title ,
         openGraph: {
             url: 'https://portal.iot4h.de/',
@@ -30,7 +38,7 @@ export async function generateMetadata({ params }: {params: Params}) {
             type: 'website',
             description: page.description
         },
-    }
+    } : {};
 }
 export default async function RootLayout(props: any) {
 
@@ -41,12 +49,14 @@ export default async function RootLayout(props: any) {
                 <LoadingWrapper>
                     <PageBlockingSpinner />
                     <div className={'flex flex-1 flex-col '}>
+                        {/* @ts-expect-error Server Component */}
                         <Header/>
                         <div className={"mb-auto"}>
                             {props.children}
                         </div>
                         {props.auth}
                         {props.setup}
+                        {/* @ts-expect-error Server Component */}
                         <Footer />
                     </div>
                 </LoadingWrapper>

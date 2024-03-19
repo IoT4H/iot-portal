@@ -16,6 +16,7 @@ import {
     SignalIcon, PhotoIcon
 } from "@heroicons/react/20/solid";
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {
 
     const qsPara =
@@ -43,8 +44,8 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0]);
+    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+        return mapUseCase(data.data[0] || undefined);
     });
 
 
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: {params: Params}) {
 
     const page = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data.attributes || null;
 
-    return {
+    return useCase ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
             images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
@@ -72,7 +73,7 @@ export async function generateMetadata({ params }: {params: Params}) {
             description: page.description,
             images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
         }
-    }
+    } : {};
 }
 
 export default async function UseCase(props: { children: React.ReactNode, params: {  id: number } }) {
@@ -102,8 +103,8 @@ export default async function UseCase(props: { children: React.ReactNode, params
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0]);
+    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+        return mapUseCase(data.data[0] || undefined);
     });
 
     return (
@@ -128,7 +129,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12"}>
                             <div className={"pr-12 relative"}>
                                 <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
-                                    title: (await generateMetadata({params: props.params})).title,
+                                    title: (await generateMetadata({params: props.params})).title || "",
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>

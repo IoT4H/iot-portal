@@ -3,6 +3,10 @@ import { Deployment, ListDeployments, ListItemDeployment } from "@iot-portal/fro
 import { fetchAPI } from '@iot-portal/frontend/lib/api'
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import { useCallback, useEffect, useState } from "react";
+
+
+const dynamic = 'force-dynamic';
+
 export default function Mine() {
 
 

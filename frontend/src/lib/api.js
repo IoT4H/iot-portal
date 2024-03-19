@@ -24,7 +24,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
         headers: {
             "Content-Type": "application/json",
         },
-        next: { revalidate: 5 },
+        next: { revalidate: 0 },
     }, options);
 
     // Build request URL

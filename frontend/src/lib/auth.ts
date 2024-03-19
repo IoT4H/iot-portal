@@ -14,7 +14,7 @@ export type User = {
 
 export class Auth {
 
-    static #ID_ITEM_NAME = "token";
+    static ID_ITEM_NAME = "token";
 
     static onUserChange = () => {};
 
@@ -41,14 +41,14 @@ export class Auth {
 
     static isAuth(): boolean {
         try {
-            return localStorage.getItem(Auth.#ID_ITEM_NAME) !== null;
+            return localStorage.getItem(Auth.ID_ITEM_NAME) !== null;
         } catch (e) {
             return false;
         }
     }
 
     static getToken() {
-        return this.isAuth() && localStorage.getItem(Auth.#ID_ITEM_NAME);
+        return this.isAuth() && localStorage.getItem(Auth.ID_ITEM_NAME);
     }
 
     static async login(username: string, password: string) {
@@ -73,7 +73,7 @@ export class Auth {
             const raw = await response.json();
 
             if(raw.jwt) {
-                localStorage.setItem(Auth.#ID_ITEM_NAME, raw.jwt);
+                localStorage.setItem(Auth.ID_ITEM_NAME, raw.jwt);
             }
             Auth.onUserChange();
         } catch (e) {
@@ -84,7 +84,7 @@ export class Auth {
     }
 
      static async logout() {
-        localStorage.removeItem(Auth.#ID_ITEM_NAME);
+        localStorage.removeItem(Auth.ID_ITEM_NAME);
         Auth.onUserChange();
     }
 

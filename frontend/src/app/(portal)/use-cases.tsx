@@ -3,6 +3,8 @@ import { getStrapiURL } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 
 
+export const dynamic = 'force-dynamic';
+
 export type UseCase = {
     id: number;
     title: string;

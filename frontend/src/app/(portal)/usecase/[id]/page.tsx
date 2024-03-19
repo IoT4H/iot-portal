@@ -7,6 +7,7 @@ function Info({ description } : { description: string; }) {
 }
 
 
+export const dynamic = 'force-dynamic';
 export default async function UseCasePage({params}: { params: { id: number } }) {
 
 
