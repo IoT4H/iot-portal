@@ -40,7 +40,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     }, [params.id]);
 
     useEffect(() => {
-        const s = steps.map((s: any, i: number , a: any[]) => {
+        const s = Array.isArray(steps) ? steps.map((s: any, i: number , a: any[]) => {
             if (Array.isArray(stepsProgress)) {
                 const stp = stepsProgress.find((e: any) => {
                     return e.id == s.id && e.__component == s.__component;
@@ -56,7 +56,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 s.progress = stp?.progress;
             }
             return s;
-        });
+        }) : [];
         SetSteps(s);
     }, [stepsProgress])
 
