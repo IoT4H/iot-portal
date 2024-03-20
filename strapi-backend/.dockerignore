@@ -1,2 +1,7 @@
 node_modules
 .tmp
+.cache
+dist
+src/plugins/**/dist
+src/plugins/**/node_modules
+Dockerfile

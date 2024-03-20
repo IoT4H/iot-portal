@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "This is the description of the plugin.",
   "strapi": {
-    "name": "IoT4H Plugin",
+    "name": "thingsboard-plugin",
     "description": "IoT4H Plugin to handle any inter-communication",
     "kind": "plugin"
   },
