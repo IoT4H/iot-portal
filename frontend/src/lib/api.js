@@ -1,6 +1,7 @@
 import qs from "qs";
 
 console.info(`NEXT PUBLIC STRAPI API URL is: ${process.env.NEXT_PUBLIC_STRAPI_API_URL}`);
+console.info(`STRAPI API URL is: ${process.env.STRAPI_API_URL}`);
 
 /**
  * Get full Strapi URL from path
