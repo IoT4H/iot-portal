@@ -1,14 +1,20 @@
 import qs from "qs";
 
+console.info(`NEXT PUBLIC STRAPI API URL is: ${process.env.NEXT_PUBLIC_STRAPI_API_URL}`);
+
 /**
  * Get full Strapi URL from path
  * @param {string} path Path of the URL
  * @returns {string} Full Strapi URL
  */
 export function getStrapiURL(path = "") {
-    return `${
-        process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://127.0.0.1:1337"
-    }${path}`;
+    let strapi_url = process.env.NEXT_PUBLIC_STRAPI_API_URL
+    if (!strapi_url.startsWith('http') && typeof window === 'undefined') {
+        strapi_url = `http://localhost:3000${strapi_url.startsWith('/') ? '' : '/'}${strapi_url}`
+    }
+    return `${(
+        strapi_url || "/"
+    ).replace(/\/$/, "")}${path}`;
 }
 
 /**
@@ -39,7 +45,6 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
         // Handle response
         return await response.json();
     } catch (e) {
-        console.error(requestUrl, e)
         return null;
     }
 

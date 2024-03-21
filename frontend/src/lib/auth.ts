@@ -36,7 +36,7 @@ export class Auth {
             }
         }));
 
-        return { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
 
     static isAuth(): boolean {

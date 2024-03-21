@@ -22,12 +22,8 @@ export async function generateMetadata({ params }: {params: Params}) {
     ;
 
     const page = await (async () => {
-        try {
-            return  (await fetchAPI("/api/portal-einstellungen", pageQsPara)).data.attributes;
-        } catch (e) {
-            console.warn(e);
-        }
-        return  null;
+        const settings = (await fetchAPI("/api/portal-einstellungen", pageQsPara));
+        return settings ? settings.data.attributes : null;
     })();
 
     return page ? {

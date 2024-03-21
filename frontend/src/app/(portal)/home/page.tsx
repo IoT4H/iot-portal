@@ -33,18 +33,14 @@ export default async function Home() {
     ;
 
     const useCases = await (async () => {
-        try {
-            return (await fetchAPI('/api/use-cases', qsPara, {
+        const useCasesData = await fetchAPI('/api/use-cases', qsPara, {
                 headers: {
                     "Content-Type": "application/json",
                     cache: "no-cache"
                 }
-            })).data.map(
-                (useCase: any): UseCase => (mapUseCase(useCase)));
-        } catch (e) {
-            console.warn(e);
-        }
-        return [];
+            });
+        return useCasesData ? useCasesData.data.map(
+            (useCase: any): UseCase => (mapUseCase(useCase))) : [];
     })();
 
 
