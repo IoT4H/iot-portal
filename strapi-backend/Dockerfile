@@ -23,7 +23,7 @@ FROM base as build
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-ARG STRAPI_URL=localhost:1337
+ARG STRAPI_URL=localhost:1337/api
 ENV STRAPI_URL=${STRAPI_URL}
 
 WORKDIR /app
@@ -49,12 +49,10 @@ ENV PATH /opt/node_modules/.bin:$PATH
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-ARG STRAPI_URL=localhost:1337
+ARG STRAPI_URL=localhost:1337/api
 ENV STRAPI_URL=${STRAPI_URL}
 
 COPY --from=build /app ./
-
-USER node
 
 EXPOSE 1337
 CMD npm run start
