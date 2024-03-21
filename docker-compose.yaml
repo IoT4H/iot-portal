@@ -23,6 +23,7 @@ services:
       context: ./strapi-backend
     restart: unless-stopped
     environment:
+      STRAPI_URL: 'http://localhost:1337/api'
       DATABASE_HOST: 'portaldb'
       NODE_ENV: 'production'
       DATABASE_CLIENT: 'postgres'

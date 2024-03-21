@@ -7,3 +7,4 @@ src/plugins/**/node_modules
 Dockerfile
 **/.gitignore
 .git
+docker-compose.yaml
