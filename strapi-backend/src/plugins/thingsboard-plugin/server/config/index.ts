@@ -2,6 +2,7 @@ export default {
   default: ({ env }) =>
     ({
       thingsboardUrl: env('THINGSBOARD_URL',"http://localhost:9090"),
+      backendUrl: '/strapi'
 
     }),
   validator: (config) => {
