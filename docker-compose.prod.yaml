@@ -27,7 +27,7 @@ services:
     env_file:
       - .prod.env
     environment:    
-      STRAPI_URL: "https://portal.iot4h.de/api"
+      STRAPI_URL: "https://portal.iot4h.de"
       DATABASE_HOST: 'portaldb'
       NODE_ENV: 'production'
       DATABASE_CLIENT: 'postgres'
