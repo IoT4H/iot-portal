@@ -31,19 +31,12 @@ COPY src/plugins/thingsboard-plugin ./
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-ARG STRAPI_URL=localhost:1337
-ENV STRAPI_URL=${STRAPI_URL}
 RUN npm run build
 
 WORKDIR /app
 COPY . .
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
-
-
-ARG STRAPI_URL=http://localhost:1337
-ENV STRAPI_URL=${STRAPI_URL}
-
 
 RUN npm run build
 
@@ -59,9 +52,6 @@ ENV PATH /opt/node_modules/.bin:$PATH
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
-
-ARG STRAPI_URL=http://localhost:1337
-ENV STRAPI_URL=${STRAPI_URL}
 
 EXPOSE 1337
 CMD npm run start
