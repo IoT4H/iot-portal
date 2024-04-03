@@ -1,7 +1,5 @@
 import qs from "qs";
-
-console.info(`NEXT PUBLIC STRAPI API URL is: ${process.env.NEXT_PUBLIC_STRAPI_API_URL}`);
-console.info(`STRAPI API URL is: ${process.env.STRAPI_API_URL}`);
+import { APITool } from "@iot-portal/frontend/lib/APITool";
 
 /**
  * Get full Strapi URL from path
@@ -9,9 +7,11 @@ console.info(`STRAPI API URL is: ${process.env.STRAPI_API_URL}`);
  * @returns {string} Full Strapi URL
  */
 export function getStrapiURL(path = "") {
-    let strapi_url = process.env.NEXT_PUBLIC_STRAPI_API_URL
-    if (!strapi_url.startsWith('http') && typeof window === 'undefined') {
-        strapi_url = `http://localhost:3000${strapi_url.startsWith('/') ? '' : '/'}${strapi_url}`
+    let strapi_url;
+    if(typeof window === 'undefined') {
+        strapi_url = process.env.SERVER_STRAPI_API_URL
+    } else {
+        strapi_url = APITool.StrapiURL;
     }
     return `${(
         strapi_url || "/"
@@ -46,6 +46,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
         // Handle response
         return await response.json();
     } catch (e) {
+        console.error(e)
         return null;
     }
 
