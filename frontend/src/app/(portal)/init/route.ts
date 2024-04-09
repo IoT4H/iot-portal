@@ -11,7 +11,7 @@ export async function GET(request: Request, context: { params: Params }) {
     newHeaders.set('Content-Type', 'application/json')
 
     const url = process.env.FRONTEND_STRAPI_API_URL;
-    const serverUrl = process.env.SERVER_STRAPI_API_URL;
+    const serverUrl = process.env.SERVER_STRAPI_API_URL || process.env.FRONTEND_STRAPI_API_URL;
 
     return NextResponse.json({ StrapiURL: url, serverStrapiUrl: serverUrl }, { status: 200,headers:  newHeaders }, )
 }

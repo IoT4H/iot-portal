@@ -11,7 +11,7 @@ export function isServer() {
  * @returns {string} Full Strapi URL
  */
 export function getStrapiURL(path = "") {
-    let strapi_url = isServer() ? (process.env.SERVER_STRAPI_API_URL || 'http://127.0.0.1:1337') : APITool.StrapiURL;
+    let strapi_url = isServer() ? (process.env.SERVER_STRAPI_API_URL || process.env.FRONTEND_STRAPI_API_URL || 'http://127.0.0.1:1337') : APITool.StrapiURL;
 
     return `${(
         strapi_url || "/"
