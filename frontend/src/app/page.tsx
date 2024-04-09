@@ -16,7 +16,7 @@ export default async function LandingPage() {
     ;
 
     const load = (await fetchAPI('/api/startpage', qsPara));
-    const page = load ? load.data.attributes : null;
+    const page = load && load.data ? load.data.attributes : null;
 
     return (
         <main className="flex h-full flex-col items-center justify-between p-24 text-center justify-center align-middle">

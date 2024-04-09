@@ -1,18 +1,18 @@
 import qs from "qs";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
 
+
+export function isServer() {
+    return typeof window === 'undefined';
+}
 /**
  * Get full Strapi URL from path
  * @param {string} path Path of the URL
  * @returns {string} Full Strapi URL
  */
 export function getStrapiURL(path = "") {
-    let strapi_url;
-    if(typeof window === 'undefined') {
-        strapi_url = process.env.SERVER_STRAPI_API_URL
-    } else {
-        strapi_url = APITool.StrapiURL;
-    }
+    let strapi_url = isServer() ? (process.env.SERVER_STRAPI_API_URL || 'http://127.0.0.1:1337') : APITool.StrapiURL;
+
     return `${(
         strapi_url || "/"
     ).replace(/\/$/, "")}${path}`;

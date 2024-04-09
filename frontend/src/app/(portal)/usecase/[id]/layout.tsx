@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: {params: Params}) {
 
     const page = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data.attributes || null;
 
-    return useCase ? {
+    return useCase && page ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
             images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
