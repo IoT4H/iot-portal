@@ -56,13 +56,13 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const page = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data.attributes || null;
+    const pageData = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data;
+    const page = pageData && pageData.attributes || null;
 
     return useCase && page ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
             images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
-            url: 'https://portal.iot4h.de/usecase/'+ params.id,
             title: page.title + " - " + useCase.title,
             type: 'website',
             description: useCase.summary

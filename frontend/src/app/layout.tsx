@@ -29,7 +29,6 @@ export async function generateMetadata({ params }: {params: Params}) {
     return page ? {
         title: page.title ,
         openGraph: {
-            url: 'https://portal.iot4h.de/',
             title: page.title,
             type: 'website',
             description: page.description
