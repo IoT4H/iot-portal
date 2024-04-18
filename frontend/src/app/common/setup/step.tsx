@@ -5,6 +5,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/s
 import * as HeroIcons from "@heroicons/react/20/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
+import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
@@ -198,13 +199,14 @@ export default function Step(stepData: StepData) {
                                             <div className={"flex justify-center"}>
                                                 { stepData.data.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"} onClick={() => toggleModalOpen()} disabled={ !actionable() }>{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Einrichten</button> }
                                             </div>
-                                            <DeviceSetupModal open={modalOpen} onClose={() => { toggleModalOpen();
+                                            {  modalOpen && <DeviceSetupModal onClose={() => {
                                                 stepData.updateState();
+                                                toggleModalOpen();
                                             }} config={{
                                                 deployment: stepData.deployment,
                                                 "thingsboard_profile":  stepData.data.thingsboard_profile,
                                                 "form_alternative_label": stepData.data.form_alternative_label,
-                                            }} step={stepData}></DeviceSetupModal>
+                                            }} step={stepData} triggerStateRefresh={stepData.updateState}></DeviceSetupModal> }
                                         </>
                                     )
                                 }

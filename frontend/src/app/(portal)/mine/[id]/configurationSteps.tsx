@@ -1,5 +1,6 @@
 "use client"
 import { State } from "@iot-portal/frontend/app/(portal)/deployment-status";
+import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import Step from "@iot-portal/frontend/app/common/setup/step";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
@@ -83,6 +84,8 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                     })
                 }
                 s.progress = stp?.progress;
+                s.flash = stp?.flash;
+                s.setup = stp?.setup;
             }
             return s;
         }) : new Array(0);
@@ -92,7 +95,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
 
     return (
         <div className={"gap-8 flex flex-col"}>
-            <h1>TEST</h1>
+            <h1>Einrichtung: </h1>
             <Suspense>
                 {
                     Array.isArray(steps) && steps.map((s, index, a) => {

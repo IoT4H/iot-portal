@@ -215,8 +215,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return deployment.stepStatus;
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
-    "id": number, tasks?: any[]}, progress: number, subprogress?: any) {
-
+    "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {
+    delete step.meta;
+    console.warn(deploymentId, step, progress, subprogress);
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
@@ -229,6 +230,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     switch (step.__component) {
       case "instructions.setup-instruction":
+        if(Object.keys(subprogress).length === 0) {
+          progress = 100;
+        } else {
+          if(posIndex !== -1) {
+            if(step.flashProcess){
+              subprogress.flash = { progress: (subprogress.flash && subprogress.flash.progress) || (currenStatus[posIndex].flash && currenStatus[posIndex].flash.progress) || 0};
+            }
+            subprogress.setup = { progress: (subprogress.setup && subprogress.setup.progress) || (currenStatus[posIndex].setup && currenStatus[posIndex].setup.progress) || 0};
+          }
+          progress = (((subprogress.flash && Number(subprogress.flash.progress) || 0) + (subprogress.setup && Number(subprogress.setup.progress) || 0)) / (step.flashProcess ? 2 : 1));
+        }
         break;
       case "instructions.text-instruction":
         break;
@@ -273,41 +285,52 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     switch (data.step.data.__component) {
       case "instructions.setup-instruction":
-        returnPromise = strapi.plugin(pluginId)
-          .service('thingsboardService').setupThingsboardDeviceAsset(
-            deployment.firm.TenentUID,
-            deployment.firm.CustomerUID,
-            data.step.data.thingsboard_profile,
-            {
-              name: data.parameter.name,
-              label: data.parameter.label
-            }
-          );
-        returnPromise = returnPromise.then((response) => {
+        if(data.parameter.flash) {
+          returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+            ...data.step.data
+          }, null, {
+            flash: { progress: 100 }
+          });
+          returnPromise.then((response) => resolve(response), (reason) => reject(reason));
+        } else {
+          returnPromise = strapi.plugin(pluginId)
+            .service('thingsboardService').setupThingsboardDeviceAsset(
+              deployment.firm.TenentUID,
+              deployment.firm.CustomerUID,
+              data.step.data.thingsboard_profile,
+              {
+                name: data.parameter.name,
+                label: data.parameter.label
+              }
+            );
+          returnPromise = returnPromise.then((response) => {
             strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-              id: data.step.data.id,
-              __component: data.step.data.__component
-            }, 100, {});
+              ...data.step.data
+            }, null, {
+              setup: { progress: 100 }
+            });
             resolve(response);
-        }, (reason) => {
-          strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-            id: data.step.data.id,
-            __component: data.step.data.__component
-          }, 1, {});
-          strapi.log.warn(`${data.step.data.__component} action failed`);
-          reject(reason);
-        });
+          }, (reason) => {
+            strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+              ...data.step.data
+            }, null, { setup: { progress: 100 }});
+            strapi.log.warn(`${data.step.data.__component} action failed`);
+            reject(reason);
+          });
+
+        }
         break;
       case "instructions.text-instruction":
         returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-          id: data.step.data.id,
-          __component: data.step.data.__component
+          ...data.step.data
         }, 100, {})
         returnPromise.then((response) => resolve(response), (reason) => reject(reason));
         break;
       case "instructions.list-instruction":
         console.warn("data: " + JSON.stringify(data));
-        returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, data.step.data, null, data.parameter)
+        returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+          ...data.step.data
+        }, null, data.parameter)
         returnPromise.then((response) => resolve(response), (reason) => reject(reason));
       default:
         break;

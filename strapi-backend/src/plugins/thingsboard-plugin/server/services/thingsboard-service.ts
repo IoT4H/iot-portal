@@ -1,5 +1,4 @@
 import { Strapi } from '@strapi/strapi';
-import { responses } from "@strapi/strapi/dist/middlewares/responses";
 import axios, { AxiosResponse } from "axios";
 import { randomUUID } from "crypto";
 import pluginId from "../../admin/src/pluginId";

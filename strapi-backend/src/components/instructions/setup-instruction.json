@@ -30,6 +30,11 @@
       "type": "string",
       "default": "Name",
       "required": true
+    },
+    "flashProcess": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   }
 }

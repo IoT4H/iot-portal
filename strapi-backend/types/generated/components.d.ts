@@ -115,6 +115,9 @@ export interface InstructionsSetupInstruction extends Schema.Component {
     form_alternative_label: Attribute.String &
       Attribute.Required &
       Attribute.DefaultTo<'Name'>;
+    flashProcess: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
   };
 }
 
