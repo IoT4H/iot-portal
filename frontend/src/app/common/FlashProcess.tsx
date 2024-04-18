@@ -334,19 +334,24 @@ const FlashProgress = ({ onClose } : {onClose?: Function}) => {
         );
     }
 
-    const InstructionDriver = () => {
+    const InstructionPreparation = () => {
         return (
             <Instruction
                 title={Steps.VORBEREITUNG}
                 content={
-                    <div className={" flex flex-col place-content-center h-full"}>
-                        <ArrowDownTrayIcon className={"h-16 mb-8"} />
-                        <p className={"text-sm  text-center"}>
-                            Stellen Sie sicher, dass der notwendige Treiber installiert ist.<br/> <br/>
-                            Sie können diesen <a href={"https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads"} target={"_blank"} className={"underline underline-offset-2 text-orange-500 font-bold"}>hier</a> bei Silicon Labs herunterladen. </p>
-                    </div>
-                }
-                action={<div className={"btn-primary w-min"} onClick={() => SetStep(Steps.ANSCHLIESSEN)}>Erledigt</div>} />
+
+                        <div className={" flex flex-col place-content-center h-full"}>
+                            {
+                            // @ts-ignore
+                            window.navigator.serial && (<span className={"text-center text-red-500 font-bold mb-2"}> Nutzen Sie einen unterstützen Browser für diese Funktion! <span className={"block"}>Chrome oder Edge ab Version 89 </span><span className={"block"}>Opera ab Version 75</span></span>)
+                        }
+                            <ArrowDownTrayIcon className={"h-16 mb-8"} />
+                            <p className={"text-sm  text-center"}>
+                                Stellen Sie sicher, dass der notwendige Treiber installiert ist.<br/> <br/>
+                                Sie können diesen <a href={"https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads"} target={"_blank"} className={"underline underline-offset-2 text-orange-500 font-bold"}>hier</a> bei Silicon Labs herunterladen. </p>
+                        </div>}
+                action={// @ts-ignore
+                    window.navigator.serial ? <div className={"btn-primary w-min"} onClick={() => SetStep(Steps.ANSCHLIESSEN)}>Erledigt</div> : undefined} />
         );
     }
 
@@ -506,7 +511,7 @@ const FlashProgress = ({ onClose } : {onClose?: Function}) => {
                 </div>
             </div>
             <div className={"w-96 pl-6"}>
-                { step === Steps.VORBEREITUNG && (<InstructionDriver />) }
+                { step === Steps.VORBEREITUNG && (<InstructionPreparation />) }
                 { step === Steps.ANSCHLIESSEN && (<InstructionPlugIn />) }
                 { step === Steps.VERBINDEN && (<InstructionConnect />) }
                 { step === Steps.FLASHEN && (<InstructionFlash />) }
