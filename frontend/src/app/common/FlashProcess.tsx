@@ -314,7 +314,7 @@ const FlashProgress = ({ onClose } : {onClose?: Function}) => {
                 action={<div className={"flex flex-col items-center gap-2"}>
                     <div className={"btn-primary w-max"} onClick={() => flash()}>Flashen starten
                     </div>
-                    <span className={"text-[0.6rem]"}>* All Espressif's logos are trademarks of Espressif Systems (Shanghai) Co., Ltd.</span>
+                    <span className={"text-[0.6rem]"}>* All Espressif&apos;s logos are trademarks of Espressif Systems (Shanghai) Co., Ltd.</span>
                 </div>}/>
         );
     }
