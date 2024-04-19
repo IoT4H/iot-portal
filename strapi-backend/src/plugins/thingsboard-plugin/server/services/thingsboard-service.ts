@@ -231,7 +231,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async getSysAdminToken() {
     return axios({method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + "/api/auth/login",headers: {
         'Content-Type': 'application/json'
-      }, data: JSON.stringify({username: "sysadmin@thingsboard.org", password: "sysadmin"})})
+      }, data: JSON.stringify({username: strapi.plugin(pluginId).config('thingsboardSysAdminUsername'), password: strapi.plugin(pluginId).config('thingsboardSysAdminPassword')})})
       .then((response:any): any => response.data);
   },
   async getUserToken(userId: string) {
