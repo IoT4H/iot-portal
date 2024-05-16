@@ -203,7 +203,13 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const constructedModSteps = JSON.stringify(deployment.use_case.setupSteps).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
       return replacementDictionary[matched]
     })
-    return JSON.parse(constructedModSteps);
+
+    try {
+      return JSON.parse(constructedModSteps);
+    } catch (e) {
+      strapi.log.error(e);
+      return null;
+    }
 
     //TODO: CHECK CODE FOR BUGS
   },

@@ -5,7 +5,6 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/s
 import * as HeroIcons from "@heroicons/react/20/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
-import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";

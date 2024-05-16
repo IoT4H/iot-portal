@@ -15,6 +15,33 @@ export interface FirmFirmRoles extends Schema.Component {
   };
 }
 
+export interface FirmwareFlashConfigAttribute extends Schema.Component {
+  collectionName: 'components_firmware_flash_config_attributes';
+  info: {
+    displayName: 'FlashConfigAttribute';
+    icon: 'chartBubble';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    label: Attribute.String & Attribute.Required;
+    type: Attribute.Enumeration<['string', 'number']> & Attribute.Required;
+  };
+}
+
+export interface FirmwareFlashConfig extends Schema.Component {
+  collectionName: 'components_firmware_flash_configs';
+  info: {
+    displayName: 'FlashConfig';
+    icon: 'chartBubble';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String;
+    attributes: Attribute.Component<'firmware.flash-config-attribute', true> &
+      Attribute.Required;
+  };
+}
+
 export interface FirmwareTest extends Schema.Component {
   collectionName: 'components_test_tests';
   info: {
@@ -237,6 +264,8 @@ declare module '@strapi/types' {
   export module Shared {
     export interface Components {
       'firm.firm-roles': FirmFirmRoles;
+      'firmware.flash-config-attribute': FirmwareFlashConfigAttribute;
+      'firmware.flash-config': FirmwareFlashConfig;
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
       'instructions.base-instruction': InstructionsBaseInstruction;

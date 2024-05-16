@@ -1,4 +1,5 @@
 import { de } from "@faker-js/faker";
+import ConfigProgress from "@iot-portal/frontend/app/common/ConfigProcess";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";

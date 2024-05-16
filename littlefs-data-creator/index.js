@@ -1,8 +1,11 @@
 // Import the framework and instantiate it
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
+import multipart from '@fastify/multipart'
 import * as tmp from "tmp"
-import {  execSync } from 'node:child_process';
-import fs from 'node:fs/promises';
+import {  execSync } from 'child_process';
+import * as fs from 'fs';
+import { platform } from 'node:os';
 
 const fastify = Fastify({
     logger: true
@@ -10,35 +13,63 @@ const fastify = Fastify({
 
 tmp.setGracefulCleanup();
 
+console.info(`creator started on ${platform()}`)
+
+
+await fastify.register(cors, {
+    // put your options here
+    origin: ["*"]
+})
+
 fastify.get('/', async function handler (request, reply) {
     reply.body = "test"
 })
 
 // Declare a route
-fastify.post('/flashdata', async function handler (request, reply) {
+fastify.post('/flashdata.bin', async function handler (request, reply) {
 
-    let data = null;
+    console.info("request received")
+
     try {
-        const tmpobj = tmp.dirSync({ prefix: "littlefs-", unsafeCleanup: true});
-        console.log('Dir: ', tmpobj.name);
-        const content = JSON.stringify(request.body);
-        await fs.writeFile(`${tmpobj.name}/config.json`, content);
+
+        const data = request.body || "{}";
+        console.info(`data ${data}`)
+
+        const tmpobj = tmp.dirSync({ prefix: "littlefs", unsafeCleanup: true});
+        console.info('Created Dir: ', tmpobj.name);
+
+        fs.writeFileSync(`${tmpobj.name}/config.json`, data);
 
 
-        const tmpFile = tmp.fileSync({prefix: "littlefs-", postfix: "data.bin"});
-        console.log('Created temporary filename: ', tmpFile.name);
+        const tmpFile = tmp.fileSync({ postfix: "littlefs.bin"});
+        console.info('Created temporary filename: ', tmpFile.name);
 
 
-        execSync(`./mklittlefs/mklittlefs -s 16384 -b 4096 -p 256 -c "${tmpobj.name}" "${tmpFile.name}"`);
-        console.log(`file data ${tmpFile.name}`)
-        data = await fs.readFile(`${tmpFile.name}`);
-        tmpobj.removeCallback();
-        tmpFile.removeCallback();
+        let mklittlefsCommandPath;
+        if((platform() === 'win32')) { // WINDOWS SYSTEM
+            mklittlefsCommandPath = "mklittlefs\\mklittlefs.exe"
+        } else { // LINUX Systems
+            mklittlefsCommandPath = "./mklittlefs/mklittlefs"
+        }
+
+        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 65536 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
+        console.info(`littlefs create command: ${command}`)
+        execSync(command);
+
+        console.info(`file data ${tmpFile.name}`)
+        const stream = fs.createReadStream(`${tmpFile.name}`);
+        reply.then(() => {
+
+            // clean up files
+
+            //tmpobj.removeCallback();
+            //tmpFile.removeCallback();
+        })
+        return reply.type('application/octet-stream').send(stream)
     } catch (err) {
         console.log(err);
+        
     }
-    reply.type("application/octet-stream");
-    reply.send(data);
 })
 
 // Run the server!

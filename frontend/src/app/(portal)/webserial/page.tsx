@@ -95,25 +95,43 @@ export default function Page() {
 
     useEffect(() => {
 
-        transport && new Promise<void>(async (resolve, reject) => {
+        if(isConsoleClosed && transport ) {
+          new Promise<void>(async (resolve, reject) => {
 
-            try {
-                const flashOptions = {
-                    transport,
-                    baudrate: 921600,
-                    terminal: espLoaderTerminal,
-                } as LoaderOptions;
-                SetEsploader(new ESPLoader(flashOptions));
+                try {
+                    const flashOptions = {
+                        transport,
+                        baudrate: 460800,
+                        terminal: espLoaderTerminal
+                    } as LoaderOptions;
+                    SetEsploader(new ESPLoader(flashOptions));
 
-                // Temporarily broken
-                // await esploader.flashId();
-            } catch (e: any) {
-                console.log(`${e.message}`);
-                SetErrors([`${e.message}`]);
-            } finally {
-                resolve()
-            }
-        });
+                    // Temporarily broken
+                    // await esploader.flashId();
+                } catch (e: any) {
+                    console.log(`${e.message}`);
+                    SetErrors([`${e.message}`]);
+                } finally {
+                    resolve()
+                }
+            });
+        }
+
+        if(!isConsoleClosed && transport) {
+            new Promise<void>(async (resolve, reject) => {
+                await transport.connect(115200);
+                console.log("connect")
+
+                while (!isConsoleClosed) {
+                    const val = new TextDecoder().decode(await transport.rawRead());
+                    if (typeof val !== "undefined") {
+                        console.info(val)
+                    } else {
+                        break;
+                    }
+                }
+            });
+        }
     }, [transport]);
 
     const ctClick = () => {
@@ -123,6 +141,7 @@ export default function Page() {
                     // @ts-ignore
                     device = await navigator.serial.requestPort({});
                     SetTransport(new Transport(device, false));
+
                 }
 
             }).then(() => {
@@ -135,20 +154,44 @@ export default function Page() {
     const flash = () => {
         new Promise<void>(async (resolve) => {
 
-            // @ts-ignore
-            const [fileHandle] = await window.showOpenFilePicker();
-            const file = await fileHandle.getFile();
+            const fileArray: any[] = [];
 
-            const reader = new FileReader();
+            /* fileArray.push({data: await new Promise(async (resolve, reject) => {
+
+                    // @ts-ignore
+                    const [fileHandle] = await window.showOpenFilePicker();
+                    const file = await fileHandle.getFile();
+
+                    const reader = new FileReader();
 
 
-            const fileArray: any[] = [{data: await new Promise((resolve, reject) => {
                     reader.onload = (ev: ProgressEvent<FileReader>) => {
                         ev.target ? resolve(ev.target.result) : reject()
                     };
 
                     reader.readAsBinaryString(file);
-                }), address: 0x0000}];
+                }), address: 0x0000}) */
+
+
+            fileArray.push({data: await new Promise((resolve, reject) => {
+                    fetch("http://127.0.0.1:3001/flashdata.bin", {
+                        method: "POST",
+                        headers: {
+                            'Accept':  '*/*'
+                        },
+                        body: JSON.stringify({
+                            wifi: {
+                                ssid: "ssid",
+                                password: "wifiPassword",
+                                type: "wifitype",
+                                test2: "test2",
+                                date: new Date().toLocaleDateString()
+                            }
+                        })
+                    }).then((data) => {
+                        resolve(data.blob());
+                    })
+                }), address: 0x000eb000})
 
             //------ validate
 
@@ -185,11 +228,7 @@ export default function Page() {
             try {
                 const flashOptions: FlashOptions = {
                     fileArray: fileArray,
-                    flashSize: "keep",
-                    flashMode: "keep",
-                    flashFreq: "keep",
-                    eraseAll: false,
-                    compress: true,
+                    flashSize: "detect",
                     reportProgress: (fileIndex: number, written: number, total: number) => {
                         console.debug(`File ${fileIndex} Progress: ${(written / total) * 100}`)
                         SetProgress((written / total) * 100);
@@ -225,7 +264,7 @@ export default function Page() {
                 console.log("hard reset");
 
                 if(transport) {
-                    transport.disconnect().then(() => {
+                    transport.disconnect().then(async () => {
                         setTimeout(() => {
                             SetState(undefined);
                             SetProgress(undefined)
@@ -235,7 +274,7 @@ export default function Page() {
                             SetProductID(undefined);
                             SetChip(undefined);
                             SetErrors([]);
-                        }, 2000)
+                        }, 2000);
                     });
                 }
             });
@@ -244,12 +283,40 @@ export default function Page() {
         }
     }, [state, transport, esploader])
 
+    const [isConsoleClosed, setIsConsoleClosed] = useState(true);
+    const [consoleProcess, setConsoleProcess] = useState<Promise<void> | undefined>(undefined);
+
+    const terminalProcess = () => {
+        if(!consoleProcess) {
+            setConsoleProcess(new Promise<void>(async () => {
+                if(!transport) {
+                    if (device === null) {
+                        // @ts-ignore
+                        device = await navigator.serial.requestPort({});
+                        SetTransport(new Transport(device, false));
+                    }
+                }
+            }).then())
+        }
+    }
+
+    useEffect( () => {
+        if (!isConsoleClosed) {
+            terminalProcess();
+        }
+
+    }, [isConsoleClosed, transport]);
+
     return (
         <div className={"bg-zinc-600 relative block"}>
 
             <div className={"m-16 absolute left-0 top-0 "}>
             { state === "Connected" && (<div className={" px-8 py-4 bg-orange-500 hover:bg-orange-700 text-white rounded cursor-pointer "} onClick={() => flash()}>Flash</div> ) }
             { !state && ( <div className={" px-8 py-4 bg-orange-500 hover:bg-orange-700 text-white rounded cursor-pointer "} onClick={() => ctClick()}>Connect</div> ) }
+
+
+                { isConsoleClosed && (<div className={" px-8 py-4 bg-orange-500 hover:bg-orange-700 text-white rounded cursor-pointer "} onClick={() => setIsConsoleClosed(false)}>Console open</div> ) }
+                { !isConsoleClosed && ( <div className={" px-8 py-4 bg-orange-500 hover:bg-orange-700 text-white rounded cursor-pointer "} onClick={() => setIsConsoleClosed(true)}>Console close</div> ) }
             </div>
 
             <div className={"p-2 relative block bg-grey-100 text-right w-1/2 left-1/2"}>
