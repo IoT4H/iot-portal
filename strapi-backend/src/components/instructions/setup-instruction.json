@@ -35,6 +35,11 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "form_alternative_label_required": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

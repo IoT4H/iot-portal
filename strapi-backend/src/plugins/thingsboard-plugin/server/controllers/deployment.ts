@@ -124,7 +124,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .service('strapiService').updateInstructionStepsProgressFromDeployment(ctx.params.setupId, step, progress)
   },
   async stepAction(ctx) {
-    return strapi.plugin(pluginId).service('strapiService').stepAction(ctx.params.setupId, JSON.parse(ctx.request.body));
+    return strapi.plugin(pluginId).service('strapiService').stepAction(ctx.params.setupId, JSON.parse(ctx.request.body)).then(
+      (response) => response,
+      (reason) => ctx.badRequest(reason.message, reason));
   }
 
 });

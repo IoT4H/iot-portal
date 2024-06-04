@@ -310,16 +310,16 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               }
             );
           returnPromise = returnPromise.then((response) => {
-            strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-              ...data.step.data
-            }, null, {
-              setup: { progress: 100 }
-            });
-            resolve(response);
+              strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+                ...data.step.data
+              }, null, {
+                setup: {progress: 100}
+              });
+              resolve(response);
           }, (reason) => {
             strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
               ...data.step.data
-            }, null, { setup: { progress: 100 }});
+            }, null, { setup: { progress: 0 }});
             strapi.log.warn(`${data.step.data.__component} action failed`);
             reject(reason);
           });

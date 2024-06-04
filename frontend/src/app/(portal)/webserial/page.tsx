@@ -156,7 +156,7 @@ export default function Page() {
 
             const fileArray: any[] = [];
 
-            /* fileArray.push({data: await new Promise(async (resolve, reject) => {
+            fileArray.push({data: await new Promise(async (resolve, reject) => {
 
                     // @ts-ignore
                     const [fileHandle] = await window.showOpenFilePicker();
@@ -170,14 +170,14 @@ export default function Page() {
                     };
 
                     reader.readAsBinaryString(file);
-                }), address: 0x0000}) */
+                }), address: 0x0000})
 
-
+            /*
             fileArray.push({data: await new Promise((resolve, reject) => {
+
                     fetch("http://127.0.0.1:3001/flashdata.bin", {
                         method: "POST",
                         headers: {
-                            'Accept':  '*/*'
                         },
                         body: JSON.stringify({
                             wifi: {
@@ -191,7 +191,8 @@ export default function Page() {
                     }).then((data) => {
                         resolve(data.blob());
                     })
-                }), address: 0x000eb000})
+                }), address: 0x000eb000});
+*/
 
             //------ validate
 
@@ -228,7 +229,8 @@ export default function Page() {
             try {
                 const flashOptions: FlashOptions = {
                     fileArray: fileArray,
-                    flashSize: "detect",
+                    flashSize: "keep",
+                    compress: true,
                     reportProgress: (fileIndex: number, written: number, total: number) => {
                         console.debug(`File ${fileIndex} Progress: ${(written / total) * 100}`)
                         SetProgress((written / total) * 100);

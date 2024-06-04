@@ -489,7 +489,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           (response: any) => {
             resolve(response.data);
           }, (reason: any) => {
-            reject(reason);
+            reject(reason.response.data);
           });
 
     } else if (profile.entityType === "ASSET_PROFILE") {
@@ -506,7 +506,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               id: customerId,
               entityType: "CUSTOMER"
             },
-            name: data.name,
+            name: data.name || data.label,
             label: data.label,
             assetProfileId: profile,
             additionalInfo: {}
@@ -515,7 +515,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         (response: any) => {
           resolve(response.data);
         }, (reason: any) => {
-          reject(reason);
+          reject(reason.response.data);
         });
 
     } else {

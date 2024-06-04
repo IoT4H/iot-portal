@@ -1,13 +1,13 @@
-import { de } from "@faker-js/faker";
-import ConfigProgress from "@iot-portal/frontend/app/common/ConfigProcess";
+"use client"
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import { CheckBox } from "@iot-portal/frontend/app/common/setup/step";
+import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 
 const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Function, config: any, step: any, triggerStateRefresh?: Function}) => {
 
@@ -16,6 +16,8 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [label, SetLabel] = useState<string>("");
     const [description, SetDescription] = useState<string>("");
     const [gateway, SetGateway] = useState<boolean>(false);
+
+    const [error, SetError] = useState<string | undefined>();
 
     const setupDevice = () => {
         LoadingState.startLoading();
@@ -35,10 +37,15 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                     gateway: gateway
                 }
             })
-        }).then(() => {
-            if(!step.data.flashProcess && !!onClose) {
-                onClose();
+        }).then((response) => {
+            console.debug(response)
+            if(!step.data.flashProcess) {
+                if(!!onClose) onClose();
+            } else if (response.error) {
+                SetError(response.error.message)
             }
+        }, (reason) => {
+            SetError(reason.error.message)
         }).finally(() => {
             LoadingState.endLoading();
             triggerStateRefresh && triggerStateRefresh();
@@ -67,7 +74,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     }
 
     const actionable = () => {
-        return (label.length > 0) && (Array.from(["DEVICE_PROFILE"]).includes(step.data.thingsboard_profile.entityType) || name.length > 0) && (description.length > 0);
+        return (label.length > 0) && (!config.form_alternative_label_required || name.length > 0) && (description.length > 0);
     }
 
     return <>
@@ -94,7 +101,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                             </div>
                         </div>
                         {
-                            ["ASSET_PROFILE"].includes(step.data.thingsboard_profile.entityType) && (
+                            (config.form_alternative_label_required) && (
                                 <div>
                                     <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
                                         { config.form_alternative_label } *
@@ -140,6 +147,12 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         }}></FlashProgress>
 
     }
+        {
+            error && createPortal(
+                <Prompt type={PromptType.Error} text={error || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetError(undefined)} />,
+                document.getElementById('promptArea')!
+            )
+        }
     </>;
 }
 export default Modal;

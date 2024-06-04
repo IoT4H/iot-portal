@@ -205,6 +205,7 @@ export default function Step(stepData: StepData) {
                                                 deployment: stepData.deployment,
                                                 "thingsboard_profile":  stepData.data.thingsboard_profile,
                                                 "form_alternative_label": stepData.data.form_alternative_label,
+                                                "form_alternative_label_required" : stepData.data.form_alternative_label_required
                                             }} step={stepData} triggerStateRefresh={stepData.updateState}></DeviceSetupModal> }
                                         </>
                                     )
