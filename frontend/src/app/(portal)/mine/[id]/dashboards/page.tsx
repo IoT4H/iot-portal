@@ -1,9 +1,9 @@
 "use client"
-import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/mine/[id]/configurationSteps";
 import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/mine/[id]/dashboards";
 
+const dynamic = 'force-dynamic';
 
-const Page = async ({params}: { params: { id: number } }) => {
-    return <ConfigurationSteps params={params} />;
+const Page = ({params}: { params: { id: number } }) => {
+    return <MyDeploymentPage params={params} />;
 }
 export default Page;

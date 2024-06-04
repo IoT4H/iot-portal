@@ -73,7 +73,10 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                         <div className={"pb-8"}>
                             <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                                 <Suspense>
-                                    <Tab name={"Dashboards"} link={""}/>
+                                    <Tab name={"Start"} link={`/mine/${props.params.id}/start`}/>
+                                </Suspense>
+                                <Suspense>
+                                    <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards`}/>
                                 </Suspense>
                             </div>
                             <div className={"w-full"}>

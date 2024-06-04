@@ -1,9 +1,13 @@
 "use client"
-import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/mine/[id]/configurationSteps";
-import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/mine/[id]/dashboards";
+import { useRouter } from 'next/navigation';
+
+const dynamic = 'force-dynamic';
+
+const Page = ({params}: { params: { id: number } }) => {
 
 
-const Page = async ({params}: { params: { id: number } }) => {
-    return <ConfigurationSteps params={params} />;
+    const router = useRouter()
+    router.push('dashboards');
+
 }
 export default Page;

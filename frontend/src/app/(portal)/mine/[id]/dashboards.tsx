@@ -129,7 +129,7 @@ export function ListDashboards ({
 }
 
 
-export default async function MyDeploymentPage({params}: { params: { id: number } }) {
+export default function MyDeploymentPage({params}: { params: { id: number } }) {
 
 
     const [dashboards, setDashboards] = useState<Array<Dashboard>>(Array.of());
