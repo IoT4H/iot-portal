@@ -3,6 +3,7 @@ import AuthWrapper from "@iot-portal/frontend/app/common/AuthWrapper";
 import Footer from "@iot-portal/frontend/app/common/Footer";
 import Header from "@iot-portal/frontend/app/common/Header";
 import PageBlockingSpinner, { LoadingWrapper } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import PromptComponent from "@iot-portal/frontend/app/common/prompt";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
@@ -43,6 +44,7 @@ export default async function RootLayout(props: any) {
             <AuthWrapper>
                 <LoadingWrapper>
                     <PageBlockingSpinner />
+                    <PromptComponent />
                     <div className={'flex flex-1 flex-col '}>
                         {/* @ts-expect-error Server Component */}
                         <Header/>
