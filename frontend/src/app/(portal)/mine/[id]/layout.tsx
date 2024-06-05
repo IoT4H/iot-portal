@@ -1,4 +1,5 @@
 "use client"
+import { CursorArrowRaysIcon } from "@heroicons/react/24/solid";
 import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -73,10 +74,12 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                         <div className={"pb-8"}>
                             <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                                 <Suspense>
-                                    <Tab name={"Start"} link={`/mine/${props.params.id}/start`}/>
+                                    <div className={"text-orange-500 font-extrabold text-xl leading-4"}>
+                                        <Tab name={"Start"} link={`/mine/${props.params.id}/start/`} Icon={CursorArrowRaysIcon}/>
+                                    </div>
                                 </Suspense>
                                 <Suspense>
-                                    <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards`}/>
+                                    <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards/`}/>
                                 </Suspense>
                             </div>
                             <div className={"w-full"}>
