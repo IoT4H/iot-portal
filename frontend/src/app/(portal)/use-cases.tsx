@@ -60,7 +60,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                     <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
                         <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
                         {
-                            useCase.thumbnail && (
+                            useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (
                                     <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover gallery-image"}/>
                             ) || (
                                 <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
