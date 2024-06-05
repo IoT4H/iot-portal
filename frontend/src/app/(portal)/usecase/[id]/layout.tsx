@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     return useCase && page ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
-            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
+            images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
             title: page.title + " - " + useCase.title,
             type: 'website',
             description: useCase.summary
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: {params: Params}) {
             card: 'summary_large_image',
             title: page.title,
             description: page.description,
-            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
+            images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
         }
     } : {};
 }
@@ -115,11 +115,11 @@ export default async function UseCase(props: { children: React.ReactNode, params
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
-                            useCase.thumbnail ? (
+                            useCase.thumbnail && !!useCase.thumbnail.url ? (
                                 <div
                                     className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
-                                    <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url} src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
+                                    <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url } src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             ) : (
