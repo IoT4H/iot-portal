@@ -115,7 +115,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
-                            useCase.thumbnail && !!useCase.thumbnail.url ? (
+                            useCase.thumbnail && !!useCase.thumbnail.url && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url ? (
                                 <div
                                     className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
