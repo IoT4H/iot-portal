@@ -4,7 +4,7 @@ import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -119,7 +119,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                 <div
                                     className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
-                                    <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url } src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
+                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url } src={getStrapiURLForFrontend() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             ) : (

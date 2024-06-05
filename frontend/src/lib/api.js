@@ -18,6 +18,14 @@ export function getStrapiURL(path = "") {
     ).replace(/\/$/, "")}${path}`;
 }
 
+export function getStrapiURLForFrontend(path = "") {
+    let strapi_url = APITool.FrontendStrapiURL;
+
+    return `${(
+        strapi_url || "/"
+    ).replace(/\/$/, "")}${path}`;
+}
+
 /**
  * Helper to make GET requests to Strapi API endpoints
  * @param {string} path Path of the API route
