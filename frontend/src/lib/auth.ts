@@ -1,5 +1,5 @@
 "use client"
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 
 export type User = {
 
@@ -55,7 +55,7 @@ export class Auth {
 
         try {
 
-            const response = await fetch(getStrapiURL() + "/api/auth/local", {
+            const response = await fetch(getStrapiURLForFrontend() + "/api/auth/local", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
