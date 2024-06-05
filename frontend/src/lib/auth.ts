@@ -55,7 +55,8 @@ export class Auth {
 
         try {
 
-            const response = await fetch(getStrapiURLForFrontend() + "/api/auth/local", {
+
+            const response = await fetchAPI( "/api/auth/local", {},{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
