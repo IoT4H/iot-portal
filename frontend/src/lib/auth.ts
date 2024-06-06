@@ -1,5 +1,6 @@
 "use client"
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { APITool } from "@iot-portal/frontend/lib/APITool";
 
 export type User = {
 
@@ -30,7 +31,9 @@ export class Auth {
             }
         ;
 
-        const u = (await fetchAPI("/api/users/me", qsPara, {
+        await APITool.init();
+
+        const u = (await fetchAPI( "/api/users/me", qsPara, {
             headers: {
                 "Authorization": "Bearer " + this.getToken()
             }

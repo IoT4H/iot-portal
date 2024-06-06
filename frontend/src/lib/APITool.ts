@@ -1,19 +1,42 @@
+import { getUrls } from "@iot-portal/frontend/lib/urls";
+
 export class APITool {
 
-    static StrapiURL: string = process.env.FRONTEND_STRAPI_API_URL || "";
-    static FrontendStrapiURL: string = process.env.FRONTEND_STRAPI_API_URL || "";
-    static ServerStrapiURL: string = process.env.SERVER_STRAPI_API_URL || "";
+    static StrapiURL: string = "";
+    static FrontendStrapiURL: string = "";
+    static ServerStrapiURL: string = "";
+    static initComplete = false;
 
-    constructor() {
-        fetch("/init/").then((response) => response.json()).then((data) => {
-            APITool.StrapiURL = typeof window === 'undefined' ? data.serverStrapiUrl : data.StrapiURL;
-            APITool.FrontendStrapiURL = data.StrapiURL;
-            APITool.ServerStrapiURL = data.serverStrapiUrl;
-            console.info(`Frontend STRAPI API URL is: ${APITool.FrontendStrapiURL}`);
-            console.info(`Server STRAPI API URL is: ${APITool.ServerStrapiURL}`);
-        });
-
-
+    static isServer() {
+        return typeof window === 'undefined';
     }
 
+    static init(): Promise<{StrapiURL: string, serverStrapiUrl: string}> {
+        return APITool.initComplete ? new Promise((resolve) => {
+            resolve({StrapiURL: APITool.FrontendStrapiURL, serverStrapiUrl: APITool.ServerStrapiURL})
+        }) : new Promise((resolve, reject) => {
+            if (APITool.isServer()) {
+                const {StrapiURL, serverStrapiUrl} = getUrls();
+
+                APITool.FrontendStrapiURL = StrapiURL;
+                APITool.ServerStrapiURL = serverStrapiUrl;
+                resolve({StrapiURL, serverStrapiUrl});
+                APITool.initComplete = true;
+            } else {
+                fetch("/init/").then((response) => response.json()).then((data) => {
+                    APITool.StrapiURL = data.StrapiURL;
+                    APITool.FrontendStrapiURL = data.StrapiURL;
+                    APITool.ServerStrapiURL = data.serverStrapiUrl;
+                    console.info(`Frontend STRAPI API URL is: ${APITool.FrontendStrapiURL}`);
+                    console.info(`Server STRAPI API URL is: ${APITool.ServerStrapiURL}`);
+                    APITool.initComplete = true;
+                    resolve(data);
+                });
+            }
+
+        })
+
+    }
 }
+
+APITool.init();

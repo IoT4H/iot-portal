@@ -1,3 +1,4 @@
+import { getUrls } from "@iot-portal/frontend/lib/urls";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 
@@ -10,10 +11,9 @@ export async function GET(request: Request, context: { params: Params }) {
 // Add a new header
     newHeaders.set('Content-Type', 'application/json')
 
-    const url = process.env.FRONTEND_STRAPI_API_URL || '';
-    const serverUrl = process.env.SERVER_STRAPI_API_URL || process.env.FRONTEND_STRAPI_API_URL || '';
+    const { StrapiURL, serverStrapiUrl } = getUrls();
 
-    console.log("send init parameter ", { StrapiURL: url, serverStrapiUrl: serverUrl })
+    console.log("send init parameter ", { StrapiURL: StrapiURL, serverStrapiUrl: serverStrapiUrl })
 
-    return NextResponse.json({ StrapiURL: url, serverStrapiUrl: serverUrl }, { status: 200, headers: newHeaders } )
+    return NextResponse.json({ StrapiURL: StrapiURL, serverStrapiUrl: serverStrapiUrl }, { status: 200, headers: newHeaders } )
 }
