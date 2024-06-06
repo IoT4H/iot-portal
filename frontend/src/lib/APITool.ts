@@ -1,10 +1,8 @@
-export const dynamic = 'force-dynamic';
-
 export class APITool {
 
-    static StrapiURL: string = "";
-    static FrontendStrapiURL: string = "";
-    static ServerStrapiURL: string = "";
+    static StrapiURL: string = process.env.FRONTEND_STRAPI_API_URL || "";
+    static FrontendStrapiURL: string = process.env.FRONTEND_STRAPI_API_URL || "";
+    static ServerStrapiURL: string = process.env.SERVER_STRAPI_API_URL || "";
 
     constructor() {
         fetch("/init/").then((response) => response.json()).then((data) => {

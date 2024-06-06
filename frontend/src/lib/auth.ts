@@ -67,19 +67,14 @@ export class Auth {
                 })
             });
 
-            if(response.status !== 200) {
-                throw new Error("Login failed.");
-            }
-
-            const raw = await response.json();
-
-            if(raw.jwt) {
-                localStorage.setItem(Auth.ID_ITEM_NAME, raw.jwt);
+            if(response.jwt) {
+                localStorage.setItem(Auth.ID_ITEM_NAME, response.jwt);
             }
             Auth.onUserChange();
         } catch (e) {
-
+            console.error(e);
         } finally {
+            console.info("login attempt finished");
         }
 
     }
