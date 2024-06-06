@@ -1,6 +1,7 @@
 import qs from "qs";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
 
+const APIInit = new APITool();
 
 export function isServer() {
     return typeof window === 'undefined';
