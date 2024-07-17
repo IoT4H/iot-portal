@@ -38,5 +38,3 @@ export class APITool {
 
     }
 }
-
-APITool.init();

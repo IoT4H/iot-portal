@@ -19,6 +19,8 @@ export default function Login() {
         if( username && password ) {
             Auth.login(username, password).then(() => {
                 router.back();
+            }).catch((error) => {
+
             });
         }
     }

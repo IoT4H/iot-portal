@@ -6,14 +6,14 @@ export function isServer() {
     return typeof window === 'undefined';
 }
 
-APITool.init();
 
 /**
  * Get full Strapi URL from path
  * @param {string} path Path of the URL
  * @returns {string} Full Strapi URL
  */
-export function getStrapiURL(path = "") {
+export async function getStrapiURL(path = "") {
+    await APITool.init();
     let strapi_url = isServer() ? APITool.ServerStrapiURL : APITool.FrontendStrapiURL;
 
     return `${(
@@ -47,7 +47,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
 
     // Build request URL
     const queryString = qs.stringify(urlParamsObject);
-    const requestUrl = `${getStrapiURL(
+    const requestUrl = `${await getStrapiURL(
         `${path}${queryString ? `?${queryString}` : ""}`
     )}`;
 

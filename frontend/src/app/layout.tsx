@@ -12,8 +12,6 @@ import { Suspense } from "react";
 
 const inter = Inter({ subsets: ['latin'] });
 
-APITool.init();
-
 
 export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {

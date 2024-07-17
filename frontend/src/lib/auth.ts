@@ -31,8 +31,6 @@ export class Auth {
             }
         ;
 
-        await APITool.init();
-
         const u = (await fetchAPI( "/api/users/me", qsPara, {
             headers: {
                 "Authorization": "Bearer " + this.getToken()
