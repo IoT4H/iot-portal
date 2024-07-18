@@ -4,7 +4,7 @@ import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import { Suspense, useEffect, useState } from "react";
 import {
@@ -54,7 +54,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                     <div
                                         className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                     >
-                                        <GalleryImage thumbnailSrc={getStrapiURL() + setup.thumbnail.formats.medium.url} src={getStrapiURL() + setup.thumbnail.url}  alt={""}  caption={setup.thumbnail.caption}
+                                        <GalleryImage thumbnailSrc={getStrapiURLForFrontend() + setup.thumbnail.formats.medium.url} src={getStrapiURLForFrontend() + setup.thumbnail.url}  alt={""}  caption={setup.thumbnail.caption}
                                                       className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                     </div>
                                 ) : (

@@ -1,7 +1,7 @@
 "use client"
 import Loading from "@iot-portal/frontend/app/common/loading";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import React, { useEffect, useState, useRef, MutableRefObject, useContext } from "react";
@@ -105,7 +105,7 @@ export function ListItemDashboard({setup, dashboard}: {setup: number, dashboard:
                         </div>
                     </div>
 
-                    <iframe src={getStrapiURL(
+                    <iframe src={getStrapiURLForFrontend(
                     `/api/thingsboard-plugin/url?url=/login-portal?redirectUri=/dashboards/${dashboard.id}`)} onLoad={(event) => { transmitToken(event.currentTarget);}} width={"100%"} height={"800px"}></iframe>
                 </div>
             </li>
@@ -133,29 +133,49 @@ export default function MyDeploymentPage({params}: { params: { id: number } }) {
 
 
     const [dashboards, setDashboards] = useState<Array<Dashboard>>(Array.of());
+    const [deployed, SetDeployed] = useState<boolean>(false);
 
-    useEffect(() => {
-
-        LoadingState.startLoading();
-        fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/dashboards`, {} ,{
+    const pullDeploy = () => fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}`, {},
+        {
             headers: {
                 Authorization: `Bearer ${Auth.getToken()}`
             }
-        }).then((dashboards) => {
-            setDashboards(dashboards);
-            LoadingState.endLoading();
-        })
+        }).then((response) => {
+            console.log(response);
+        SetDeployed(response.status === "deployed");
+        if(!deployed){
+            setTimeout(pullDeploy, 1000);
+        }
+    });
+
+    useEffect(() => {
+
+        pullDeploy();
+
     }, []);
 
+    useEffect(() => {
+        if(deployed) {
+            LoadingState.startLoading();
+            fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/dashboards`, {} ,{
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then((dashboards) => {
+                setDashboards(dashboards);
+                LoadingState.endLoading();
+            })
+        }
 
+    }, [deployed]);
 
     return (
         <>
             <ListDashboards>
                 {
-                    Array.isArray(dashboards) && dashboards.map((dashboard) => {
+                    Array.isArray(dashboards) && dashboards.length > 0 ? dashboards.map((dashboard) => {
                         return (<ListItemDashboard key={dashboard.id} setup={params.id || 0} dashboard={dashboard} />) || (<></>);
-                    })
+                    }) : <p className={"text-xl font-extrabold"}>Aktuelle gibt es keine Dashboards anzusehen.</p>
                 }
             </ListDashboards>
 
