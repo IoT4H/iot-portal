@@ -33,7 +33,7 @@ export function ListItemDashboard({setup, dashboard}: {setup: number, dashboard:
                 }
             }).then((response) => {
                 setNAme(response.name)
-                setDescription(response.configuration.description)
+                setDescription(response.configuration?.description || "" )
             })
         } catch (e) {
             console.error(e);

@@ -78,7 +78,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     }
 
     return <>
-    { (!step.data.setup || step.data.setup.progress < 100) ?
+    { (!step.data.setup || step.state.setup.progress < 100) ?
         <ModalUI onClose={onClose}>
             <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4"}>
                 <h1 className={"text-3xl mb-8 font-bold"}>Gerät einrichten</h1>

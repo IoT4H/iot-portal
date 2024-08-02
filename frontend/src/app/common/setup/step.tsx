@@ -13,7 +13,7 @@ import * as React from "react";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 type StepData = {
-    state: number | undefined,
+    state: any,
     viewStatus: boolean,
     locked: boolean,
     deployment: number,
@@ -55,16 +55,25 @@ const StepStatus = ({color, progress, Icon} : { color: string, progress: number 
     </div>);
 }
 
-export const CheckBox = ({label, init, onChange}: {label: string, init: boolean, onChange?: Function}) => {
+export const CheckBox = ({label, init, locked, onChange}: {label: string, init: boolean, locked: boolean, onChange?: Function}) => {
 
     const sOnChange = (e: any) => onChange && onChange(e);
     const [check, setCheck] = useState(init);
 
-    return (<label className={"relative cursor-pointer flex gap-2 flex-row items-center p-0.5 group/checkbox"}>
-                                    <span className={"h-6 aspect-square border-2 border-orange-500 bg-orange-500/20 group-hover/checkbox:bg-orange-500/40 group/indicator"}>
+    useEffect(() => {
+        setCheck(init)
+    }, [init]);
+
+    return (<label className={`relative ${ !locked && 'cursor-pointer'} flex gap-2 flex-row items-center p-0.5 group/checkbox`}>
+                                    <span className={`h-6 aspect-square border-2 border-orange-500 ${ !locked ? 'bg-orange-500/20' : 'bg-orange-500'}  ${ !locked && 'group-hover/checkbox:bg-orange-500/40'} group/indicator`}>
                                         <CheckIcon className={`w-full aspect-square  ${ check ? 'visible' : 'invisible'}`} />
                                     </span>
-        <input type={"checkbox"} className={"absolute opacity-0 h-2 w-2 cursor-pointer "} checked={check} onChange={(e) => {setCheck(e.currentTarget.checked); sOnChange(e);}}/>
+        <input type={"checkbox"} className={`absolute opacity-0 h-2 w-2  ${ !locked && 'cursor-pointer'} `} checked={init} onChange={(e) => {
+            if(!locked)  {
+                setCheck(e.currentTarget.checked); sOnChange(e);
+            }
+        }}
+        />
         {label}
     </label>);
 }
@@ -144,7 +153,7 @@ export default function Step(stepData: StepData) {
             <div className={`w-full flex flex-row group rounded-2xl bg-zinc-900/50 peer ${progress === 100 && 'done'}`}>
                 <div className={"w-16 flex-shrink-0 flex-grow-0 flex flex-col"}>
                     <div className={`w-16 aspect-square p-2 mb-0 bg-zinc-700/80 rounded-l-2xl`}>
-                        <StepStatus color={color} progress={stepData.state} Icon={HeroIcons.ShoppingBagIcon}/>
+                        <StepStatus color={color} progress={stepData.state?.progress} Icon={HeroIcons.ShoppingBagIcon}/>
                     </div>
                     <div className={"flex-grow flex flex-row justify-center -mb-8"}>
                         <div className={`h-full border-l border-zinc-500/50 group-[:last-of-type]:hidden `} style={progress === 100 ? {borderColor: color} : {}}></div>
@@ -174,7 +183,20 @@ export default function Step(stepData: StepData) {
                                         <span className={"pb-2 mt-4"}>Zu erledigen: </span>
                                     {
                                         stepData.data.tasks.map((task: any) => {
-                                            return <CheckBox key={task.id} label={task.text} init={subtaskComplete(task.id) } onChange={(e: any) => {
+                                            let taskProgress = 0;
+                                            let fullProgress = 0;
+                                            if(stepData.state) {
+                                                fullProgress = stepData.state.progress;
+
+                                                if(stepData.state.tasks && Array.isArray(stepData.state.tasks) ) {
+                                                   const foundTask = stepData.state.tasks.find((e: any) => e.id === task.id);
+                                                   if(foundTask) {
+                                                       taskProgress = foundTask.progress;
+                                                   }
+                                                }
+                                            }
+
+                                            return <CheckBox key={task.id} label={task.text} locked={fullProgress >= 100 } init={taskProgress >= 100 } onChange={(e: any) => {
                                                 task.progress = e.currentTarget.checked ? 100 : 0;
                                                 performStepAction({tasks: [
                                                         {
@@ -196,7 +218,7 @@ export default function Step(stepData: StepData) {
                                     ["instructions.setup-instruction"].includes(stepData.data.__component) && (
                                         <>
                                             <div className={"flex justify-center"}>
-                                                { stepData.data.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"} onClick={() => toggleModalOpen()} disabled={ !actionable() }>{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Einrichten</button> }
+                                                { stepData.state?.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"} onClick={() => toggleModalOpen()} disabled={ !actionable() }>{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Einrichten</button> }
                                             </div>
                                             {  modalOpen && <DeviceSetupModal onClose={() => {
                                                 stepData.updateState();
@@ -213,7 +235,7 @@ export default function Step(stepData: StepData) {
                                 {
                                     ["instructions.text-instruction", "instructions.list-instruction"].includes(stepData.data.__component) && (
                                         <div className={"flex justify-center"}>
-                                            { stepData.data.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"}
+                                            { stepData.state?.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"}
                                             disabled={ !actionable(() => {
                                                 switch (stepData.data.__component) {
                                                     case  "instructions.list-instruction":

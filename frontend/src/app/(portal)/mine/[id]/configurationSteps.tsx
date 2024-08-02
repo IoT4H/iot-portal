@@ -58,6 +58,12 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
         }
     }, [state]);
 
+    const getProgress = (step: {__component: string, id: number}) => {
+        return stepsProgress.find((e: any) => {
+            return e.id == step.id && e.__component == step.__component;
+        })
+    };
+
     const fetchStepsProgress = useCallback(() => {
         fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progress`, {},
             {
@@ -103,7 +109,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
             <Suspense>
                 {
                     Array.isArray(steps) && steps.map((s, index, a) => {
-                        return (<Step key={s.id.toString() + "-" + s.__component} state={s.progress} viewStatus={true} deployment={params.id} data={ Object.assign(s, {index: index + 1 }) } updateState={() => fetchStepsProgress()} locked={index > 0 && (a[index - 1].progress < 100 || a[index - 1].progress === undefined)} />);
+                        return (<Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true} deployment={params.id} data={ Object.assign(s, {index: index + 1 }) } updateState={() => fetchStepsProgress()} locked={index > 0 && (a[index - 1].progress < 100 || a[index - 1].progress === undefined)} />);
                     })
                 }
             </Suspense>
