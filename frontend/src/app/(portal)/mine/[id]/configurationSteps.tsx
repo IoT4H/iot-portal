@@ -59,7 +59,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     }, [state]);
 
     const getProgress = (step: {__component: string, id: number}) => {
-        return stepsProgress.find((e: any) => {
+        return Array.isArray(stepsProgress) && stepsProgress.find((e: any) => {
             return e.id == step.id && e.__component == step.__component;
         })
     };
