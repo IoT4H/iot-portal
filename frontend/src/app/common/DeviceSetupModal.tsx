@@ -96,7 +96,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                     type="text"
                                     required
                                     onChange={(event) => SetLabel(event.currentTarget.value)}
-                                    className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                    className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -113,7 +113,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                             type="text"
                                             required
                                             onChange={(event) => SetName(event.currentTarget.value)}
-                                            className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                            className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
                                         />
                                     </div>
                                 </div>
@@ -129,7 +129,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                     name="description"
                                     required
                                     onChange={(event) => SetDescription(event.currentTarget.value)}
-                                    className="block w-full h-[5em] resize-none bg-zinc-300/10 rounded py-1.5 text-gray-900 shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
+                                    className="block w-full h-[5em] resize-none bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
                                 ></textarea>
                             </div>
                         </div>
