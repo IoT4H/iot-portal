@@ -3,7 +3,7 @@ import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 
 export const dynamic = 'force-dynamic';
-function PictureGallery({ pictures } : {pictures?: any[]}) {
+export function PictureGallery({ pictures } : {pictures?: any[]}) {
 
     return (
         <div className={"grid md:grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] grid-cols-2 gap-2"}>
