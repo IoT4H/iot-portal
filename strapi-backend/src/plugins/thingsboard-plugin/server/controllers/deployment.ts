@@ -117,6 +117,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return strapi.plugin(pluginId)
       .service('strapiService').getInstructionStepsProgressFromDeployment(ctx.params.setupId)
   },
+  async getStepsProgressCompleteFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsProgressCompleteFromDeployment(ctx.params.setupId)
+  },
   async updateStepsProgressFromDeployment(ctx) {
     const step = ctx.body.step;
     const progress = ctx.body.progress;

@@ -27,7 +27,20 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                     Authorization: `Bearer ${Auth.getToken()}`
                 }
             }).then((respond) => {
-            SetSetup(respond);
+                SetSetup(respond);
+
+                fetchAPI(`/api/thingsboard-plugin/deployment/${props.params.id}/steps/progressComplete`, {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Auth.getToken()}`
+                        }
+                    }).then((response) => {
+                    if(response.complete) {
+                        SetSetupDevice(false);
+                    } else {
+                        SetSetupDevice(true);
+                    }
+                })
             });
     }, []);
 
@@ -35,11 +48,8 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
         LoadingState.endLoading();
     })();
 
-    const [setupDevice, SetSetupDevice] = useState(false);
+    const [setupDevice, SetSetupDevice] = useState<boolean | undefined>(undefined);
 
-
-    const startSetupDevice = () => SetSetupDevice(true);
-    const stopSetupDevice = () => SetSetupDevice(false);
 
     return (
         <>
@@ -75,11 +85,11 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                             <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                                 <Suspense>
                                     <div className={"text-orange-500 font-extrabold text-xl leading-4"}>
-                                        <Tab name={"Start"} link={`/mine/${props.params.id}/start/`} Icon={CursorArrowRaysIcon}/>
+                                        { setupDevice == true &&  <Tab name={"Start"} link={`/mine/${props.params.id}/start/`} Icon={CursorArrowRaysIcon}/> }
                                     </div>
                                 </Suspense>
                                 <Suspense>
-                                    <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards/`}/>
+                                    { setupDevice == false && <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards/`}/> }
                                 </Suspense>
                             </div>
                             <div className={"w-full"}>

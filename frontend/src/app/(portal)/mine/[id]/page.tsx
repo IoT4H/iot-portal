@@ -11,13 +11,13 @@ const Page = ({params}: { params: { id: number } }) => {
     const router = useRouter();
 
 
-    fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progress`, {},
+    fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progressComplete`, {},
         {
             headers: {
                 Authorization: `Bearer ${Auth.getToken()}`
             }
         }).then((response) => {
-            if(response.progress && response.progress >= 100) {
+            if(response.complete) {
                 router.push('dashboards');
             } else {
                 router.push('start');

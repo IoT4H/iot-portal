@@ -217,8 +217,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
-    console.warn(deployment.stepStatus);
     return deployment.stepStatus;
+  },
+  async getInstructionStepsProgressCompleteFromDeployment(deploymentId: number) {
+    const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
+      populate: { use_case : { populate: { setupSteps: { populate: '*'}}}},
+      fields: ['stepStatus'],
+    });
+    return { complete: deployment.stepStatus.filter((t) => t.progress >= 100).length == deployment.use_case.setupSteps.length};
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {

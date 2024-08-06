@@ -164,6 +164,22 @@ export default [
     },
   },
   {
+    method: 'GET',
+    path: '/deployment/:setupId/steps/progressComplete',
+    handler: `plugin::${pluginId}.deployment.getStepsProgressCompleteFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
     method: 'POST',
     path: '/deployment/:setupId/steps/progress',
     handler: `plugin::${pluginId}.deployment.updateStepsProgressFromDeployment`,
