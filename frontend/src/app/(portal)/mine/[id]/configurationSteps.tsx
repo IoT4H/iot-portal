@@ -1,9 +1,10 @@
 "use client"
 import { State } from "@iot-portal/frontend/app/(portal)/deployment-status";
-import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import Step from "@iot-portal/frontend/app/common/setup/step";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
+import { useRouter } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useState } from "react";
 
 export default function ConfigurationSteps({params}: { params: { id: number } }) {
@@ -12,6 +13,8 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     const [steps, SetSteps] = useState<Array<any>>(ar);
     const [stepsProgress, SetStepsProgress] = useState<Array<any>>(ar);
     const [state, setState] = useState<State>(State.none);
+    const router = useRouter();
+
 
 
 
@@ -72,7 +75,23 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 }
             }).then((response) => {
                 SetStepsProgress(response);
+
+
+            fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progressComplete`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${Auth.getToken()}`
+                    }
+                }).then((response) => {
+                if(response.complete) {
+                    LoadingState.startLoading();
+                    router.push(`/mine/${params.id}/dashboards`);
+                    LoadingState.endLoading();
+                }
             })
+            });
+
+
     }, [params.id]);
 
     useEffect(() => {

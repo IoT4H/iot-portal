@@ -6,6 +6,7 @@ import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinne
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
+import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import {
     PhotoIcon, WrenchScrewdriverIcon
@@ -18,6 +19,8 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
 
 
     const [setup, SetSetup] = useState<any>();
+
+    const pathname = usePathname()
 
     useEffect(() => {
         LoadingState.startLoading();
@@ -43,6 +46,22 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                 })
             });
     }, []);
+
+
+    useEffect(() => {
+        fetchAPI(`/api/thingsboard-plugin/deployment/${props.params.id}/steps/progressComplete`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then((response) => {
+            if(response.complete) {
+                SetSetupDevice(false);
+            } else {
+                SetSetupDevice(true);
+            }
+        })
+    }, [pathname]);
 
     (() => {
         LoadingState.endLoading();
@@ -84,9 +103,9 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                         <div className={"pb-8"}>
                             <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                                 <Suspense>
-                                    <div className={"text-orange-500 font-extrabold text-xl leading-4"}>
-                                        { setupDevice == true &&  <Tab name={"Start"} link={`/mine/${props.params.id}/start/`} Icon={CursorArrowRaysIcon}/> }
-                                    </div>
+                                    { setupDevice == true && <div className={"text-orange-500 font-extrabold text-xl leading-4"}>
+                                         <Tab name={"Start"} link={`/mine/${props.params.id}/start/`} Icon={CursorArrowRaysIcon}/>
+                                    </div> }
                                 </Suspense>
                                 <Suspense>
                                     { setupDevice == false && <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards/`}/> }

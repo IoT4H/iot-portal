@@ -4,7 +4,7 @@ import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinne
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
-import React, { useEffect, useState, useRef, MutableRefObject, useContext } from "react";
+import React, { useEffect, useState, useRef, MutableRefObject, useContext, useCallback } from "react";
 
 
 export type Dashboard = {
@@ -135,24 +135,23 @@ export default function MyDeploymentPage({params}: { params: { id: number } }) {
     const [dashboards, setDashboards] = useState<Array<Dashboard>>(Array.of());
     const [deployed, SetDeployed] = useState<boolean>(false);
 
-    const pullDeploy = () => fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}`, {},
+    const pullDeploy = useCallback(() => fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}`, {},
         {
             headers: {
                 Authorization: `Bearer ${Auth.getToken()}`
             }
         }).then((response) => {
-            console.log(response);
-        SetDeployed(response.status === "deployed");
-        if(!deployed){
+        SetDeployed(response.status == "deployed");
+        if(response.status != "deployed"){
             setTimeout(pullDeploy, 1000);
         }
-    });
+    }), [params.id]);
 
     useEffect(() => {
 
         pullDeploy();
 
-    }, []);
+    }, [params.id]);
 
     useEffect(() => {
         if(deployed) {
