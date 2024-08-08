@@ -15,35 +15,35 @@ export default function Page() {
                 deine IoT-Reise mit uns!</p>
             <div className={"mx-8 flex flex-col gap-y-8"}>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Vorname"} name={"firstname"} required></FieldSetInput>
-                    <FieldSetInput label={"Nachname"} name={"lastname"} required></FieldSetInput>
+                    <FieldSetInput label={"Vorname"} id={"firstname"} required></FieldSetInput>
+                    <FieldSetInput label={"Nachname"} id={"lastname"} required></FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Benutzername"} name={"username"} required></FieldSetInput>
+                    <FieldSetInput label={"Benutzername"} id={"username"} required></FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Email"} name={"email"} required></FieldSetInput>
-                    <FieldSetInput label={"Email wiederholen"} name={"email2"} required></FieldSetInput>
+                    <FieldSetInput label={"Email"} id={"email"} required></FieldSetInput>
+                    <FieldSetInput label={"Email wiederholen"} id={"email2"} required></FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Passwort"} type={"password"} name={"password"} required></FieldSetInput>
-                    <FieldSetInput label={"Passwort wiederholen"} type={"password"} name={"password2"} required></FieldSetInput>
+                    <FieldSetInput label={"Passwort"} type={"password"} id={"password"} required></FieldSetInput>
+                    <FieldSetInput label={"Passwort wiederholen"} type={"password"} id={"password2"} required></FieldSetInput>
                 </div>
             </div>
             <p className={"mx-2 my-4 mt-12"}>Information zur Kontaktaufnahme (optional).</p>
             <div className={"mx-8 flex flex-col gap-y-8"}>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Rufnummer"} type={"phone"} name={"phone"} ></FieldSetInput>
+                    <FieldSetInput label={"Rufnummer"} type={"phone"} id={"phone"} ></FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Straße, Hausnr."} type={"text"} name={"address"} className={'col-span-2'}></FieldSetInput>
-                    <FieldSetInput label={"PLZ"} type={"text"} name={"plz"} ></FieldSetInput>
-                    <FieldSetInput label={"Stadt"} type={"text"} name={"city"} ></FieldSetInput>
+                    <FieldSetInput label={"Straße, Hausnr."} type={"text"} id={"address"} className={'col-span-2'}></FieldSetInput>
+                    <FieldSetInput label={"PLZ"} type={"text"} id={"plz"} ></FieldSetInput>
+                    <FieldSetInput label={"Stadt"} type={"text"} id={"city"} ></FieldSetInput>
                 </div>
             </div>
             <div className={"mx-8 my-10 flex flex-col gap-y-8"}>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetCheckbox className={'col-span-2'} name={"legal"} >Ich habe die <Link href={"/agb"}
+                    <FieldSetCheckbox className={'col-span-2'} id={"legal"} >Ich habe die <Link href={"/agb"}
                                                                                   className={"text-orange-500 font-bold underline underline-offset-[3px]"}>AGB</Link> und <Link
                         href={"/nutzungsbedingungen"}
                         className={"text-orange-500 font-bold underline underline-offset-[3px]"}>Nutzungsbedingungen</Link> gelesen

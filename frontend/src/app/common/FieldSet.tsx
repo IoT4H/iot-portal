@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 export function FieldSetInput({ ...props}) {
     return (
         <div className={` flex flex-col ${props.className}`}>
-            <label htmlFor={props.name} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
+            <label htmlFor={props.id} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
                 {props.label}{props.required && (<span className={"text-orange-500 ml-0.5 text-xl"}>*</span>)}
             </label>
             <div className="mt-2">
@@ -26,7 +26,7 @@ export function FieldSetCheckbox(p: any) {
     return (
         <>
             <div className={`group/checkbox flex flex-col ${props.className}`}>
-                <label  htmlFor={props.name}
+                <label htmlFor={props.id}
                     className={`relative flex gap-2 flex-row items-center p-0.5 group/checkbox group-[:not(:has(*:disabled))]/checkbox:cursor-pointer`}>
                                         <span
                                             className={`h-6 aspect-square border-2 border-orange-500 bg-orange-500/20 group-[:has(*:checked)]/checkbox:bg-orange-500 group-[:not(:has(*:disabled))]/checkbox:group-hover/checkbox:bg-orange-500/40 `}>
