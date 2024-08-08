@@ -3,7 +3,7 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import Gallery from "@iot-portal/frontend/app/common/gallery";
-import { getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import { useState } from 'react';
 
@@ -44,7 +44,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                         links.map((link) => {
                                 let samePage = true;
                                 try {
-                                    samePage = (new URL(link.href)).host === getStrapiURL();
+                                    samePage = (new URL(link.href)).host === getStrapiURLForFrontend();
                                 } catch (e) {
 
                                 }
