@@ -43,9 +43,9 @@ export default function Page() {
             </div>
             <div className={"mx-8 my-10 flex flex-col gap-y-8"}>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetCheckbox className={'col-span-2'} id={"legal"} >Ich habe die <Link href={"/agb"}
+                    <FieldSetCheckbox className={'col-span-2'} id={"legal"} >Ich habe die <Link href={"/agb"} target={"_blank"}
                                                                                   className={"text-orange-500 font-bold underline underline-offset-[3px]"}>AGB</Link> und <Link
-                        href={"/nutzungsbedingungen"}
+                        href={"/nutzungsbedingungen"}  target={"_blank"}
                         className={"text-orange-500 font-bold underline underline-offset-[3px]"}>Nutzungsbedingungen</Link> gelesen
                         und stimme diesen zu.</FieldSetCheckbox>
                 </div>
