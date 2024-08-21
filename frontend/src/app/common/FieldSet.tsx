@@ -21,7 +21,7 @@ export function FieldSetInput(p: any) {
                 {props.label}{props.required && (<RequiredStar />)}
             </label>
             <div className="mt-2">
-                <input {...props} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6" />
+                <input name={props.id} {...props} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6" />
             </div>
             { children }
         </div>
@@ -34,7 +34,7 @@ export function FieldSetCheckbox(p: any) {
 
     return (
         <>
-            <div className={`group/checkbox flex flex-col ${props.className || ""}`}>
+            <div className={`group/checkbox ${props.className || ""}`}>
                 <label htmlFor={props.id}
                     className={`relative flex gap-2 flex-row items-center p-0.5 group/checkbox group-[:not(:has(*:disabled))]/checkbox:cursor-pointer`}>
                                         <span
@@ -42,8 +42,8 @@ export function FieldSetCheckbox(p: any) {
                                             <CheckIcon className={`w-full aspect-square invisible group-[:has(*:checked)]/checkbox:visible`}/>
                                         </span>
                     <input type={"checkbox"} {...props} className={"hidden"} />
-                    { children }
-                    {props.required && (<RequiredStar />)}
+                    <div>{ children }
+                        {props.required && (<RequiredStar />)}</div>
                 </label>
             </div>
         </>

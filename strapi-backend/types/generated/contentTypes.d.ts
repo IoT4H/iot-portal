@@ -1003,7 +1003,7 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     verified: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    Address: Attribute.Component<'general.address'> & Attribute.Required;
+    Address: Attribute.Component<'general.address'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &

@@ -89,7 +89,7 @@ export default function Login() {
 
                     <p className="mt-10 text-center text-sm text-gray-500">
                         Noch kein Account?{' '}
-                        <Link href="#" className="font-semibold leading-6 text-orange-400 hover:text-orange-500">
+                        <Link href={"/signup"} className="font-semibold leading-6 text-orange-400 hover:text-orange-500">
                             Jetzt registrieren
                         </Link>
                     </p>

@@ -22,7 +22,6 @@ export default ({ strapi }: { strapi: Strapi }) => {
         "additionalInfo": {}
       });
       data.thingsboardUserId = tenant.id.id;
-
     },
   });
 

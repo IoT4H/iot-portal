@@ -8,3 +8,9 @@ export default function TextWithHeadline() {
         <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
     </div>)
 }
+
+export function TextSkeleton({ ...props}) {
+    return (<div role="status" className={`max-w-sm animate-pulse ${props.className}`}>
+        <div {...props} className={`h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 w-max `}></div>
+    </div>)
+}

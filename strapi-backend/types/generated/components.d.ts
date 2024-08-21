@@ -64,16 +64,15 @@ export interface GeneralAddress extends Schema.Component {
   info: {
     displayName: 'Address';
     icon: 'pinMap';
+    description: '';
   };
   attributes: {
-    Address: Attribute.String & Attribute.Required;
+    Address: Attribute.String;
     Address_2: Attribute.String;
     City: Attribute.String;
     Postal_code: Attribute.String;
     State: Attribute.String;
-    Country: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'Germany'>;
+    Country: Attribute.String & Attribute.DefaultTo<'Germany'>;
   };
 }
 

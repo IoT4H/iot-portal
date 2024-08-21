@@ -58,7 +58,7 @@
       "type": "component",
       "repeatable": false,
       "component": "general.address",
-      "required": true
+      "required": false
     }
   }
 }

@@ -2,10 +2,11 @@
 import { ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/20/solid";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
+import { TextSkeleton } from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 
 export default function AuthHeader() {
 
@@ -22,15 +23,15 @@ export default function AuthHeader() {
     return (
         <>
             {
-                isAuth && user ?
+                Auth.isAuth() ?
                     (
                         <div className={"flex flex-row gap-3 content-center not:sr-only"}>
                             <div className={"flex flex-col justify-center"}>
-                                <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border"}></UserIcon>
+                                <Suspense>{user && <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border aspect-square"}></UserIcon> }</Suspense>
                             </div>
                             <div className={"flex flex-col justify-center text-sm"}>
-                                <span className={"capitalize text-md font-bold"}>{ user.firstname }{ user.middlename ? ` ${user.middlename} ` : " " }{ user.lastname }</span>
-                                <span className={"capitalize text-sm"}>{ user.firm && user.firm.name }</span>
+                                <Suspense>{user && <span className={"capitalize text-md font-bold"}>{ user.firstname } { user.lastname }</span>}</Suspense>
+                                <Suspense>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name !== `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
                             </div>
                             <div className={"flex flex-col justify-center"}>
                                 <ArrowRightOnRectangleIcon onClick={() => Auth.logout()}

@@ -71,8 +71,8 @@ export const Prompt = (context: PromptContext) => {
 
 
    return (
-        <div className={"hidden bg-zinc-700 rounded-xl min-w-[30vw] first:flex flex-col gap-3 overflow-hidden shadow-zinc-700/90 shadow-2xl"}>
-            <div className={"px-6 py-3 font-bold text-2xl bg-zinc-800/90"}>
+        <div className={"hidden bg-orange-100/20 dark:bg-zinc-700 rounded-xl min-w-[30vw] first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
+            <div className={"px-6 py-3 font-bold text-2xl bg-orange-100/90 dark:bg-zinc-800/90"}>
                {
                    headers()
                }
@@ -82,7 +82,7 @@ export const Prompt = (context: PromptContext) => {
             </div>
             <div className={"px-6 py-3 flex flex-row gap-3 justify-between"}>
                 { context.actions.map((action) => {
-                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={"ml-auto bg-zinc-800 hover:bg-zinc-900 cursor-pointer p-3 px-6 w-min rounded"}>{action.text}</div>
+                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={"ml-auto dark:bg-zinc-800 dark:hover:bg-zinc-900 cursor-pointer p-3 px-6 w-min rounded"}>{action.text}</div>
                 })}
             </div>
         </div>
