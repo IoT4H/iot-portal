@@ -31,7 +31,7 @@ export default function AuthHeader() {
                             </div>
                             <div className={"flex flex-col justify-center text-sm"}>
                                 <Suspense>{user && <span className={"capitalize text-md font-bold"}>{ user.firstname } { user.lastname }</span>}</Suspense>
-                                <Suspense>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name !== `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
+                                <Suspense>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name === `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
                             </div>
                             <div className={"flex flex-col justify-center"}>
                                 <ArrowRightOnRectangleIcon onClick={() => Auth.logout()}

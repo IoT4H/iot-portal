@@ -52,7 +52,7 @@ export class Auth {
         return this.isAuth() && localStorage.getItem(Auth.ID_ITEM_NAME);
     }
 
-    static async login(username: string, password: string) {
+    static async login(email: string, password: string) {
 
         try {
 
@@ -63,7 +63,7 @@ export class Auth {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    identifier: username,
+                    identifier: email,
                     password: password,
                 })
             });

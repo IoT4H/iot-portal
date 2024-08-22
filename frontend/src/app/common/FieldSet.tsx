@@ -16,7 +16,7 @@ export function FieldSetInput(p: any) {
     let {children, ...props}  = p;
 
     return (
-        <div className={` flex flex-col ${props.className || ""}`}>
+        <div className={`relative flex flex-col ${props.className || ""}`}>
             <label htmlFor={props.id} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
                 {props.label}{props.required && (<RequiredStar />)}
             </label>
@@ -34,7 +34,7 @@ export function FieldSetCheckbox(p: any) {
 
     return (
         <>
-            <div className={`group/checkbox ${props.className || ""}`}>
+            <div className={`relative block group/checkbox ${props.className || ""}`}>
                 <label htmlFor={props.id}
                     className={`relative flex gap-2 flex-row items-center p-0.5 group/checkbox group-[:not(:has(*:disabled))]/checkbox:cursor-pointer`}>
                                         <span

@@ -69,7 +69,7 @@ export default function Page() {
     }, [firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
 
     return <div
-        className={"relative py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
+        className={"relative w-full max-w-screen-lg py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
         <form className="flex-auto max-h-full sticky top-0 pl-4">
             { signUpError && createPortal(
                 <Prompt type={PromptType.Error} text={signUpError.message || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetSingupError(null)} />,
