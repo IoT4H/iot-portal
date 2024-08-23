@@ -31,11 +31,11 @@ export class Auth {
             }
         ;
 
-        const u = (await fetchAPI( "/api/users/me", qsPara, {
+        const u = await fetchAPI( "/api/users/me", qsPara, {
             headers: {
                 "Authorization": "Bearer " + this.getToken()
             }
-        }));
+        });
 
         return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
@@ -52,7 +52,17 @@ export class Auth {
         return this.isAuth() && localStorage.getItem(Auth.ID_ITEM_NAME);
     }
 
-    static async login(email: string, password: string) {
+
+    static setToken(token: string) {
+        localStorage.setItem(Auth.ID_ITEM_NAME, token);
+        Auth.onUserChange();
+    }
+
+    static removeToken() {
+        localStorage.removeItem(Auth.ID_ITEM_NAME);
+    }
+
+    static async login(username: string, password: string) {
 
         try {
 
@@ -63,13 +73,13 @@ export class Auth {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    identifier: email,
+                    identifier: username,
                     password: password,
                 })
             });
 
             if(response.jwt) {
-                localStorage.setItem(Auth.ID_ITEM_NAME, response.jwt);
+                Auth.setToken(response.jwt);
             }
             Auth.onUserChange();
         } catch (e) {
@@ -81,7 +91,7 @@ export class Auth {
     }
 
      static async logout() {
-        localStorage.removeItem(Auth.ID_ITEM_NAME);
+        Auth.removeToken();
         Auth.onUserChange();
     }
 

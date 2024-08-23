@@ -18,6 +18,11 @@ export default function AuthHeader() {
 
     useEffect(() => {
         SetIsAuth(user !== undefined);
+
+        if(user) {
+            console.log(`Authenticated User changed: ${user?.firstname} ${user?.lastname}`)
+        }
+
     }, [user])
 
     return (

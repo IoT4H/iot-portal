@@ -62,8 +62,7 @@ export default function Page() {
                         </FieldSetInput>
 
                         <Button
-                            type="button"
-                            onClick={() => login()}
+                            type="submit"
                             className={"w-full"}
                         >
                             Einloggen
