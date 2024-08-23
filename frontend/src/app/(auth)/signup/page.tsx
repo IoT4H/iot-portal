@@ -71,7 +71,7 @@ export default function Page() {
     }, [formValid, firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
 
     return <div
-        className={"relative py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
+        className={"relative w-full max-w-screen-lg  py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
         <form className="flex-auto max-h-full sticky top-0 pl-4" onSubmit={(event) => {event.preventDefault();signUp();}}>
             <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500"}>Registrieren</h2>
             <p className={"mx-2 my-4"}>Registriere dich jetzt und tauche ein in die faszinierende Welt des Internets der
