@@ -40,6 +40,11 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "relations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "thingsboard.relation-to-setup"
     }
   }
 }

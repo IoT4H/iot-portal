@@ -147,6 +147,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
     form_alternative_label_required: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
+    relations: Attribute.Component<'thingsboard.relation-to-setup', true>;
   };
 }
 
@@ -245,6 +246,29 @@ export interface ThingsboardDashboard extends Schema.Component {
   };
 }
 
+export interface ThingsboardRelationToSetup extends Schema.Component {
+  collectionName: 'components_thingsboard_relation_to_setups';
+  info: {
+    displayName: 'relationToSetup';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String;
+    component: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        {
+          types: {
+            dashboard: false;
+            AssetProfile: true;
+            DeviceProfile: true;
+          };
+          type: 'AssetProfile';
+        }
+      >;
+  };
+}
+
 export interface ThingsboardRuleChain extends Schema.Component {
   collectionName: 'components_thingsboard_rule_chains';
   info: {
@@ -280,6 +304,7 @@ declare module '@strapi/types' {
       'thingsboard.component-description': ThingsboardComponentDescription;
       'thingsboard.component': ThingsboardComponent;
       'thingsboard.dashboard': ThingsboardDashboard;
+      'thingsboard.relation-to-setup': ThingsboardRelationToSetup;
       'thingsboard.rule-chain': ThingsboardRuleChain;
     }
   }

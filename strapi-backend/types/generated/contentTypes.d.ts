@@ -805,12 +805,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    merkliste: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::use-case.use-case'
-    >;
-    profilPic: Attribute.Media;
     lastname: Attribute.String & Attribute.Required;
     firstname: Attribute.String & Attribute.Required;
     middlename: Attribute.String;
@@ -820,6 +814,13 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::firm.firm'
     >;
     phone: Attribute.String;
+    merkliste: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::use-case.use-case'
+    >;
+    profilPic: Attribute.Media;
+    firmname: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

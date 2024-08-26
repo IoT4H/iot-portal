@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_thingsboard_relation_to_setups",
+  "info": {
+    "displayName": "relationToSetup",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "component": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.singleThingsboardComponent",
+      "options": {
+        "types": {
+          "dashboard": false,
+          "AssetProfile": true,
+          "DeviceProfile": true
+        },
+        "type": "AssetProfile"
+      }
+    }
+  }
+}

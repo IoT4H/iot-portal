@@ -1,6 +1,7 @@
 "use client"
 import Button from "@iot-portal/frontend/app/common/button";
 import { FieldSetInput, FieldSetCheckbox, RequiredStar } from "@iot-portal/frontend/app/common/FieldSet";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
@@ -17,6 +18,7 @@ export default function Page() {
     const [firstname, SetFirstname] = useState("");
     const [lastname, SetLastname] = useState("");
     const [username, SetUsername] = useState("");
+    const [firmname, SetFirmname] = useState("");
     const [email, SetEmail] = useState("");
     const [email2, SetEmail2] = useState("");
     const [password, SetPassword] = useState("");
@@ -36,11 +38,7 @@ export default function Page() {
             legal &&
             passwordMatch &&
             emailMatch
-    }, [firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
-
-    useEffect(() => {
-        console.log([firstname, lastname, email, password, legal, passwordMatch, emailMatch])
-    }, [firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
+    }, [firstname, lastname, firmname, email, password, legal, passwordMatch, emailMatch]);
 
 
     const signUp = useCallback(() => {
@@ -48,6 +46,7 @@ export default function Page() {
         if (
             formValid
         ) {
+            LoadingState.startLoading();
             fetchAPI(`/api/auth/local/register`, {}, {
                 method: "POST",
                 headers: {
@@ -56,7 +55,7 @@ export default function Page() {
                 body: JSON.stringify({
                     username: email,
                     email: email,
-                    firm: {name: firstname + " " + lastname},
+                    firmname: firmname,
                     firstname: firstname,
                     lastname: lastname,
                     password: password
@@ -65,6 +64,7 @@ export default function Page() {
                 if (res.jwt) {
                     Auth.setToken(res.jwt);
                     router.push(`/home`);
+                    LoadingState.endLoading();
                 }
             });
         }
@@ -80,14 +80,14 @@ export default function Page() {
                 deine IoT-Reise mit uns!</p>
             <div className={"mx-8 flex flex-col gap-y-8"}>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Vorname"} id={"firstname"}  type={"text"} required autoComplete={"given-name"}
+                    <FieldSetInput label={"Vorname"} id={"firstname"} type={"text"} required autoComplete={"given-name"}
                                    onChange={(e: any) => SetFirstname(e.currentTarget.value)}></FieldSetInput>
-                    <FieldSetInput label={"Nachname"} id={"lastname"} type={"text"} required  autoComplete={"family-name"}
+                    <FieldSetInput label={"Nachname"} id={"lastname"} type={"text"} required autoComplete={"family-name"}
                                    onChange={(e: any) => SetLastname(e.currentTarget.value)}></FieldSetInput>
                 </div>
-                <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4 hidden"}>
-                    <FieldSetInput label={"Benutzername"} id={"username"} type={"hidden"}
-                                   onChange={(e: any) => SetUsername(e.currentTarget.value)}></FieldSetInput>
+                <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
+                    <FieldSetInput label={"Unternehmen"} id={"firmname"} type={"text"} autoComplete={"organization"}
+                                   onChange={(e: any) => SetFirmname(e.currentTarget.value)}></FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
                     <FieldSetInput label={"Email"} id={"email"} type={"email"} required autoComplete={"email"}
@@ -97,7 +97,8 @@ export default function Page() {
                                 Die Email stimmt nicht überein!
                             </span>)}
                     </FieldSetInput>
-                    <FieldSetInput label={"Email wiederholen"} id={"email2"} type={"email"} required  autoComplete={"email"}
+                    <FieldSetInput label={"Email wiederholen"} id={"email2"} type={"email"} required
+                                   autoComplete={"email"}
                                    onChange={(e: any) => SetEmail2(e.currentTarget.value)}>
                         {(!emailMatch && email2.length !== 0) && (
                             <span
@@ -105,13 +106,15 @@ export default function Page() {
                     </FieldSetInput>
                 </div>
                 <div className={"mt-4 grid grid-cols-2 gap-x-8 gap-y-4"}>
-                    <FieldSetInput label={"Passwort"} type={"password"} id={"password"} minLength={8} required autoComplete={"new-password"}
+                    <FieldSetInput label={"Passwort"} type={"password"} id={"password"} minLength={8} required
+                                   autoComplete={"new-password"}
                                    onChange={(e: any) => SetPassword(e.currentTarget.value)}>
                         {(!passwordMatch && password2.length !== 0) && (
                             <span
                                 className={"text-red-600 text-sm m-0.5 font-bold"}>Das Passwort stimmen nicht überein!</span>)}
                     </FieldSetInput>
-                    <FieldSetInput label={"Passwort wiederholen"} type={"password"} id={"password2"} minLength={8}  autoComplete={"new-password"}
+                    <FieldSetInput label={"Passwort wiederholen"} type={"password"} id={"password2"} minLength={8}
+                                   autoComplete={"new-password"}
                                    required
                                    onChange={(e: any) => SetPassword2(e.currentTarget.value)}>
                         {(!passwordMatch && password2.length !== 0) && (

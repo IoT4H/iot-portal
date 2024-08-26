@@ -13,7 +13,7 @@ export default {
   "users-permissions": {
     config: {
       register: {
-        allowedFields: ["firstname", "lastname", "firm"],
+        allowedFields: ["firstname", "lastname", "firm", "firmname"],
       },
     },
   },

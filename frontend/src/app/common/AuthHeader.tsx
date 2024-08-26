@@ -2,6 +2,7 @@
 import { ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/20/solid";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { TextSkeleton } from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
@@ -38,9 +39,8 @@ export default function AuthHeader() {
                                 <Suspense>{user && <span className={"capitalize text-md font-bold"}>{ user.firstname } { user.lastname }</span>}</Suspense>
                                 <Suspense>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name === `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
                             </div>
-                            <div className={"flex flex-col justify-center"}>
-                                <ArrowRightOnRectangleIcon onClick={() => Auth.logout()}
-                                                           className="h-6 w-6 inline-block cursor-pointer"></ArrowRightOnRectangleIcon>
+                            <div className={"flex flex-col justify-center"} onClick={() => Auth.logout()}>
+                                <ArrowRightOnRectangleIcon className="h-6 w-6 inline-block cursor-pointer"></ArrowRightOnRectangleIcon>
                             </div>
                         </div>
                     ) : (

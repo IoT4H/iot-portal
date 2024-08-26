@@ -1,4 +1,5 @@
 "use client"
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
 
@@ -91,8 +92,10 @@ export class Auth {
     }
 
      static async logout() {
+        LoadingState.startLoading();
         Auth.removeToken();
         Auth.onUserChange();
+        LoadingState.endLoading();
     }
 
 }

@@ -72,19 +72,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "merkliste": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::use-case.use-case"
-    },
-    "profilPic": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ]
-    },
     "lastname": {
       "type": "string",
       "required": true,
@@ -108,6 +95,22 @@
     "phone": {
       "type": "string",
       "configurable": false
+    },
+    "merkliste": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::use-case.use-case"
+    },
+    "profilPic": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "firmname": {
+      "type": "string"
     }
   }
 }

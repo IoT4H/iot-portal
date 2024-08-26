@@ -1,5 +1,4 @@
 import { ContentBox } from "@strapi/helper-plugin";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from "react";
 
