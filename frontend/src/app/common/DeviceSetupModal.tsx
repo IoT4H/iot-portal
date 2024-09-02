@@ -1,12 +1,15 @@
 "use client"
+import { en } from "@faker-js/faker";
+import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
+import { RelationMapField, RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-import { useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Function, config: any, step: any, triggerStateRefresh?: Function}) => {
@@ -17,7 +20,11 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [description, SetDescription] = useState<string>("");
     const [gateway, SetGateway] = useState<boolean>(false);
 
+
+    const [relations, SetRelations] = useState([]);
     const [error, SetError] = useState<string | undefined>();
+
+    const [component, SetComponent] = useState<any>(undefined);
 
     const setupDevice = () => {
         LoadingState.startLoading();
@@ -39,6 +46,9 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
             })
         }).then((response) => {
             console.debug(response)
+            if(response && response.id ) {
+                SetComponent(response.id);
+            }
             if(!step.data.flashProcess) {
                 if(!!onClose) onClose();
             } else if (response.error) {
@@ -66,7 +76,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                     }
                 }
             })
-        }).then(() => {
+        }).then((res) => {
         }).finally(() => {
             LoadingState.endLoading();
             triggerStateRefresh && triggerStateRefresh();
@@ -77,62 +87,55 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         return (label.length > 0) && (!config.form_alternative_label_required || name.length > 0) && (description.length > 0);
     }
 
+    useEffect(() => {
+        SetRelations(step.data.relations)
+    }, [step]);
+
+    useEffect(() => {
+        console.log(name, relations)
+    }, [name, relations]);
+
     return <>
     { (!step.data.setup || step.state.setup.progress < 100) ?
-        <ModalUI onClose={onClose}>
-            <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4"}>
-                <h1 className={"text-3xl mb-8 font-bold"}>Gerät einrichten</h1>
-                <div className={"pl-4"}>
-                    <h2 className={"text-xl mb-2 font-base"}>Gerätedetails</h2>
-                    <div className={"flex flex-col gap-6 pt-4 pl-8"}>
+        <ModalUI onClose={onClose} name={`${step.data.meta.name} einrichten`}>
+            <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
+                <div className={""}>
+                    <p className={"w-full text-center mt-4"}>Geben Sie nun die Informationen an.</p>
+                    <div className={"flex flex-col gap-6 pt-4"}>
                         <div>
-                            <label htmlFor="label" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
-                                Name *
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="label"
-                                    name="label"
-                                    type="text"
-                                    required
-                                    onChange={(event) => SetLabel(event.currentTarget.value)}
-                                    className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
-                                />
-                            </div>
+                            <FieldSetInput
+                                label={"Name"}
+                                type="text"
+                                required
+                                name="label"
+                                onChange={(event: any) => SetLabel(event.currentTarget.value)}
+                            ></FieldSetInput>
                         </div>
                         {
                             (config.form_alternative_label_required) && (
                                 <div>
-                                    <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
-                                        { config.form_alternative_label } *
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            id="name"
-                                            name="name"
-                                            type="text"
-                                            required
-                                            onChange={(event) => SetName(event.currentTarget.value)}
-                                            className="block w-full bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
+                                    <FieldSetInput
+                                        label={config.form_alternative_label}
+                                        type="text"
+                                        required
+                                        name="name"
+                                        onChange={(event: any) => SetName(event.currentTarget.value)}
+                                    ></FieldSetInput>
                                 </div>
                             )
                         }
                         <div>
-                            <label htmlFor="name" className="block text-md font-medium leading-6 text-gray-900 dark:text-orange-50">
-                                Beschreibung *
-                            </label>
-                            <div className="mt-2">
-                                <textarea
-                                    id="description"
-                                    name="description"
-                                    required
-                                    onChange={(event) => SetDescription(event.currentTarget.value)}
-                                    className="block w-full h-[5em] resize-none bg-zinc-300/10 rounded py-1.5 text-gray-900 dark:text-white shadow-md ring-1 border-0 ring-inset ring-zinc-700/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"
-                                ></textarea>
-                            </div>
+                            <FieldSetInput
+                                label={"Beschreibung"}
+                                multiline
+                                type="text"
+                                required
+                                name="description"
+                                className={"h-12"}
+                                onChange={(event: any) => SetDescription(event.currentTarget.value)}
+                            ></FieldSetInput>
                         </div>
+                        <RelationMappings relations={relations} linkingComponent={component} deploymentId={config.deployment} />
                     </div>
                     <div className={"mt-8 flex flex-row justify-center"}>
                         <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"} disabled={!actionable()}
@@ -147,12 +150,12 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         }}></FlashProgress>
 
     }
-        {
-            error && createPortal(
-                <Prompt type={PromptType.Error} text={error || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetError(undefined)} />,
-                document.getElementById('promptArea')!
-            )
-        }
+        {/*{*/}
+        {/*    error && createPortal(*/}
+        {/*        <Prompt type={PromptType.Error} text={error || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetError(undefined)} />,*/}
+        {/*        document.getElementById('promptArea')!*/}
+        {/*    )*/}
+        {/*}*/}
     </>;
 }
 export default Modal;

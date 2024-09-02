@@ -131,6 +131,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return strapi.plugin(pluginId).service('strapiService').stepAction(ctx.params.setupId, JSON.parse(ctx.request.body)).then(
       (response) => response,
       (reason) => ctx.badRequest(reason.message, reason));
+  },
+  async getComponentsForDeploymentByProfile(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    return strapi.plugin(pluginId).service('thingsboardService').getThingsboardDevicesInfosOrAssetInfosByProfile(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, { page: 0, pageSize: 100 })
+  },
+  async createComponentsRelation(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    console.warn(ctx.request.body)
+    const body = JSON.parse(ctx.request.body);
+    return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined)
   }
 
 });

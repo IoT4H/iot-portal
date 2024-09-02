@@ -65,9 +65,7 @@ export class Auth {
 
     static async login(username: string, password: string) {
 
-        try {
-
-
+        LoadingState.startLoading();
             const response = await fetchAPI( "/api/auth/local", {},{
                 method: "POST",
                 headers: {
@@ -79,19 +77,21 @@ export class Auth {
                 })
             });
 
+            if(response.error) {
+                LoadingState.endLoading();
+                throw new Error(response.error.message);
+            }
+
             if(response.jwt) {
                 Auth.setToken(response.jwt);
+                Auth.onUserChange();
+                LoadingState.endLoading();
             }
-            Auth.onUserChange();
-        } catch (e) {
-            console.error(e);
-        } finally {
-            console.info("login attempt finished");
-        }
+
 
     }
 
-     static async logout() {
+     static logout() {
         LoadingState.startLoading();
         Auth.removeToken();
         Auth.onUserChange();

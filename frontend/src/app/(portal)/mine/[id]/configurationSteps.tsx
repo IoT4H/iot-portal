@@ -119,19 +119,18 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
 
 
     return (
+
         <div className={"gap-8 flex flex-col px-3"}>
             <h1 className={"text-2xl font-bold"}>Einrichtung: </h1>
             <p className={"px-3"}>
                 Dies sind die erste Schritte, um diesen UseCase einzurichten. <br/><br/>
                 Bei Fehlern oder Problemen wenden Sie sich bitte an das Team von IoT4H.
             </p>
-            <Suspense>
                 {
                     Array.isArray(steps) && steps.map((s, index, a) => {
                         return (<Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true} deployment={params.id} data={ Object.assign(s, {index: index + 1 }) } updateState={() => fetchStepsProgress()} locked={index > 0 && (a[index - 1].progress < 100 || a[index - 1].progress === undefined)} />);
                     })
                 }
-            </Suspense>
         </div>
     );
 

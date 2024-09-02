@@ -20,6 +20,9 @@
         },
         "type": "AssetProfile"
       }
+    },
+    "displayName": {
+      "type": "string"
     }
   }
 }

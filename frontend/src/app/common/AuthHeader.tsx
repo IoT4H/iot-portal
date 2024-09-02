@@ -27,23 +27,27 @@ export default function AuthHeader() {
     }, [user])
 
     return (
-        <>
+        <div>
             {
-                Auth.isAuth() ?
+                Auth.isAuth() &&
                     (
                         <div className={"flex flex-row gap-3 content-center not:sr-only"}>
                             <div className={"flex flex-col justify-center"}>
                                 <Suspense>{user && <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border aspect-square"}></UserIcon> }</Suspense>
                             </div>
                             <div className={"flex flex-col justify-center text-sm"}>
-                                <Suspense>{user && <span className={"capitalize text-md font-bold"}>{ user.firstname } { user.lastname }</span>}</Suspense>
-                                <Suspense>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name === `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
+                                <Suspense fallback={<TextSkeleton className={"w-20"} />}>{user && <span className={"capitalize text-md font-bold"}>{ user.firstname } { user.lastname }</span>}</Suspense>
+                                <Suspense fallback={<TextSkeleton className={"w-20"} />}>{user && <span className={"capitalize text-sm"}>{ (user.firm && user.firm.name ) && (user.firm.name === `${ user.firstname } ${ user.lastname }` ? "Persönlicher Account" : user.firm.name) }</span>}</Suspense>
                             </div>
                             <div className={"flex flex-col justify-center"} onClick={() => Auth.logout()}>
                                 <ArrowRightOnRectangleIcon className="h-6 w-6 inline-block cursor-pointer"></ArrowRightOnRectangleIcon>
                             </div>
                         </div>
-                    ) : (
+                    )
+            }
+            {
+
+                !Auth.isAuth() && (
                     <Link href={`/login?return_url=${return_url}`}
                           className="text-sm font-semibold cursor-pointer leading-6 text-gray-900 dark:text-white flex items-center gap-1 not:sr-only">
                         Log in <ArrowLeftOnRectangleIcon
@@ -52,6 +56,6 @@ export default function AuthHeader() {
                 )
 
             }
-        </>
+        </div>
     );
 }

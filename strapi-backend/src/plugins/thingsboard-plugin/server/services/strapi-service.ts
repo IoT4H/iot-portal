@@ -224,7 +224,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       populate: { use_case : { populate: { setupSteps: { populate: '*'}}}},
       fields: ['stepStatus'],
     });
-    return { complete: deployment.stepStatus.filter((t) => t.progress >= 100).length == deployment.use_case.setupSteps.length};
+    return { complete: deployment.stepStatus.filter((t) => t.progress >= 100).length === deployment.use_case.setupSteps.length};
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {
@@ -311,7 +311,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               deployment.firm.CustomerUID,
               data.step.data.thingsboard_profile,
               {
-                name: data.parameter.name,
+                name: data.parameter.name || deployment.name + " | " + data.parameter.label,
                 label: data.parameter.label
               }
             );

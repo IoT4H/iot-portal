@@ -6,6 +6,7 @@ import * as HeroIcons from "@heroicons/react/20/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import RelationMappingWindow from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
@@ -253,7 +254,6 @@ export default function Step(stepData: StepData) {
                     </div>
                 </div>
             </div>
-
         </>
     );
 

@@ -11,6 +11,13 @@ export default function TextWithHeadline() {
 
 export function TextSkeleton({ ...props}) {
     return (<div role="status" className={`max-w-sm animate-pulse ${props.className}`}>
-        <div {...props} className={`h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 w-max `}></div>
+        <div {...props} className={`h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 w-max`}></div>
+    </div>)
+}
+
+
+export function StepSkeleton({ ...props}) {
+    return (<div role="status" className={`max-w-sm animate-pulse rounded-2xl overflow-hidden h-16 w-full ${props.className}`}>
+        <div {...props} className={`h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 w-max`}></div>
     </div>)
 }

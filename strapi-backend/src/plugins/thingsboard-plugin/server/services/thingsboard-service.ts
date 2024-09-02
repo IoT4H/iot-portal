@@ -522,6 +522,100 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       reject("couldnt find correct type");
     }
   });
-  }
+  },
+  async createThingsboardComponentsRelationForTenant(tenantId: string, componentType: string, componentId: string, toComponentType: string,  toComponentId: string, type: string , typeGroup: string = "COMMON") {
+    return new Promise<any>((resolve, reject) => {
+
+      this.axiosAsTenant(tenantId, {
+        method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/relation`, headers: {
+          'Content-Type': 'application/json'
+        }, data: JSON.stringify({
+
+            from: {
+              id: componentId,
+              entityType: componentType
+          },
+            to: {
+              id: toComponentId,
+              entityType: toComponentType
+            },
+            type: type,
+            typeGroup: typeGroup,
+            additionalInfo: {}
+          }
+
+        )
+      })
+        .then(
+          (response: any) => {
+            resolve(response.data);
+          }, (reason: any) => {
+            reject(reason.response.data);
+          });
+    });
+  },
+  async deleteThingsboardComponentsRelationForTenant(tenantId: string, componentId: string, componentType: "ASSET" | "DEVICE", toComponentId: string, toComponentType: "ASSET" | "DEVICE", type: string , typeGroup: string) {
+    return new Promise<any>((resolve, reject) => {
+
+      this.axiosAsTenant(tenantId, {
+        method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/relation`, headers: {
+          'Content-Type': 'application/json'
+        }, data: JSON.stringify({
+
+            from: {
+              id: componentId,
+              entityType: componentType
+            },
+            to: {
+              id: toComponentId,
+              entityType: toComponentType
+            },
+            type: type,
+            typeGroup: typeGroup,
+            additionalInfo: {}
+          }
+
+        )
+      })
+        .then(
+          (response: any) => {
+            resolve(response.data);
+          }, (reason: any) => {
+            reject(reason.response.data);
+          });
+    });
+  },
+
+  async getThingsboardDevicesInfosOrAssetInfosByProfile(tenantId: string, componentType: "ASSET" | "DEVICE", componentProfileId: string, params : { page: number, pageSize: number, sortOrder: string, sortProperty: string, textSearch: string}) {
+    switch (componentType) {
+      case "ASSET":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/assetInfos`, params: { ...params, assetProfileId: componentProfileId }})
+          .then((response: any) => {
+            return response.data
+          })
+      case "DEVICE":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/deviceInfos`, params:  { ...params, deviceProfileId: componentProfileId }})
+          .then((response: any) => {
+            return response.data
+          })
+    }
+
+  },
+
+  async getThingsboardDeviceOrAsset(tenantId: string, componentType: "ASSET" | "DEVICE", componentId: string) {
+    switch (componentType) {
+      case "ASSET":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset/${componentId}`})
+          .then((response: any) => {
+            return response.data
+          })
+      case "DEVICE":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${componentId}` })
+          .then((response: any) => {
+            return response.data
+          })
+    }
+
+  },
 
 });

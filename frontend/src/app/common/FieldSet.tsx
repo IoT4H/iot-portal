@@ -13,17 +13,41 @@ export function RequiredStar (p: any) {
 
 export function FieldSetInput(p: any) {
 
-    let {children, ...props}  = p;
+    let {children, ...props }  = p;
 
     return (
-        <div className={`relative flex flex-col ${props.className || ""}`}>
+        <div className={`relative flex flex-col h-auto ${props.className || ""}`}>
             <label htmlFor={props.id} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
                 {props.label}{props.required && (<RequiredStar />)}
             </label>
             <div className="mt-2">
-                <input name={props.id} {...props} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6" />
+                { props.multiline ?
+                    <textarea name={props.id} {...props} className="block h-[5em] resize-none w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6"></textarea> :
+                    <input name={props.id} {...props} className=" flex-grow block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6" />
+                }
             </div>
-            { children }
+                { Array.isArray(children ) &&  children.map((child: any) => {
+                    return child;
+                }) || children }
+        </div>
+    );
+}
+
+
+export function FieldSetSelect(p: any) {
+
+    let {children, ...props }  = p;
+
+    return (
+        <div className={`relative flex flex-col ${props.className || ""}`}>
+            { props.label && ( <label htmlFor={props.id} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
+                {props.label}{props.required && (<RequiredStar />)}
+            </label> ) }
+            <select className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6">
+                { Array.isArray(children ) &&  children.map((child: any) => {
+                    return child;
+                }) || children }
+            </select>
         </div>
     );
 }
@@ -42,7 +66,10 @@ export function FieldSetCheckbox(p: any) {
                                             <CheckIcon className={`w-full aspect-square invisible group-[:has(*:checked)]/checkbox:visible`}/>
                                         </span>
                     <input type={"checkbox"} {...props} className={"hidden"} />
-                    <div>{ children }
+                    <div>
+                        { Array.isArray(children ) &&  children.map((child: any) => {
+                            return child;
+                        }) || children }
                         {props.required && (<RequiredStar />)}</div>
                 </label>
             </div>
