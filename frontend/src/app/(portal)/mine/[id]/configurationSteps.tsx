@@ -1,5 +1,5 @@
 "use client"
-import { State } from "@iot-portal/frontend/app/(portal)/deployment-status";
+import { pollStatus, State } from "@iot-portal/frontend/app/(portal)/deployment-status";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import Step from "@iot-portal/frontend/app/common/setup/step";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -37,17 +37,16 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 default:
                     break;
             }
+        }).finally(() => {
+            if(state !== State.deployed) {
+                setTimeout(poll, state === State.none ? 0 : 250);
+            }
         });
     };
 
 
     useEffect(() => {
-        if(state !== State.deployed) {
-            setTimeout(poll, state === State.none ? 0 : 250);
-        }
-    }, [state])
 
-    useEffect(() => {
         if(state === State.deployed) {
                 fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
                     {
@@ -60,6 +59,10 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
             fetchStepsProgress();
         }
     }, [state]);
+
+    useEffect(() => {
+        pollStatus(params.id, setState)
+    }, [params.id]);
 
     const getProgress = (step: {__component: string, id: number}) => {
         return Array.isArray(stepsProgress) && stepsProgress.find((e: any) => {
@@ -118,20 +121,26 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     }, [stepsProgress])
 
 
-    return (
-
-        <div className={"gap-8 flex flex-col px-3"}>
-            <h1 className={"text-2xl font-bold"}>Einrichtung: </h1>
-            <p className={"px-3"}>
-                Dies sind die erste Schritte, um diesen UseCase einzurichten. <br/><br/>
-                Bei Fehlern oder Problemen wenden Sie sich bitte an das Team von IoT4H.
-            </p>
+    if (Array.isArray(steps)) {
+        return (
+            <div className={"gap-8 flex flex-col px-3"}>
+                <h1 className={"text-2xl font-bold"}>Einrichtung: </h1>
+                <p className={"px-3"}>
+                    Dies sind die erste Schritte, um diesen UseCase einzurichten. <br/><br/>
+                    Bei Fehlern oder Problemen wenden Sie sich bitte an das Team von IoT4H.
+                </p>
                 {
                     Array.isArray(steps) && steps.map((s, index, a) => {
-                        return (<Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true} deployment={params.id} data={ Object.assign(s, {index: index + 1 }) } updateState={() => fetchStepsProgress()} locked={index > 0 && (a[index - 1].progress < 100 || a[index - 1].progress === undefined)} />);
+                        return (
+                            <Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true}
+                                  deployment={params.id} data={Object.assign(s, {index: index + 1})}
+                                  updateState={() => fetchStepsProgress()}
+                                  locked={index > 0 && (a[index - 1].progress < 100 || a[index - 1].progress === undefined)}/>);
                     })
                 }
-        </div>
-    );
+            </div>
+        );
+    }
+    return null;
 
 }

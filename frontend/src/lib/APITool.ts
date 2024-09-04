@@ -23,7 +23,7 @@ export class APITool {
                 resolve({StrapiURL, serverStrapiUrl});
                 APITool.initComplete = true;
             } else {
-                fetch("/init/").then((response) => response.json()).then((data) => {
+                fetch("/init/", {cache: "force-cache"}).then((response) => response.json()).then((data) => {
                     APITool.StrapiURL = data.StrapiURL;
                     APITool.FrontendStrapiURL = data.StrapiURL;
                     APITool.ServerStrapiURL = data.serverStrapiUrl;

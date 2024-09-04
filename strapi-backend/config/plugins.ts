@@ -17,4 +17,22 @@ export default {
       },
     },
   },
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: '',
+        port: 465,
+        secure: true,
+        auth: {
+          user: '',
+          pass: '',
+        },
+        tls: { rejectUnauthorized: false },
+      },
+      settings: {
+        defaultFrom: '',
+      },
+    }
+  }
 };

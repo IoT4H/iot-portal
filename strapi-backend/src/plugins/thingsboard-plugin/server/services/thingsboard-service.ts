@@ -616,6 +616,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           })
     }
 
-  },
+  }
 
 });

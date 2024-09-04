@@ -12,6 +12,41 @@ export enum State {
     deployed
 }
 
+export const pollStatus  = (id: number, setState: Function) => {
+    let r = new Promise<boolean>((resolve, reject) => {
+        fetchAPI(`/api/thingsboard-plugin/deployment/${id}/status`, {}, {
+            headers: {
+                Authorization: `Bearer ${Auth.getToken()}`
+            }
+        }).then((newState) => {
+            switch (newState.status) {
+                case "deployed":
+                    setState(State.deployed);
+                    resolve(false);
+                    break;
+                case "deploying":
+                    setState(State.deploying);
+                    break;
+                case "created":
+                    setState(State.created);
+                    break;
+                default:
+                    break;
+            }
+
+            resolve(true);
+        });
+    });
+
+    r.then( async (r) => {
+        if(r) {
+            setTimeout(() => pollStatus(id, setState), 250);
+        }
+    })
+    return r;
+
+};
+
 export default function Status ({ id } : { id: number}) {
 
     const [state, setState] = useState<State>(State.none);
@@ -32,45 +67,10 @@ export default function Status ({ id } : { id: number}) {
         root: null
     });
 
-    const poll = () => {
-        let r = new Promise<boolean>((resolve, reject) => {
-            fetchAPI(`/api/thingsboard-plugin/deployment/${id}/status`, {}, {
-                headers: {
-                    Authorization: `Bearer ${Auth.getToken()}`
-                }
-            }).then((newState) => {
-                switch (newState.status) {
-                    case "deployed":
-                        setState(State.deployed);
-                        resolve(false);
-                        break;
-                    case "deploying":
-                        setState(State.deploying);
-                        break;
-                    case "created":
-                        setState(State.created);
-                        break;
-                    default:
-                        break;
-                }
-
-                resolve(true);
-            });
-        });
-
-        r.then( async (r) => {
-            if(r) {
-                setTimeout(poll, 250);
-            }
-        })
-        return r;
-
-    };
-
     useEffect(() => {
         if(inView && state !== State.deployed && !pollingStarted) {
             SetPollingStarted(true);
-            poll();
+            pollStatus(id, setState);
         }
     }, [inView, state])
 

@@ -191,6 +191,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       populate: { use_case : { populate: { setupSteps: { populate: '*'}}}}
     });
+
+    /**** UUID replacement ****/
     let replacementDictionary: Array<string> = new Array<string>();
     Array.of(...deployment.deployed).forEach((deployed) => {
       if(deployed.id && deployed.template) {
@@ -201,6 +203,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const constructedModSteps = JSON.stringify(deployment.use_case.setupSteps).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
       return replacementDictionary[matched]
     })
+
+    /**** END UUID replacement ****/
 
     try {
       return JSON.parse(constructedModSteps);

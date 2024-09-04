@@ -112,9 +112,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                 </Suspense>
                             </div>
                             <div className={"w-full"}>
-                                <Suspense fallback={<TextWithHeadline/>}>
-                                    {props.children}
-                                </Suspense>
+                                {props.children}
                             </div>
                         </div>
                     </article>
