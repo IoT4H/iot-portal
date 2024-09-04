@@ -235,12 +235,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response:any): any => response.data);
   },
   async getUserToken(userId: string) {
-    console.warn("get user token");
+    //console.warn("get user token");
     return this.axiosAsSysAdmin({method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
       .then((response: any):any => response.data);
   },
   async getCustomerUserToken(tenantId: string, userId: string) {
-    console.warn("get user token");
+    //console.warn("get user token");
     return this.axiosAsTenant(tenantId, {method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/user/${userId}/token`})
       .then((response: any):any => response.data);
   },

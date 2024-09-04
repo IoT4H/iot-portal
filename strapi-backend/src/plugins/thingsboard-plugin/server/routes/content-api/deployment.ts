@@ -49,7 +49,7 @@ export default [
             fields: [],
             populate: { firm : { fields: ["id"] } }
           }).then((u: any) => {
-            console.warn(u.firm.id)
+            //console.warn(u.firm.id)
           });
 
 
@@ -58,7 +58,7 @@ export default [
             fields: [],
             populate: { firm : true }
           }).then((d: any) => {
-            console.warn(d, d?.firm, d?.firm?.id);
+            //console.warn(d, d?.firm, d?.firm?.id);
           })
 
           return true;

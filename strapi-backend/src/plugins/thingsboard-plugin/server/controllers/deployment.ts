@@ -42,7 +42,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const user: any = await strapi.entityService.findOne('plugin::users-permissions.user', ctx.state.user.id, {
       populate: "*",
     });
-    console.warn("req parmas", ctx.query);
     const s = await strapi.plugin(pluginId)
       .service('strapiService').createNewDeployment(Number(ctx.params.useCaseId), Number(user.firm.id), ctx.query.title, ctx.query.description);
     ctx.body = s;
@@ -106,7 +105,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         return strapi.plugin(pluginId)
           .service('thingsboardService').getThingsboardComponent(d.id, d.entityType, tenentUID)
       }));
-    console.log(completeDevices)
     ctx.body = completeDevices;
   },
   async getStepsFromDeployment(ctx) {
@@ -140,7 +138,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async createComponentsRelation(ctx) {
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
     const tenentUID = te.firm.TenentUID;
-    console.warn(ctx.request.body)
     const body = JSON.parse(ctx.request.body);
     return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined)
   }

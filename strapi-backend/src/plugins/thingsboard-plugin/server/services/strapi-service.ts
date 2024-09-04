@@ -108,17 +108,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       })
     ));
 
-      console.warn("ID ARRAY", deployDict);
+      //console.warn("ID ARRAY", deployDict);
 
       const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
             .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.name).then((response) => {
-              console.warn(response)
+              //console.warn(response)
               if(response.id.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase() === "dashboard") {
                 strapi.plugin(pluginId)
                   .service('thingsboardService').assignCustomerToDashboard(firm.TenentUID, firm.CustomerUID, response.id.id).then(() => {
-                  console.log("Dashboard Assigned")
+                  //console.log("Dashboard Assigned")
                 })
               }
               return response;
@@ -229,7 +229,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {
     delete step.meta;
-    console.warn(deploymentId, step, progress, subprogress);
+    //console.warn(deploymentId, step, progress, subprogress);
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
@@ -339,7 +339,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         returnPromise.then((response) => resolve(response), (reason) => reject(reason));
         break;
       case "instructions.list-instruction":
-        console.warn("data: " + JSON.stringify(data));
+        //console.warn("data: " + JSON.stringify(data));
         returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
           ...data.step.data
         }, null, data.parameter)
