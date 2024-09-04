@@ -144,7 +144,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }).filter((result) => {
         return result !== null;
       });
-    console.log(JSON.stringify(constructJson));
 
 
     strapi.entityService.update('api::deployment.deployment', deploymentId,{
@@ -186,7 +185,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       delete comp.tenantId;
       return comp;
     });
-    console.log(comps)
     return comps
   },
   async getInstructionStepsFromDeployment(deploymentId: number) {
@@ -217,14 +215,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
-    return deployment.stepStatus;
+    return deployment.stepStatus || [];
   },
   async getInstructionStepsProgressCompleteFromDeployment(deploymentId: number) {
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       populate: { use_case : { populate: { setupSteps: { populate: '*'}}}},
       fields: ['stepStatus'],
     });
-    return { complete: (Array.isArray(deployment.stepStatus) && deployment.stepStatus.filter((t) => t.progress >= 100) || []).length === deployment.use_case.setupSteps.length};
+
+    if(Array.isArray(deployment.stepStatus)) {
+      return { complete: (deployment.stepStatus.filter((t) => t.progress >= 100) || []).length === deployment.use_case.setupSteps.length};
+    } else {
+      return { complete: 0 === deployment.use_case.setupSteps.length};
+    }
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
     "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {
