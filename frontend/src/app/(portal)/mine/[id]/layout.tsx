@@ -7,7 +7,7 @@ import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWith
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
     PhotoIcon, WrenchScrewdriverIcon
 } from "@heroicons/react/20/solid";
@@ -107,9 +107,14 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                 <Suspense>
                                     { setupDevice == false && <Tab name={"Dashboards"} link={`/mine/${props.params.id}/dashboards/`}/> }
                                 </Suspense>
+                                <Suspense>
+                                    { setupDevice == false && <Tab name={"Geräte & Sensoren"} link={`/mine/${props.params.id}/devices/`}/> }
+                                </Suspense>
                             </div>
                             <div className={"w-full"}>
-                                {props.children}
+                                {
+                                    props.children
+                                }
                             </div>
                         </div>
                     </article>

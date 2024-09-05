@@ -117,7 +117,7 @@ export default [
   },
   {
     method: 'GET',
-    path: '/deployment/:setupId/setup/profiles',
+    path: '/deployment/:setupId/profiles',
     handler: `plugin::${pluginId}.deployment.getSetupStepsProfiles`,
     config: {
       policies: [
