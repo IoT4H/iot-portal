@@ -11,7 +11,7 @@ import * as React from "react";
 import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import ConfettiExplosion from "react-confetti-explosion";
 
-const FlashProgress = ({ onClose } : {onClose?: Function}) => {
+const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: any}) => {
 
     enum Steps {
         VORBEREITUNG = "Vorbereitung",

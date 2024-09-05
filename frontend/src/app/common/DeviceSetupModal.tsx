@@ -147,8 +147,10 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     </ModalUI> : <FlashProgress onClose={(b?: boolean) => {
             if(b) flashComplete();
             if(!!onClose) onClose();
-        }}></FlashProgress>
+        }} stepData={step}></FlashProgress>
 
+
+        //TODO: move FlashProgress out into Step
     }
         {/*{*/}
         {/*    error && createPortal(*/}

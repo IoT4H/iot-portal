@@ -176,8 +176,7 @@ export default function Step(stepData: StepData) {
                     </div>
                     <div className={`step-bodyoverflow-hidden ${!open && 'hidden'}`}>
                         <div className={" mx-2 my-8 "}>
-                            <BlocksRenderer content={stepData.data.meta.text}
-                            ></BlocksRenderer>
+                            <BlocksRenderer content={stepData.data.meta.text}></BlocksRenderer>
                             {
                                 ["instructions.list-instruction"].includes(stepData.data.__component) && (
                                     <form id={"taskForm"} >

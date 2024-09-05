@@ -44,7 +44,7 @@ export const RelationMapField = (p: any) => {
 
     useEffect(() => {
 
-        if(value === undefined && options.length >= 0) {
+        if(value === undefined && options.length > 0) {
             console.log(options[0])
             SetValue(options[0]);
         }
