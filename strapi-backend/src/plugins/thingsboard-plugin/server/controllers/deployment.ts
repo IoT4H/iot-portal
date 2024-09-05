@@ -107,6 +107,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }));
     ctx.body = completeDevices;
   },
+  async getSetupStepsProfiles(ctx) {
+    ctx.body = await strapi.plugin(pluginId)
+      .service('strapiService').getComponentProfilesFromSetupProcessOfDeployment(ctx.params.setupId);
+  },
   async getStepsFromDeployment(ctx) {
     return strapi.plugin(pluginId)
       .service('strapiService').getInstructionStepsFromDeployment(ctx.params.setupId)

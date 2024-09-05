@@ -1,6 +1,6 @@
 import { Strapi } from "@strapi/strapi";
-import { responses } from "@strapi/strapi/dist/middlewares/responses";
 import { randomUUID } from "crypto";
+import { ComponentStructure } from "../../admin/src/components/ComponentStructure";
 import pluginId from "../../admin/src/pluginId";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
@@ -187,27 +187,28 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     });
     return comps
   },
+  async getComponentProfilesFromSetupProcessOfDeployment(deploymentId: number): Promise<any[]> {
+
+    const steps = await this.getInstructionStepsFromDeployment(deploymentId);
+    let profiles = await Promise.all(
+      steps.filter(steps => steps.__component === "instructions.setup-instruction")
+        .map(async (step) => {
+            let t = { id: { id: step.thingsboard_profile.id, entityType: step.thingsboard_profile.entityType}, tenantId: step.thingsboard_profile.tenantId };
+            return await strapi.plugin(pluginId).service('thingsboardService').getThingsboardComponent(t.id.id, t.id.entityType, t.tenantId.id);
+        })
+    );
+
+    return profiles
+  },
   async getInstructionStepsFromDeployment(deploymentId: number) {
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       populate: { use_case : { populate: { setupSteps: { populate: '*'}}}}
     });
 
-    /**** UUID replacement ****/
-    let replacementDictionary: Array<string> = new Array<string>();
-    Array.of(...deployment.deployed).forEach((deployed) => {
-      if(deployed.id && deployed.template) {
-        replacementDictionary[deployed.template.id] = deployed.id;
-        replacementDictionary[deployed.template.tenantId.id] = deployed.tenantId.id;
-      }
-    })
-    const constructedModSteps = JSON.stringify(deployment.use_case.setupSteps).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
-      return replacementDictionary[matched]
-    })
-
-    /**** END UUID replacement ****/
+    const cMs = this.replaceUUIDsForDeployment(deployment.deployed, deployment.use_case.setupSteps)
 
     try {
-      return JSON.parse(constructedModSteps);
+      return cMs;
     } catch (e) {
       strapi.log.error(e);
       return null;
@@ -358,5 +359,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     });
 
+  },
+  replaceUUIDsForDeployment(deployedProfiles: Array<ComponentStructure>, objectToReplaceWithin: any) {
+    let replacementDictionary: Array<string> = new Array<string>();
+    deployedProfiles.forEach((deployed: ComponentStructure) => {
+      if(deployed.id && deployed.template) {
+        replacementDictionary[deployed.template.id] = deployed.id;
+        replacementDictionary[deployed.template.tenantId.id] = deployed.tenantId.id;
+      }
+    });
+    return JSON.parse(JSON.stringify(objectToReplaceWithin).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+      return replacementDictionary[matched]
+    }))
   }
 });

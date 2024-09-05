@@ -22,11 +22,13 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               return response.data
             });
         case "assetprofile":
+        case "asset_profile":
           return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfiles`, params: params})
             .then((response: any) => {
               return response.data
             })
         case "deviceprofile":
+        case "device_profile":
           return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfiles`, params: params})
             .then((response: any) => {
               return response.data
@@ -39,38 +41,38 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
 
   },
-  async getThingsboardComponent(componentId: string, componentType: string, tenantId: string) {
+  async getThingsboardComponent(profileId: string, componentType: string, tenantId: string) {
     componentType = componentType.toLowerCase().replace(/[_ ]/gim, '');
       switch (componentType) {
         case "dashboard":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${componentId}`
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${profileId}`
           })
             .then((response: any) => response.data));
         case "assetprofile":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${componentId}`
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${profileId}`
           })
             .then((response: any) => response.data));
         case "deviceprofile":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${componentId}`
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${profileId}`
           })
             .then((response: any) => response.data));
         case "rulechain":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${componentId}`
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${profileId}`
           })
             .then((response: any) => response.data));
 
         case "rulechainmetadata":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${componentId}/metadata`
+            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${profileId}/metadata`
           })
             .then((response: any) => response.data));
       }

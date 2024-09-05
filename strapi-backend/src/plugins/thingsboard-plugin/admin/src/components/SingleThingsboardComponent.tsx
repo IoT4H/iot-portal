@@ -1,63 +1,36 @@
-import { ContentBox } from "@strapi/helper-plugin";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from "react";
 
-import { useIntl } from "react-intl";
-import { TextInput } from "@strapi/design-system"
 import { Grid, GridItem } from '@strapi/design-system';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/helper-plugin';
-import { Field, FieldLabel, FieldHint, FieldError, FieldInput, FieldAction } from '@strapi/design-system';
+import { Field, FieldLabel } from '@strapi/design-system';
 import {
-  Dots,
-  NextLink,
-  PageLink,
-  Pagination,
-  PreviousLink,
   Card,
-  CardHeader,
   CardBody,
-  CardCheckbox,
-  CardAction,
-  CardAsset,
-  CardTimer,
   CardContent,
-  CardBadge,
   CardTitle,
   CardSubtitle,
   Button,
   Box,
-  IconButton,
   KeyboardNavigable,
   Typography,
   Flex,
   Breadcrumbs,
-  Link as LinkButton,
   Crumb,
   Loader,
-  TabGroup,
-  Tabs,
-  Tab,
-  TabPanels,
-  TabPanel
 } from '@strapi/design-system';
 import { EmptyStateLayout } from '@strapi/design-system';
 import {
-  Plus,
   Pencil,
-  Trash,
   Dashboard,
   Link,
   ChartBubble,
   Server,
-  CollectionType,
   User,
   ArrowLeft,
   Question
 } from '@strapi/icons';
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -141,9 +114,6 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
   const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
     props; // these are just some of the props passed by the content-manager
-
-  const { formatMessage } = useIntl();
-
 
 
   const getOrgValue = (): any => {

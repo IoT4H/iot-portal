@@ -117,6 +117,22 @@ export default [
   },
   {
     method: 'GET',
+    path: '/deployment/:setupId/setup/profiles',
+    handler: `plugin::${pluginId}.deployment.getSetupStepsProfiles`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
     path: '/deployment/:setupId/dashboard/:id',
     handler: `plugin::${pluginId}.deployment.getDashboardInfo`,
     config: {

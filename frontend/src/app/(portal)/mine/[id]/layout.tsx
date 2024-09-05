@@ -63,9 +63,6 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
         })
     }, [pathname]);
 
-    (() => {
-        LoadingState.endLoading();
-    })();
 
     const [setupDevice, SetSetupDevice] = useState<boolean | undefined>(undefined);
 
@@ -118,6 +115,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                     </article>
 
                     {
+                        LoadingState.endLoading()
                     }
                 </>)
 

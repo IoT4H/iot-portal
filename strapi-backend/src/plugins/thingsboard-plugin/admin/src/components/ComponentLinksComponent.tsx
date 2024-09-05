@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
 
-import { useIntl } from "react-intl";
 import { Grid, GridItem, Field, FieldLabel, Box, Flex, EmptyStateLayout } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/helper-plugin';
 import { ComponentItem } from "./SingleThingsboardComponent";
+import { ComponentStructure } from "./ComponentStructure"
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -12,24 +12,6 @@ const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
 const formatter = (s: string) => {
   return s
 }
-
-type ComponentStructure = {
-  id: string,
-  entityType: string,
-  tenantId?: {
-    id: string,
-    entityType: string
-  },
-  template?: {
-    id: string,
-    entityType: string,
-    tenantId?: {
-      id: string,
-      entityType: string
-    }
-  }
-}
-
 
 class ErrorBoundary extends React.Component {
 
@@ -85,8 +67,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
   const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
     props; // these are just some of the props passed by the content-manager
-
-  const { formatMessage } = useIntl();
 
   const getOrgValue = (): any[] => {
     try {
