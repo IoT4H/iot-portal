@@ -1,11 +1,11 @@
-export default function TextWithHeadline() {
-    return (<div role="status" className="max-w-sm animate-pulse">
+export default function TextWithHeadline({ ...props}) {
+    return (<div role="status" {...props} className={`max-w-sm animate-pulse ${props.className}`}>
         <div className="h-[1.5em] bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700  max-w-[360px] w-full mb-2.5"></div>
+        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700  mb-2.5 w-full "></div>
+        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700  max-w-[330px] w-full  mb-2.5"></div>
+        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700  max-w-[300px] w-full  mb-2.5"></div>
+        <div className="h-[1em] bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] w-full "></div>
     </div>)
 }
 

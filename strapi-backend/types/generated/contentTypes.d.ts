@@ -1014,6 +1014,39 @@ export interface ApiFirmFirm extends Schema.CollectionType {
   };
 }
 
+export interface ApiGlossarGlossar extends Schema.CollectionType {
+  collectionName: 'glossars';
+  info: {
+    singularName: 'glossar';
+    pluralName: 'glossars';
+    displayName: 'Glossar';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    word: Attribute.String;
+    text: Attribute.Blocks;
+    slug: Attribute.UID<'api::glossar.glossar', 'word'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::glossar.glossar',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::glossar.glossar',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPagePage extends Schema.CollectionType {
   collectionName: 'pages';
   info: {
@@ -1251,6 +1284,7 @@ declare module '@strapi/types' {
       'api::deployment.deployment': ApiDeploymentDeployment;
       'api::device.device': ApiDeviceDevice;
       'api::firm.firm': ApiFirmFirm;
+      'api::glossar.glossar': ApiGlossarGlossar;
       'api::page.page': ApiPagePage;
       'api::portal-einstellungen.portal-einstellungen': ApiPortalEinstellungenPortalEinstellungen;
       'api::startpage.startpage': ApiStartpageStartpage;
