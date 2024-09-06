@@ -18,9 +18,8 @@ const DeviceBox = ({device, setup, stepData } : {device: any, setup: any, stepDa
 
 
     return (
-        <div key={device.id.id} className={"bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center"}>
+        <div key={device.id.id}  title={stepData.data.active ? "Online" : "Offline"} className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center border-l-4 ${stepData.data.active ? "border-green-500" : "border-red-500"}`}>
             <span>{device.label.replace(setup.name + " | ", "")}</span>
-            <span title={stepData.data.active ? "Online" : "Offline"} className={`aspect-square w-3 ml-2 rounded-3xl bg-white ${stepData.data.active ? "bg-green-500" : "bg-red-500"}`}></span>
             <div className={"flex-shrink-0 ml-auto flex flex-row gap-2"}>
                 {stepData.data.flashProcess && <div title={"Flashen"} onClick={toggleFlashModalOpen}
                                                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}>
