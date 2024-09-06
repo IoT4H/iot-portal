@@ -21,6 +21,9 @@
     "slug": {
       "type": "uid",
       "targetField": "word"
+    },
+    "shortdescription": {
+      "type": "text"
     }
   }
 }
