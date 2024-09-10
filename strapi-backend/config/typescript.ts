@@ -1,3 +1,3 @@
 module.exports = ({ env }) => ({
-  autogenerate: false,
+  autogenerate: true,
 });

@@ -1,0 +1,19 @@
+{
+  "name": "littlefs-data-creator",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "run": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@fastify/multipart": "^8.2.0",
+    "@fastify/static": "^7.0.4",
+    "fastify": "^4.26.2",
+    "tmp": "^0.2.3"
+  }
+}

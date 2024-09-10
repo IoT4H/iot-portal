@@ -42,7 +42,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const user: any = await strapi.entityService.findOne('plugin::users-permissions.user', ctx.state.user.id, {
       populate: "*",
     });
-    console.warn("req parmas", ctx.query);
     const s = await strapi.plugin(pluginId)
       .service('strapiService').createNewDeployment(Number(ctx.params.useCaseId), Number(user.firm.id), ctx.query.title, ctx.query.description);
     ctx.body = s;
@@ -96,6 +95,55 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const tenentUID = te.firm.TenentUID;
     ctx.body = await strapi.plugin(pluginId)
       .service('thingsboardService').getThingsboardDashboardInfo(ctx.params.id, tenentUID);
+  },
+  async getDevices(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    const devices = await strapi.plugin(pluginId)
+      .service('strapiService').getDevicesFromDeployment(ctx.params.setupId);
+    const completeDevices = await Promise.all(devices.map((d) => {
+        return strapi.plugin(pluginId)
+          .service('thingsboardService').getThingsboardComponent(d.id, d.entityType, tenentUID)
+      }));
+    ctx.body = completeDevices;
+  },
+  async getSetupStepsProfiles(ctx) {
+    ctx.body = await strapi.plugin(pluginId)
+      .service('strapiService').getComponentProfilesFromSetupProcessOfDeployment(ctx.params.setupId);
+  },
+  async getStepsFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsFromDeployment(ctx.params.setupId)
+  },
+  async getStepsProgressFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsProgressFromDeployment(ctx.params.setupId)
+  },
+  async getStepsProgressCompleteFromDeployment(ctx) {
+    return strapi.plugin(pluginId)
+      .service('strapiService').getInstructionStepsProgressCompleteFromDeployment(ctx.params.setupId)
+  },
+  async updateStepsProgressFromDeployment(ctx) {
+    const step = ctx.body.step;
+    const progress = ctx.body.progress;
+    return strapi.plugin(pluginId)
+      .service('strapiService').updateInstructionStepsProgressFromDeployment(ctx.params.setupId, step, progress)
+  },
+  async stepAction(ctx) {
+    return strapi.plugin(pluginId).service('strapiService').stepAction(ctx.params.setupId, JSON.parse(ctx.request.body)).then(
+      (response) => response,
+      (reason) => ctx.badRequest(reason.message, reason));
+  },
+  async getComponentsForDeploymentByProfile(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    return strapi.plugin(pluginId).service('thingsboardService').getThingsboardDevicesInfosOrAssetInfosByProfile(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, { page: 0, pageSize: 100 })
+  },
+  async createComponentsRelation(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    const body = JSON.parse(ctx.request.body);
+    return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined)
   }
 
 });

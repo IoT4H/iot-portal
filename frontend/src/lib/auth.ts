@@ -1,5 +1,7 @@
 "use client"
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { APITool } from "@iot-portal/frontend/lib/APITool";
 
 export type User = {
 
@@ -14,7 +16,7 @@ export type User = {
 
 export class Auth {
 
-    static #ID_ITEM_NAME = "token";
+    static ID_ITEM_NAME = "token";
 
     static onUserChange = () => {};
 
@@ -30,32 +32,41 @@ export class Auth {
             }
         ;
 
-        const u = (await fetchAPI("/api/users/me", qsPara, {
+        const u = await fetchAPI( "/api/users/me", qsPara, {
             headers: {
                 "Authorization": "Bearer " + this.getToken()
             }
-        }));
+        });
 
-        return { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
 
     static isAuth(): boolean {
         try {
-            return localStorage.getItem(Auth.#ID_ITEM_NAME) !== null;
+            return localStorage.getItem(Auth.ID_ITEM_NAME) !== null;
         } catch (e) {
             return false;
         }
     }
 
     static getToken() {
-        return this.isAuth() && localStorage.getItem(Auth.#ID_ITEM_NAME);
+        return this.isAuth() && localStorage.getItem(Auth.ID_ITEM_NAME);
+    }
+
+
+    static setToken(token: string) {
+        localStorage.setItem(Auth.ID_ITEM_NAME, token);
+        Auth.onUserChange();
+    }
+
+    static removeToken() {
+        localStorage.removeItem(Auth.ID_ITEM_NAME);
     }
 
     static async login(username: string, password: string) {
 
-        try {
-
-            const response = await fetch(getStrapiURL() + "/api/auth/local", {
+        LoadingState.startLoading();
+            const response = await fetchAPI( "/api/auth/local", {},{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -66,26 +77,25 @@ export class Auth {
                 })
             });
 
-            if(response.status !== 200) {
-                throw new Error("Login failed.");
+            if(response.error) {
+                LoadingState.endLoading();
+                throw new Error(response.error.message);
             }
 
-            const raw = await response.json();
-
-            if(raw.jwt) {
-                localStorage.setItem(Auth.#ID_ITEM_NAME, raw.jwt);
+            if(response.jwt) {
+                Auth.setToken(response.jwt);
+                Auth.onUserChange();
+                LoadingState.endLoading();
             }
-            Auth.onUserChange();
-        } catch (e) {
 
-        } finally {
-        }
 
     }
 
-     static async logout() {
-        localStorage.removeItem(Auth.#ID_ITEM_NAME);
+     static logout() {
+        LoadingState.startLoading();
+        Auth.removeToken();
         Auth.onUserChange();
+        LoadingState.endLoading();
     }
 
 }

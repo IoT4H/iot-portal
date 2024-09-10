@@ -2,10 +2,9 @@ version: '3.5'
 services:
   frontend:
     environment:
-       NEXT_PUBLIC_STRAPI_API_URL: "localhost:1337/api"
+       NEXT_PUBLIC_STRAPI_API_URL: "http://localhost:1337"
     build:
       context: ./frontend
-    
     restart: unless-stopped
     depends_on:
       - strapi
@@ -23,6 +22,7 @@ services:
       context: ./strapi-backend
     restart: unless-stopped
     environment:
+      STRAPI_URL: 'http://localhost:1337'
       DATABASE_HOST: 'portaldb'
       NODE_ENV: 'production'
       DATABASE_CLIENT: 'postgres'
@@ -31,5 +31,31 @@ services:
       - "1337:1337"
     depends_on:
       - portaldb
-
+  flashdata:
+    build:
+      context: ./littlefs-data-creator
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./littlefs-data-creator/mklittlefs/debug:/tmp
+  mytb:
+    restart: unless-stopped
+    image: "ghcr.io/iot4h/iot4h-platform:3.6.2-iot4h.1"
+    ports:
+      - "8080:9090"
+      - "9090:9090"
+      - "1883:1883"
+      - "7070:7070"
+      - "5683-5688:5683-5688/udp"
+    environment:
+      TB_QUEUE_TYPE: in-memory
+    volumes:
+      - mytb-data:/data
+      - mytb-logs:/var/log/thingsboard
+volumes:
+  mytb-data:
+    external: true
+  mytb-logs:
+    external: true
 

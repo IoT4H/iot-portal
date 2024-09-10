@@ -12,8 +12,20 @@ export default async function Footer() {
         }
     ;
 
-    const menus = ((await fetchAPI("/api/menus/", Para)).data.filter((m: any) => m.attributes.slug === "footer"))[0] || null;
-
+    const menus = await (async () => {
+        try {
+            const response = await fetchAPI("/api/menus/", Para);
+            if (response) {
+                const filtered = response.data.filter((m: any) => m.attributes.slug === "footer");
+                if (filtered.length > 0) {
+                    return filtered[0];
+                }
+            }
+        } catch (e) {
+            console.warn(e);
+        }
+        return null;
+    })();
 
     return (
         <div className={"mt-auto"}>
@@ -21,7 +33,7 @@ export default async function Footer() {
                 <nav
                     className="mx-auto h-full flex flex-row flex-wrap max-w-7xl items-center justify-start gap-16 p-8 lg:px-16 border-solid border-t border-gray-400/30">
                     {
-                        menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
+                        menus && menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
 
 
                             let samePage = true;

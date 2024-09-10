@@ -4,7 +4,7 @@ import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
 import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
@@ -16,6 +16,7 @@ import {
     SignalIcon, PhotoIcon
 } from "@heroicons/react/20/solid";
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {
 
     const qsPara =
@@ -43,8 +44,8 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0]);
+    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+        return mapUseCase(data.data[0] || undefined);
     });
 
 
@@ -55,13 +56,13 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const page = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data.attributes || null;
+    const pageData = (await fetchAPI('/api/portal-einstellungen', pageQsPara)).data;
+    const page = pageData && pageData.attributes || null;
 
-    return {
+    return useCase && page ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
-            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
-            url: 'https://portal.iot4h.de/usecase/'+ params.id,
+            images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
             title: page.title + " - " + useCase.title,
             type: 'website',
             description: useCase.summary
@@ -70,9 +71,9 @@ export async function generateMetadata({ params }: {params: Params}) {
             card: 'summary_large_image',
             title: page.title,
             description: page.description,
-            images: [useCase.thumbnail && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
+            images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
         }
-    }
+    } : {};
 }
 
 export default async function UseCase(props: { children: React.ReactNode, params: {  id: number } }) {
@@ -102,8 +103,8 @@ export default async function UseCase(props: { children: React.ReactNode, params
         }
     ;
 
-    const useCase: UseCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0]);
+    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+        return mapUseCase(data.data[0] || undefined);
     });
 
     return (
@@ -114,21 +115,21 @@ export default async function UseCase(props: { children: React.ReactNode, params
                     className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                     <div className={"flex md:flex-row flex-col gap-8"}>
                         {
-                            useCase.thumbnail ? (
+                            useCase.thumbnail && !!useCase.thumbnail.url && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url ? (
                                 <div
-                                    className={"w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
+                                    className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
-                                    <GalleryImage thumbnailSrc={getStrapiURL() + useCase.thumbnail.formats.medium.url} src={getStrapiURL() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
+                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url } src={getStrapiURLForFrontend() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             ) : (
-                                <div className={" w-full flex items-center justify-center aspect-video bg-black/20 max-w-[50%] "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                                <div className={" flex items-center justify-center aspect-video bg-black/20  w-full md:w-6/12 min-w-6/12 "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
                         }
-                        <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
+                        <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12"}>
                             <div className={"pr-12 relative"}>
                                 <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
-                                    title: (await generateMetadata({params: props.params})).title,
+                                    title: (await generateMetadata({params: props.params})).title || "",
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>

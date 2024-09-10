@@ -3,28 +3,30 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import Gallery from "@iot-portal/frontend/app/common/gallery";
-import { getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import { useState } from 'react';
 
 const links: {
     href: string;
     title: string;
-    deactive: boolean;
+    deactived: boolean;
 }[] = [
     {
         title: "Use-Cases",
         href: "/home",
-        deactive: false,
+        deactived: false,
     },
     {
         title: "Meine Use-Cases",
         href: "/mine",
-        deactive: false,
+        deactived: !Auth.isAuth(),
     }
 ];
 
 
+export const dynamic = 'force-dynamic';
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
     const [ viewGallery, setViewGallery] = useState([]);
@@ -43,14 +45,14 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                         links.map((link) => {
                                 let samePage = true;
                                 try {
-                                    samePage = (new URL(link.href)).host === getStrapiURL();
+                                    samePage = (new URL(link.href)).host === getStrapiURLForFrontend();
                                 } catch (e) {
 
                                 }
 
                                 return (
-                                    <Link key={link.title} href={!link.deactive ? link.href : "#"}
-                                          className={`rounded flex items-center gap-2 px-4 py-2 ${!link.deactive && 'hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactive && 'text-gray-500'}`}>{link.title}
+                                    <Link key={link.title} href={!link.deactived ? link.href : "#"}
+                                          className={`rounded flex items-center gap-2 px-4 py-2 ${!link.deactived && 'cursor-pointer hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactived && 'text-gray-500 cursor-default'}`}>{link.title}
                                         {!samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline"}/>}
                                     </Link>
                                 )

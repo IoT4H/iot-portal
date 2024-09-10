@@ -13,7 +13,7 @@ function Logo() {
     );
 }
 
-export default async function Header() {
+const Header = async () => {
 
 
     const Para =
@@ -24,7 +24,21 @@ export default async function Header() {
         }
     ;
 
-    const menus = ((await fetchAPI("/api/menus/", Para)).data.filter((m: any) => m.attributes.slug === "menu"))[0] || null;
+    const menus = await (async () => {
+        try {
+            const response = await fetchAPI("/api/menus/", Para);
+            if (response) {
+                const filtered = response.data.filter((m: any) => m.attributes.slug === "menu");
+                if (filtered.length > 0) {
+                    return filtered[0];
+                }
+            }
+        } catch (e) {
+            console.warn(e);
+        }
+        return null;
+    })();
+
 
 
     return (
@@ -38,7 +52,7 @@ export default async function Header() {
                 <div className={"ml-4 mr-auto flex flex-row gap-2"}>
                     <Suspense>
                     {
-                        menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
+                        menus && menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
 
 
                             let samePage = true;
@@ -83,3 +97,6 @@ export default async function Header() {
         </header>
     )
 }
+
+
+export default Header;

@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_thingsboard_component_descriptions",
+  "info": {
+    "displayName": "Component Description",
+    "icon": "information"
+  },
+  "options": {},
+  "attributes": {
+    "Component": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
+    },
+    "device": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::device.device"
+    }
+  }
+}

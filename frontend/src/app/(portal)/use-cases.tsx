@@ -1,7 +1,9 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
-import { getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 
+
+export const dynamic = 'force-dynamic';
 
 export type UseCase = {
     id: number;
@@ -58,8 +60,8 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                     <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
                         <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
                         {
-                            useCase.thumbnail && (
-                                    <img src={getStrapiURL() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover gallery-image"}/>
+                            useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (
+                                    <img src={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover gallery-image"}/>
                             ) || (
                                 <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
@@ -79,7 +81,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
                             <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
                                 {
-                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURL(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
+                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURLForFrontend(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
                                 }
                             </div>
                         </div>

@@ -10,4 +10,29 @@ export default {
     enabled: true,
     resolve: './src/plugins/thingsboard-plugin'
   },
+  "users-permissions": {
+    config: {
+      register: {
+        allowedFields: ["firstname", "lastname", "firm", "firmname"],
+      },
+    },
+  },
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: '',
+        port: 465,
+        secure: true,
+        auth: {
+          user: '',
+          pass: '',
+        },
+        tls: { rejectUnauthorized: false },
+      },
+      settings: {
+        defaultFrom: '',
+      },
+    }
+  }
 };

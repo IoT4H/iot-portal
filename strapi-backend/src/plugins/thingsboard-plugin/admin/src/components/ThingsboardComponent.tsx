@@ -1,5 +1,4 @@
 import { ContentBox } from "@strapi/helper-plugin";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import * as React from "react";
 
@@ -51,6 +50,7 @@ import {
   ArrowLeft
 } from '@strapi/icons';
 import { NavLink } from "react-router-dom";
+import { ComponentItem } from "./SingleThingsboardComponent";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -87,38 +87,11 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-
-const Icons = (type: string) => {
-  switch(type) {
-    case "dashboard":
-    case "DASHBOARD":
-      return <Dashboard />;
-    case "DEVICE_PROFILE":
-      return <Server />;
-    case "ASSET_PROFILE":
-      return <ChartBubble />;
-    case "RULE_CHAIN":
-      return <Link />;
-  }
-}
-
-const ComponantItem  = (e: { id: string, type: string}) => {
+const GridComponantItem  = (e: { id: string, type: string}) => {
   return (
     <>
       <GridItem col={6}>
-        <Card id="tirdth">
-          <CardBody>
-            <Box padding={2} background="primary100">
-              {
-                Icons((e.type || ""))
-              }
-            </Box>
-            <CardContent paddingLeft={2}>
-              <CardTitle bold>{ (e.type || "").split(SplittingRegEx).join(" ").trim() }</CardTitle>
-              <CardSubtitle>{ e.id }</CardSubtitle>
-            </CardContent>
-          </CardBody>
-        </Card>
+        <ComponentItem id={e.id} type={e.type} key={e.id} />
       </GridItem>
     </>
   );
@@ -219,7 +192,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
         <Grid gap={"1rem"} col={12}>
         {
           getOrgValue().map((e: { id: string, entityType: string}) => {
-            return (<ComponantItem id={e.id} type={e.entityType} />);
+            return (<GridComponantItem id={e.id} type={e.entityType} />);
           })
         }
           {

@@ -14,7 +14,7 @@
   "attributes": {
     "name": {
       "type": "string",
-      "unique": true,
+      "unique": false,
       "required": true
     },
     "type": {
@@ -27,8 +27,12 @@
       "default": "sensor",
       "required": true
     },
-    "test": {
-      "type": "blocks"
+    "ComponentReference": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.singleThingsboardComponent",
+      "options": {
+        "type": "Dashboard"
+      }
     }
   }
 }

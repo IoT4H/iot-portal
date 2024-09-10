@@ -25,5 +25,37 @@ export default [
       auth: false,
       middlewares: [`plugin::${pluginId}.url`],
     }
-  }
+  },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/:type/:pid/components',
+    handler: `plugin::${pluginId}.deployment.getComponentsForDeploymentByProfile`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'POST',
+    path: '/deployment/:setupId/:type/:pid/relation',
+    handler: `plugin::${pluginId}.deployment.createComponentsRelation`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
 ]

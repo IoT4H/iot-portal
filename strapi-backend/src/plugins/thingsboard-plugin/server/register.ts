@@ -14,6 +14,27 @@ export default ({ strapi }: { strapi: Strapi }) => {
     },
   });
 
+  strapi.customFields.register({
+    name: "componentLinksComponent",
+    plugin: pluginId,
+    type: "json",
+    inputSize: {
+      // optional
+      default: 12,
+      isResizable: false,
+    },
+  });
+
+  strapi.customFields.register({
+    name: "singleThingsboardComponent",
+    plugin: pluginId,
+    type: "json",
+    inputSize: {
+      // optional
+      default: 12,
+      isResizable: false,
+    },
+  });
 
   strapi.customFields.register({
     name: "thingsboardComponent",

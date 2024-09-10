@@ -1,7 +1,10 @@
 import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { fetchAPI } from '@iot-portal/frontend/lib/api'
+
+export const dynamic = 'force-dynamic';
 export default async function Home() {
+
 
     const qsPara =
         {
@@ -29,8 +32,16 @@ export default async function Home() {
         }
     ;
 
-    const useCases = (await fetchAPI('/api/use-cases', qsPara)).data.map(
-        (useCase: any): UseCase => (mapUseCase(useCase)));
+    const useCases = await (async () => {
+        const useCasesData = await fetchAPI('/api/use-cases', qsPara, {
+                headers: {
+                    "Content-Type": "application/json",
+                    cache: "no-cache"
+                }
+            });
+        return useCasesData ? useCasesData.data.map(
+            (useCase: any): UseCase => (mapUseCase(useCase))) : [];
+    })();
 
 
     return (

@@ -49,7 +49,7 @@ export default [
             fields: [],
             populate: { firm : { fields: ["id"] } }
           }).then((u: any) => {
-            console.warn(u.firm.id)
+            //console.warn(u.firm.id)
           });
 
 
@@ -58,7 +58,7 @@ export default [
             fields: [],
             populate: { firm : true }
           }).then((d: any) => {
-            console.warn(d, d?.firm, d?.firm?.id);
+            //console.warn(d, d?.firm, d?.firm?.id);
           })
 
           return true;
@@ -101,6 +101,38 @@ export default [
   },
   {
     method: 'GET',
+    path: '/deployment/:setupId/deviceTypes',
+    handler: `plugin::${pluginId}.deployment.getDevices`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/profiles',
+    handler: `plugin::${pluginId}.deployment.getSetupStepsProfiles`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
     path: '/deployment/:setupId/dashboard/:id',
     handler: `plugin::${pluginId}.deployment.getDashboardInfo`,
     config: {
@@ -115,4 +147,85 @@ export default [
       ]
     },
   },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/steps',
+    handler: `plugin::${pluginId}.deployment.getStepsFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/steps/progress',
+    handler: `plugin::${pluginId}.deployment.getStepsProgressFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/steps/progressComplete',
+    handler: `plugin::${pluginId}.deployment.getStepsProgressCompleteFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'POST',
+    path: '/deployment/:setupId/steps/progress',
+    handler: `plugin::${pluginId}.deployment.updateStepsProgressFromDeployment`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'POST',
+    path: '/deployment/:setupId/steps/action',
+    handler: `plugin::${pluginId}.deployment.stepAction`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+
 ]

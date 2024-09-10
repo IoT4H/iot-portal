@@ -2,13 +2,14 @@
   "collectionName": "components_general_addresses",
   "info": {
     "displayName": "Address",
-    "icon": "pinMap"
+    "icon": "pinMap",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "Address": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "Address_2": {
       "type": "string"
@@ -24,7 +25,7 @@
     },
     "Country": {
       "type": "string",
-      "required": true,
+      "required": false,
       "default": "Germany"
     }
   }

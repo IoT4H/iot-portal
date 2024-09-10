@@ -40,9 +40,10 @@ export default function Start({params}: { params: { id: number } }) {
     }, [params.id])
 
 
-    const [toDeployedSetupLink, SettoDeployedSetupLink] = useState("")
-
+    const [toDeployedSetupLink, SettoDeployedSetupLink] = useState("");
     const toDeployedSetup = useRef<HTMLAnchorElement>();
+    // @ts-ignore
+    const hiddenLink = <Link href={toDeployedSetupLink} className={"hidden"} ref={toDeployedSetup}></Link>;
 
 
     const setupStart = () => {
@@ -86,7 +87,7 @@ export default function Start({params}: { params: { id: number } }) {
                     </button>
                 </form>
             </div>
-            <Link href={toDeployedSetupLink} ref={toDeployedSetup} className={"hidden"}></Link>
+            { hiddenLink }
         </ModalUI>
     )
 }

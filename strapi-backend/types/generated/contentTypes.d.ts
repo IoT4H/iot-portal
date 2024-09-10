@@ -669,50 +669,6 @@ export interface PluginMenusMenuItem extends Schema.CollectionType {
   };
 }
 
-export interface PluginI18NLocale extends Schema.CollectionType {
-  collectionName: 'i18n_locale';
-  info: {
-    singularName: 'locale';
-    pluralName: 'locales';
-    collectionName: 'locales';
-    displayName: 'Locale';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    'content-manager': {
-      visible: false;
-    };
-    'content-type-builder': {
-      visible: false;
-    };
-  };
-  attributes: {
-    name: Attribute.String &
-      Attribute.SetMinMax<{
-        min: 1;
-        max: 50;
-      }>;
-    code: Attribute.String & Attribute.Unique;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'plugin::i18n.locale',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'plugin::i18n.locale',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUsersPermissionsPermission
   extends Schema.CollectionType {
   collectionName: 'up_permissions';
@@ -849,12 +805,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    merkliste: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::use-case.use-case'
-    >;
-    profilPic: Attribute.Media;
     lastname: Attribute.String & Attribute.Required;
     firstname: Attribute.String & Attribute.Required;
     middlename: Attribute.String;
@@ -864,6 +814,13 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::firm.firm'
     >;
     phone: Attribute.String;
+    merkliste: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::use-case.use-case'
+    >;
+    profilPic: Attribute.Media;
+    firmname: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -874,6 +831,50 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'plugin::users-permissions.user',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface PluginI18NLocale extends Schema.CollectionType {
+  collectionName: 'i18n_locale';
+  info: {
+    singularName: 'locale';
+    pluralName: 'locales';
+    collectionName: 'locales';
+    displayName: 'Locale';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.SetMinMax<{
+        min: 1;
+        max: 50;
+      }>;
+    code: Attribute.String & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::i18n.locale',
       'oneToOne',
       'admin::user'
     > &
@@ -912,18 +913,14 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       Attribute.Required &
       Attribute.DefaultTo<'created'>;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
-    name: Attribute.String;
-    deployed: Attribute.JSON &
-      Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
-        {
-          type: 'Dashboard';
-        }
-      >;
-    description: Attribute.Text;
     CustomerUID: Attribute.String &
       Attribute.Unique &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+    name: Attribute.String;
+    description: Attribute.Text;
+    deployed: Attribute.JSON &
+      Attribute.CustomField<'plugin::thingsboard-plugin.componentLinksComponent'>;
+    stepStatus: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -953,11 +950,17 @@ export interface ApiDeviceDevice extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    name: Attribute.String & Attribute.Required;
     type: Attribute.Enumeration<['sensor', 'microcontroller', 'computer']> &
       Attribute.Required &
       Attribute.DefaultTo<'sensor'>;
-    test: Attribute.Blocks;
+    ComponentReference: Attribute.JSON &
+      Attribute.CustomField<
+        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        {
+          type: 'Dashboard';
+        }
+      >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1001,12 +1004,46 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     verified: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    Address: Attribute.Component<'general.address'> & Attribute.Required;
+    Address: Attribute.Component<'general.address'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiGlossarGlossar extends Schema.CollectionType {
+  collectionName: 'glossars';
+  info: {
+    singularName: 'glossar';
+    pluralName: 'glossars';
+    displayName: 'Glossar';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    word: Attribute.String;
+    text: Attribute.Blocks;
+    slug: Attribute.UID<'api::glossar.glossar', 'word'>;
+    shortdescription: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::glossar.glossar',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::glossar.glossar',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -1196,6 +1233,17 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'thingsboard.rule-chain'
       ]
     >;
+    setupSteps: Attribute.DynamicZone<
+      [
+        'instructions.setup-instruction',
+        'instructions.list-instruction',
+        'instructions.text-instruction'
+      ]
+    > &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        min: 1;
+      }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1230,13 +1278,14 @@ declare module '@strapi/types' {
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::menus.menu': PluginMenusMenu;
       'plugin::menus.menu-item': PluginMenusMenuItem;
-      'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'plugin::i18n.locale': PluginI18NLocale;
       'api::deployment.deployment': ApiDeploymentDeployment;
       'api::device.device': ApiDeviceDevice;
       'api::firm.firm': ApiFirmFirm;
+      'api::glossar.glossar': ApiGlossarGlossar;
       'api::page.page': ApiPagePage;
       'api::portal-einstellungen.portal-einstellungen': ApiPortalEinstellungenPortalEinstellungen;
       'api::startpage.startpage': ApiStartpageStartpage;

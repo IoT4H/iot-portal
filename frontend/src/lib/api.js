@@ -1,14 +1,32 @@
 import qs from "qs";
+import { APITool } from "@iot-portal/frontend/lib/APITool";
+
+
+export function isServer() {
+    return typeof window === 'undefined';
+}
+
 
 /**
  * Get full Strapi URL from path
  * @param {string} path Path of the URL
  * @returns {string} Full Strapi URL
  */
-export function getStrapiURL(path = "") {
-    return `${
-        process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://127.0.0.1:1337"
-    }${path}`;
+export async function getStrapiURL(path = "") {
+    await APITool.init();
+    let strapi_url = isServer() ? APITool.ServerStrapiURL : APITool.FrontendStrapiURL;
+
+    return `${(
+        strapi_url || "/"
+    ).replace(/\/$/, "")}${path}`;
+}
+
+export function getStrapiURLForFrontend(path = "") {
+    let strapi_url = APITool.FrontendStrapiURL;
+
+    return `${(
+        strapi_url || "/"
+    ).replace(/\/$/, "")}${path}`;
 }
 
 /**
@@ -24,12 +42,12 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
         headers: {
             "Content-Type": "application/json",
         },
-        next: { revalidate: 5 },
+        next: { revalidate: 0 },
     }, options);
 
     // Build request URL
     const queryString = qs.stringify(urlParamsObject);
-    const requestUrl = `${getStrapiURL(
+    const requestUrl = `${await getStrapiURL(
         `${path}${queryString ? `?${queryString}` : ""}`
     )}`;
 
@@ -39,7 +57,7 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
         // Handle response
         return await response.json();
     } catch (e) {
-        console.error(requestUrl, e)
+        console.error(e)
         return null;
     }
 

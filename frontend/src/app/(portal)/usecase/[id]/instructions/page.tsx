@@ -1,10 +1,11 @@
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
-import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import ReactMarkdown from "react-markdown";
 
 
+export const dynamic = 'force-dynamic';
 function Instruction({ instructions } : { instructions: any[]}) {
 
     return (
@@ -16,7 +17,7 @@ function Instruction({ instructions } : { instructions: any[]}) {
                         { instruction.pictures && instruction.pictures.data && instruction.pictures.data.map((pic: any, index: number, allPics: any[]) => {
                             return (
                                     <GalleryImage
-                                        key={pic.attributes.hash} thumbnailSrc={getStrapiURL() + pic.attributes.formats.thumbnail.url} src={getStrapiURL() + pic.attributes.url} className={"flex relative object-cover cursor-pointer flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square max-w-fit max-h-fit min-w-full min-h-full "} />
+                                        key={pic.attributes.hash} thumbnailSrc={getStrapiURLForFrontend() + pic.attributes.formats.thumbnail.url} src={getStrapiURLForFrontend() + pic.attributes.url} className={"flex relative object-cover cursor-pointer flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square max-w-fit max-h-fit min-w-full min-h-full "} />
 
                             );
                         })}

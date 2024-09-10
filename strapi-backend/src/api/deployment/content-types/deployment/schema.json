@@ -45,19 +45,6 @@
       "required": true,
       "configurable": false
     },
-    "name": {
-      "type": "string"
-    },
-    "deployed": {
-      "type": "customField",
-      "options": {
-        "type": "Dashboard"
-      },
-      "customField": "plugin::thingsboard-plugin.thingsboardComponent"
-    },
-    "description": {
-      "type": "text"
-    },
     "CustomerUID": {
       "type": "customField",
       "customField": "plugin::thingsboard-plugin.thingsboardUserId",
@@ -65,6 +52,19 @@
       "configurable": false,
       "deactivate": true,
       "required": false
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "deployed": {
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.componentLinksComponent"
+    },
+    "stepStatus": {
+      "type": "json"
     }
   }
 }

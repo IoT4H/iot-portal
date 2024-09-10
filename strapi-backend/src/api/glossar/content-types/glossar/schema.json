@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "glossars",
+  "info": {
+    "singularName": "glossar",
+    "pluralName": "glossars",
+    "displayName": "Glossar",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "word": {
+      "type": "string"
+    },
+    "text": {
+      "type": "blocks"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "word"
+    },
+    "shortdescription": {
+      "type": "text"
+    }
+  }
+}
