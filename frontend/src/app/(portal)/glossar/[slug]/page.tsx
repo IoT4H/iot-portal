@@ -1,42 +1,20 @@
-"use client"
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
-import { Suspense, useEffect, useState } from "react";
 
+export default async function Page({params}: { params: { slug: string } })  {
 
-
-export default function Page({params}: { params: { slug: string } })  {
-
-    const [page, SetPage] = useState<any>();
-
-
-    useEffect(() => {
-        fetchAPI('/api/glossars', {
-            fields: '*',
-            filters: {
-                slug: {
-                    $eq: params.slug,
-                },
+    const data = (await fetchAPI('/api/glossars', {
+        fields: '*',
+        filters: {
+            slug: {
+                $eq: params.slug,
             },
-        }).then((result) => {
-            if (Array.isArray(result.data) && result.data.length > 0) {
-                SetPage(result.data[0].attributes);
-            } else {
-                SetPage({ word: "",shortdescription: "", text: []});
-            }
+        },
+    })).data;
 
-        });
-    }, [params.slug]);
-
-    useEffect(() => {
-        if(page && page.data && page.data.length > 0) {
-            console.log(page.data[0].attributes)
-        }
-    }, [page])
+    const page = Array.isArray(data) && data.length > 0 ? data[0].attributes : { word: "",shortdescription: "", text: []};
 
     return  (
-        <Suspense>
-            {
                 !!page &&
                     <article className={"px-8"}>
                         <div className={"text-center"}>
@@ -44,11 +22,9 @@ export default function Page({params}: { params: { slug: string } })  {
                         </div>
                         <div className={"text-center"}>
                             <p className={"peer mt-8 text-gray-100"}>{ page.shortdescription }</p>
-                            <div className={"w-8 rounded h-[2px] bg-gray-100/30 mx-auto my-8 peer-empty:hidden"}></div>
+                            <div className={"w-8 rounded h-[2px] bg-orange-500/50 mx-auto my-8 peer-empty:hidden"}></div>
                         </div>
-                        <BlocksRenderer content={page.text} />
+                        <BlocksRenderer content={page.text} className={"*:text-justify"}/>
                     </article>
-            }
-        </Suspense>
     );
 }

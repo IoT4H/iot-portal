@@ -34,8 +34,9 @@ export class Auth {
 
         const u = await fetchAPI( "/api/users/me", qsPara, {
             headers: {
-                "Authorization": "Bearer " + this.getToken()
-            }
+                "Authorization": "Bearer " + this.getToken(),
+            },
+            cache: "force-cache"
         });
 
         return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
