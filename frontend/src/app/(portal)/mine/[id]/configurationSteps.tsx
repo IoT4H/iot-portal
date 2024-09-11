@@ -131,6 +131,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 </p>
                 {
                     Array.isArray(steps) && steps.map((s, index, a) => {
+                        console.log(s, index)
                         return (
                             <Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true}
                                   deployment={params.id} data={Object.assign(s, {index: index + 1})}

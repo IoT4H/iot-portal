@@ -52,7 +52,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
                                 return (
                                     <Link key={link.title} href={!link.deactived ? link.href : "#"}
-                                          className={`rounded flex items-center gap-2 px-4 py-2 ${!link.deactived && 'cursor-pointer hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white'} ${link.deactived && 'text-gray-500 cursor-default'}`}>{link.title}
+                                          className={`rounded flex items-center gap-2 px-4 py-2 ${link.deactived ? 'text-gray-500 cursor-default': 'cursor-pointer hover:bg-orange-500 hover:dark:bg-orange-500/30 hover:text-white' }`}>{link.title}
                                         {!samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline"}/>}
                                     </Link>
                                 )
@@ -71,5 +71,3 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
         </GalleryContext.Provider>
     );
 }
-
-
