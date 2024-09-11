@@ -80,9 +80,9 @@ export class Auth {
     }
 
     static async login(username: string, password: string) {
-
-        LoadingState.startLoading();
-            const response = await fetchAPI( "/api/auth/local", {},{
+        return new Promise<void>(async (resolve, reject) => {
+            LoadingState.startLoading();
+            const response = await fetchAPI("/api/auth/local", {}, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -93,18 +93,21 @@ export class Auth {
                 })
             });
 
-            if(response.error) {
+            if (response.error) {
                 LoadingState.endLoading();
-                throw new Error(response.error.message);
+                reject(response.error.message);
             }
 
-            if(response.jwt) {
+            if (response.jwt) {
                 Auth.setToken(response.jwt);
                 Auth.onUserChange();
                 LoadingState.endLoading();
+                resolve();
             }
 
 
+            reject("unknown reason");
+        })
     }
 
      static logout() {
