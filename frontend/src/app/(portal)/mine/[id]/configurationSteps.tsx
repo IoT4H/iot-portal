@@ -11,12 +11,10 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
 
     const ar = new Array(0);
     const [steps, SetSteps] = useState<Array<any>>(ar);
+    const [fusionSteps, SetFusionSteps] = useState<Array<any>>(ar);
     const [stepsProgress, SetStepsProgress] = useState<Array<any>>(ar);
     const [state, setState] = useState<State>(State.none);
     const router = useRouter();
-
-
-
 
     const poll = () => {
         fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/status`, {} ,{
@@ -48,14 +46,15 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     useEffect(() => {
 
         if(state === State.deployed) {
-                fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${Auth.getToken()}`
-                        }
-                    }).then((stepsResponse) => {
+            fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${Auth.getToken()}`
+                    }
+                }).then((stepsResponse) => {
                     SetSteps(Array.from(stepsResponse));
-                })
+                });
+
             fetchStepsProgress();
         }
     }, [state]);
@@ -71,6 +70,8 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
     };
 
     const fetchStepsProgress = useCallback(() => {
+        LoadingState.startLoading();
+
         fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progress`, {},
             {
                 headers: {
@@ -78,21 +79,20 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                 }
             }).then((response) => {
                 SetStepsProgress(response);
-
-
-            fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progressComplete`, {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${Auth.getToken()}`
-                    }
-                }).then((response) => {
-                if(response.complete) {
-                    LoadingState.startLoading();
-                    router.push(`/mine/${params.id}/dashboards`);
-                    LoadingState.endLoading();
-                }
-            })
+                LoadingState.endLoading();
             });
+
+        fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps/progressComplete`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then((response) => {
+            if(response.complete) {
+                LoadingState.endLoading();
+                router.push(`/mine/${params.id}/dashboards`);
+            }
+        })
 
 
     }, [params.id]);
@@ -117,11 +117,11 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
             }
             return s;
         }) : new Array(0);
-        SetSteps(Array.from(s));
-    }, [stepsProgress])
+        SetFusionSteps(Array.from(s));
+    }, [steps, stepsProgress])
 
 
-    if (Array.isArray(steps)) {
+    if (Array.isArray(fusionSteps)) {
         return (
             <div className={"gap-8 flex flex-col px-3"}>
                 <h1 className={"text-2xl font-bold"}>Einrichtung: </h1>
@@ -130,7 +130,7 @@ export default function ConfigurationSteps({params}: { params: { id: number } })
                     Bei Fehlern oder Problemen wenden Sie sich bitte an das Team von IoT4H.
                 </p>
                 {
-                    Array.isArray(steps) && steps.map((s, index, a) => {
+                    Array.isArray(fusionSteps) && fusionSteps.map((s, index, a) => {
                         console.log(s, index)
                         return (
                             <Step key={s.id.toString() + "-" + s.__component} state={getProgress(s)} viewStatus={true}
