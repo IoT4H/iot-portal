@@ -8,7 +8,19 @@ export default {
     }),
   validator: (config) => {
     if (typeof config.thingsboardUrl !== 'string') {
-      throw new Error('optionA has to be a string');
+      throw new Error('THINGSBOARD_URL has to be a string');
+    }
+
+    if (typeof config.backendUrl !== 'string') {
+      throw new Error('backendUrl has to be a string');
+    }
+
+    if (typeof config.thingsboardSysAdminUsername !== 'string') {
+      throw new Error('THINGSBOARD_SYSADMIN has to be a string');
+    }
+
+    if (typeof config.thingsboardSysAdminPassword !== 'string') {
+      throw new Error('THINGSBOARD_PASSWORD has to be a string');
     }
 
 

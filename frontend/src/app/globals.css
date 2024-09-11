@@ -44,6 +44,11 @@ body {
   font-size: 1em;
 }
 
+.markdown br {
+  width: 100%;
+  grid-column: span 12 / span 12;
+}
+
 
 .markdown h1, .markdown h2 , .markdown h3 , .markdown h4 , .markdown h5 , .markdown h6 {
   line-height: 2.25rem;

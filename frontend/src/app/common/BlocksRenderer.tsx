@@ -1,35 +1,57 @@
+"use client"
+import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { BlocksRenderer as StrapiBlocksRenderer, BlocksContent } from "@strapi/blocks-react-renderer";
 import Link from "next/link";
 import * as React from "react";
 
-const BlocksRenderer = ({content}: {content: BlocksContent}) => <StrapiBlocksRenderer content={content} blocks={{
-    paragraph: ({ children }) => <p className="text-neutral max-w-prose my-2 selection:bg-orange-100/10 selection:text-orange-500">{children}</p>,
-    heading: ({ children, level }) => {
+const BlocksRenderer = ({content, className}: {content: BlocksContent, className?: string}) => <div className={`markdown group/markdown  ${className ? className : ""}`}><StrapiBlocksRenderer content={content} blocks={{
+    paragraph: ({ children, plainText }) => <p className="w-full text-neutral  my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
+    heading: ({ children, plainText, level }) => {
         switch (level) {
             default:
-                return <h4 className={"text-xl font-bold"}>{children}</h4>
+                return <h4 className={"text-xl font-bold mb-[1.5rem] last:mb-0"}>{children || plainText}</h4>
         }
     },
     list: ({format,children,plainText}) => {
         switch (format) {
             case "ordered":
-                return <ol className={" list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500"}>{children}</ol>
+                return <ol className={"w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ol>
             case "unordered":
             default:
-                return <ul className={" list-outside list-disc  selection:bg-orange-100/10 selection:text-orange-500"}>{children}</ul>
+                return <ul className={"w-full  list-outside list-disc  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ul>
         }
     },
-    "list-item": ({children}) => {
-        return <li className={"list-outside  selection:bg-orange-100/10 selection:text-orange-500"}>{children}</li>
+    "list-item": ({children,plainText}) => {
+        return <li className={"list-outside  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</li>
     },
-    link: ({ children, url }) => <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500"} href={url}>{children}</Link>,
-}}
+    link: ({ children, plainText, url }) => <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 "} href={url}>{children || plainText}</Link>,
+    image: ({ image }) => {
 
-                                                      modifiers={{
-                                                          bold: ({ children }) => <span className={"font-bold"}>{children}</span>,
-                                                          italic: ({ children }) => <span className={"italic"}>{children}</span>,
-                                                      }}
-></StrapiBlocksRenderer>;
+        if(!image.url) {
+            return null;
+        }
+
+        return  <GalleryImage className={" max-h-64 w-full object-contain bg-gray-500/20 mb-[1.5rem] last:mb-0"}  alt={image.alternativeText || ""} thumbnailSrc={image.previewUrl || image.url} caption={image.caption || ""} src={image.url} />;
+    },
+    quote : ({ children, plainText }) => {
+        return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</blockquote>;
+    },
+    code: ({ children, plainText}) => {
+        return <pre className={`mb-[1.5rem] last:mb-0`}><code>{children || plainText}</code></pre>
+            }
+    }
+}
+
+
+
+    modifiers={{
+              bold: ({ children }) => <span className={"font-bold"}>{children}</span>,
+              italic: ({ children }) => <span className={"italic"}>{children}</span>,
+              code: ({ children}) => <code>{children}</code>,
+              underline: ({children}) => <span className={"underline"}>{children}</span>,
+              strikethrough: ({children}) => <span className={"line-through"}>{children}</span>
+          }}
+></StrapiBlocksRenderer></div>;
 
 
 export default BlocksRenderer;

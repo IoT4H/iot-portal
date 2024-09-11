@@ -3,6 +3,13 @@ import { Strapi } from '@strapi/strapi';
 export default ({ strapi }: { strapi: Strapi }) => {
   // bootstrap phase
 
+  strapi.plugin('thingsboard-plugin').service('thingsboardService').getSysAdminToken()
+    .then((data: any) => {
+      if(data.status && data.status === 401) {
+        throw new Error(`Sysadmin ${data.message} - Error ${data.errorCode}`);
+      }
+  })
+
   strapi.db.lifecycles.subscribe({
     models: ['plugin::users-permissions.user'], // optional;
 

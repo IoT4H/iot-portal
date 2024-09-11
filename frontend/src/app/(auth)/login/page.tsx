@@ -16,7 +16,7 @@ import { useParams, useRouter } from "next/navigation";
 export default function Page() {
 
 
-    const [loginError, SetLoginError] = useState<any>(undefined);
+    const [loginError, SetLoginError] = useState<any>("");
 
     const router = useRouter();
     const urlparams = useParams();
@@ -37,15 +37,14 @@ export default function Page() {
         ) {
             Auth.login(email, password).then((res) => {
                 router.push(`${urlparams.return_url || "/home"}`);
-            }).catch((error) => {
+            }).catch((error: string) => {
                 SetLoginError(error);
             });
         }
     }, [urlparams, formValid]);
 
 
-    return <>
-        <div
+    return <div
         className={"relative py-8  w-full max-w-screen-lg flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
             <form className="flex-auto max-h-full sticky top-0 pl-4"  onSubmit={(event) => {event.preventDefault();login();}}>
                 <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 px-2 py-1 border-orange-500"}>Login</h2>
@@ -62,7 +61,7 @@ export default function Page() {
                                             Passwort vergessen?
                                         </Link>
                                     </div>
-                                     <span className={"text-red-600"}> { loginError } </span>
+                                     <span className={"text-red-600"}>{ loginError }</span>
                             </FieldSetInput>
 
                             <Button
@@ -85,6 +84,5 @@ export default function Page() {
                 </p>
             </form>
         </div>
-        </>
     ;
 }

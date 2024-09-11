@@ -22,6 +22,15 @@ export async function getStrapiURL(path = "") {
 }
 
 export function getStrapiURLForFrontend(path = "") {
+
+    if(!APITool.initComplete) {
+        APITool.init();
+    }
+
+    while (!APITool.initComplete) {
+        continue;
+    }
+
     let strapi_url = APITool.FrontendStrapiURL;
 
     return `${(

@@ -1,7 +1,9 @@
 "use client"
+import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
+import { useContext, useEffect, useState } from "react";
 
 export type User = {
 
@@ -12,6 +14,19 @@ export type User = {
     firm: {  name: string };
 
 
+}
+
+export const useIsAuth = () => {
+    const [isAuth, SetIsAuth] = useState(false);
+
+    const user = useContext(AuthContext);
+
+
+    useEffect(() => {
+        SetIsAuth(user !== undefined);
+    }, [user])
+
+    return isAuth;
 }
 
 export class Auth {
@@ -34,8 +49,9 @@ export class Auth {
 
         const u = await fetchAPI( "/api/users/me", qsPara, {
             headers: {
-                "Authorization": "Bearer " + this.getToken()
-            }
+                "Authorization": "Bearer " + this.getToken(),
+            },
+            cache: "force-cache"
         });
 
         return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
@@ -64,9 +80,9 @@ export class Auth {
     }
 
     static async login(username: string, password: string) {
-
-        LoadingState.startLoading();
-            const response = await fetchAPI( "/api/auth/local", {},{
+        return new Promise<void>(async (resolve, reject) => {
+            LoadingState.startLoading();
+            const response = await fetchAPI("/api/auth/local", {}, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -77,18 +93,21 @@ export class Auth {
                 })
             });
 
-            if(response.error) {
+            if (response.error) {
                 LoadingState.endLoading();
-                throw new Error(response.error.message);
+                reject(response.error.message);
             }
 
-            if(response.jwt) {
+            if (response.jwt) {
                 Auth.setToken(response.jwt);
                 Auth.onUserChange();
                 LoadingState.endLoading();
+                resolve();
             }
 
 
+            reject("unknown reason");
+        })
     }
 
      static logout() {

@@ -1,6 +1,10 @@
-export default function Layout ({ children }: { children: React.ReactNode }) {
+export default function Layout ({
+                                    children, // will be a page or nested layout
+                                }: {
+    children: React.ReactNode
+}) {
 
-    return <>
+    return <div>
         <div className="bg-orange-100 dark:bg-zinc-900 sticky top-16 h-16">
         </div>
 
@@ -13,5 +17,5 @@ export default function Layout ({ children }: { children: React.ReactNode }) {
                 </div>
             </article>
         </div>
-    </>
+    </div>
 }

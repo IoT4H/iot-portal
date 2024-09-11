@@ -2,10 +2,9 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
-import PageBlockingSpinner, { LoadingContext } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import { Suspense, useContext, useEffect, useState } from "react";
-import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import {  useContext, useEffect,  useState } from "react";
+import {  getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 
 export default function Gallery({ index, pics} : { index: number; pics: any[]}) {
 
@@ -33,8 +32,6 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
         }))
     }, [index, pics]);
 
-
-
     const [canPlay, SetCanPlay] = useState<boolean>(false);
 
 
@@ -57,7 +54,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                 </div>
                                 <div className={"max-md:order-1 order-2 flex-shrink transition-all transition-[width] ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
                                     <img src={picUrls[currentIndex] && (getStrapiURLForFrontend() + picUrls[currentIndex])} onLoad={() => SetCanPlay(true)} className={(canPlay ? "visible " :  "invisible ") + "min-h-0 min-w-0 w-min h-min transition-all ease-out duration-500 object-contain max-height-100"}/>
-                                    <Spinner className={canPlay ? "hidden" : "w-full"}/>
+                                    <Spinner className={`${canPlay ? "hidden" : "w-full"} aspect-square h-24`}/>
                                     <div className={"h-8 text-center align-middle"}>
                                         {pics[currentIndex] ? pics[currentIndex].caption : ''}
                                     </div>

@@ -1,16 +1,14 @@
 "use client"
-import { en } from "@faker-js/faker";
-import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
+
+import { FieldSetInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
-import { RelationMapField, RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
+import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useState } from "react";
 
 const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Function, config: any, step: any, triggerStateRefresh?: Function}) => {
 

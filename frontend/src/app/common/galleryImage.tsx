@@ -2,13 +2,14 @@
 
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import Loading from "@iot-portal/frontend/app/common/loading";
+import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { ReactNode, Suspense, useContext } from "react";
 
-export default function GalleryImage({src,thumbnailSrc, className,  alt, caption, init, imageList} : {src?: string, thumbnailSrc?:string, className?: string, alt?: string, caption?: string, init?: number, imageList?: any[]}) {
+export default function GalleryImage({src, thumbnailSrc, className,  alt, caption, init, imageList} : {src?: string, thumbnailSrc?:string, className?: string, alt?: string, caption?: string, init?: number, imageList?: any[]}) {
 
     const gallery = useContext(GalleryContext);
 
-    const image = <img src={thumbnailSrc || src} data-src={src} className={className ? className : ""  + " cursor-pointer gallery-image"} title={caption} onClick={(event) => {
+    const image = <img src={thumbnailSrc || src} data-src={src} className={` cursor-zoom-in gallery-image ${className}`} title={caption} onClick={(event) => {
 
         const list: string[] = [];
         if(!imageList || !init) {
@@ -37,7 +38,7 @@ export default function GalleryImage({src,thumbnailSrc, className,  alt, caption
 
     return (
         < >
-            <Suspense fallback={<Loading/>}>
+            <Suspense fallback={<Spinner />}>
                 { image }
             </Suspense>
         </>
