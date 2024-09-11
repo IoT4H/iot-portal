@@ -1,7 +1,9 @@
 "use client"
+import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
+import { useContext, useEffect, useState } from "react";
 
 export type User = {
 
@@ -12,6 +14,19 @@ export type User = {
     firm: {  name: string };
 
 
+}
+
+export const useIsAuth = () => {
+    const [isAuth, SetIsAuth] = useState(false);
+
+    const user = useContext(AuthContext);
+
+
+    useEffect(() => {
+        SetIsAuth(user !== undefined);
+    }, [user])
+
+    return isAuth;
 }
 
 export class Auth {

@@ -48,7 +48,7 @@ export default function PageBlockingSpinner() {
     return (<>
             { isLoading && (
                 <div className={"fixed w-full h-full z-[99] bg-zinc-900/80 flex flex-col items-center justify-center"}>
-                    <Spinner/>
+                    <Spinner className={"h-24"}/>
                 </div> ) }
     </>);
 }
