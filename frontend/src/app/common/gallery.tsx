@@ -2,6 +2,7 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
+import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import {  useContext, useEffect,  useState } from "react";
 import {  getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
@@ -10,9 +11,10 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
 
     const gallery = useContext(GalleryContext);
 
+    const [canPlay, SetCanPlay] = useState<boolean>(false);
     const [picUrls, SetPicUrls] = useState<string[]>([]);
-
     const [currentIndex, setCurrentIndex] = useState(index);
+
     useEffect( () => {
         SetCanPlay(false);
         setCurrentIndex(index);
@@ -32,7 +34,6 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
         }))
     }, [index, pics]);
 
-    const [canPlay, SetCanPlay] = useState<boolean>(false);
 
 
     return (

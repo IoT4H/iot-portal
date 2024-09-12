@@ -12,8 +12,8 @@ export function isServer() {
  * @param {string} path Path of the URL
  * @returns {string} Full Strapi URL
  */
-export async function getStrapiURL(path = "") {
-    await APITool.init();
+export function getStrapiURL(path = "") {
+    APITool.init();
     let strapi_url = isServer() ? APITool.ServerStrapiURL : APITool.FrontendStrapiURL;
 
     return `${(
@@ -23,13 +23,7 @@ export async function getStrapiURL(path = "") {
 
 export function getStrapiURLForFrontend(path = "") {
 
-    if(!APITool.initComplete) {
-        APITool.init();
-    }
-
-    while (!APITool.initComplete) {
-        continue;
-    }
+    APITool.init();
 
     let strapi_url = APITool.FrontendStrapiURL;
 
