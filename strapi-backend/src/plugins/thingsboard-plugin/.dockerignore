@@ -2,12 +2,9 @@ node_modules
 .tmp
 .cache
 dist
-public/uploads
 src/plugins/**/dist
 src/plugins/**/node_modules
 Dockerfile
 **/.gitignore
 .git
 docker-compose.yaml
-.env
-.env.example
