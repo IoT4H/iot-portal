@@ -1112,9 +1112,10 @@ export interface ApiStartpageStartpage extends Schema.SingleType {
     singularName: 'startpage';
     pluralName: 'startseites';
     displayName: 'Startseite';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
