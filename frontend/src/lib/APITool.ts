@@ -20,7 +20,7 @@ export class APITool {
                 APITool.ServerStrapiURL = serverStrapiUrl;
                 APITool.initComplete = true;
                 return {StrapiURL, serverStrapiUrl};
-            } else {
+            } else if(!APITool.initComplete) {
 
                 const request = new XMLHttpRequest();
                 request.open("GET", (APITool.isServer() ? process.env.FRONTEND_URL : "") + "/init/", false); // `false` makes the request synchronous
