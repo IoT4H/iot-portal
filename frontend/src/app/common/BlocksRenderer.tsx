@@ -8,14 +8,27 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
     paragraph: ({ children, plainText }) => <p className="w-full text-neutral  my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
     heading: ({ children, plainText, level }) => {
         switch (level) {
+            case 1:
+                return <div className={"mb-1 mt-0.5"}><h1 className="dark:text-white font-bold text-3xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h1></div>
+            case 2:
+                return <div className={"mb-1 mt-0.5"}><h2 className="dark:text-white font-bold text-2xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h2></div>
+            case 3:
+                return <div className={"mb-1 mt-0.5"}><h3 className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h3></div>
+            case 4:
+                return <div className={"mb-1 mt-0.5"}><h4 className="dark:text-white font-bold text-lg  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h4></div>
+            case 5:
+                return <div className={"mb-1 mt-0.5"}><h5 className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h5></div>
+            case 6:
+                return <div className={"mb-1 mt-0.5"}><h6 className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h6></div>
             default:
-                return <h4 className={"text-xl font-bold mb-[1.5rem] last:mb-0"}>{children || plainText}</h4>
+                return <div className={" mb-[1.5rem] last:mb-0"}><h4 className={"text-xl font-bold"}>{children || plainText}</h4></div>
         }
     },
-    list: ({format,children,plainText}) => {
+    list: ({format, children, plainText}) => {
         switch (format) {
             case "ordered":
-                return <ol className={"w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ol>
+                return <ol
+                    className={"w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ol>
             case "unordered":
             default:
                 return <ul className={"w-full  list-outside list-disc  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ul>
