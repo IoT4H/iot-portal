@@ -23,12 +23,9 @@
     "thumbnail": {
       "type": "media",
       "multiple": false,
-      "required": false,
+      "required": true,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
     },
     "pictures": {
@@ -55,18 +52,20 @@
       "target": "api::tag.tag"
     },
     "summary": {
-      "type": "text"
+      "type": "text",
+      "minLength": 200,
+      "required": true
     },
     "setupDuration": {
       "type": "integer",
-      "default": 30,
-      "min": 0,
+      "default": 0,
+      "min": 1,
       "required": true
     },
     "complexity": {
       "type": "integer",
       "required": true,
-      "default": 1,
+      "default": 0,
       "min": 1,
       "max": 5
     },
@@ -79,8 +78,7 @@
     },
     "costs": {
       "type": "decimal",
-      "min": 0,
-      "default": 0
+      "min": 0
     },
     "firms": {
       "type": "relation",
@@ -103,8 +101,7 @@
         "instructions.list-instruction",
         "instructions.text-instruction"
       ],
-      "required": true,
-      "min": 1
+      "required": false
     }
   }
 }
