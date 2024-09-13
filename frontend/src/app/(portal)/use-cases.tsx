@@ -45,8 +45,8 @@ export function mapUseCase(useCase: any): UseCase {
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
             <span
-                className={"inline-flex items-center text-orange-500"}>
-                <span className={"border-transparent border-l-orange-500 border-8 block w-0 h-0 "}></span>{ name }
+                className={"inline-flex items-center leading-6  dark:text-white text-black"}>
+                <span className={"mr-0.5 text-orange-500 text-xl leading-6"}>#</span>{ name }
             </span>
     );
 }
