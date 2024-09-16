@@ -47,6 +47,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const [productID, SetProductID] = useState<string | undefined>();
     const [chip, SetChip] = useState<string | undefined>();
     const [wifi, SetWifi] = useState<boolean>(false);
+    const [bt, SetBt] = useState<boolean>(false);
     const [wifiMac, SetWifiMac] = useState<string | undefined>();
     const [hz, SetHz] = useState<string | undefined>();
     const [flashProgress, SetFlashProgress] = useState<number>();
@@ -130,16 +131,20 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 SetState(ConnectionState.CONNECTED);
             }
 
-            if(data.match(new RegExp(/Features:.*WiFi/))) {
+            if(data.match(new RegExp(/Features:.*Wi-?Fi/igm))) {
                 SetWifi(true);
+            }
+
+            if(data.match(new RegExp(/Features:.*bt/igm))) {
+                SetBt(true);
             }
 
             if(data.match(new RegExp(/^MAC:/))) {
                 SetWifiMac(data.match(new RegExp(/(?:[0-9a-f]{2}:?){6}/))[0]);
             }
 
-            if(data.match(new RegExp(/(k|m|g)hz/i))) {
-                SetHz(data.match(new RegExp(/\d+(k|m|g)hz/i))[0]);
+            if(data.match(new RegExp(/(k|m|g)hz/im))) {
+                SetHz(data.match(new RegExp(/\d+(k|m|g)hz/im))[0]);
             }
 
             if(data.match("Hash of data verified.")) {
@@ -301,7 +306,10 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             { chip && ( <span className={"block font-bold"}>{chip}</span>)}
                             { !flashingInProgress && vendorID && ( <span className={"block"}>VendorID: {vendorID}</span>)}
                             { !flashingInProgress && productID && ( <span className={"block"}>ProductID: {productID}</span>)}
-                            { wifi && ( <div className={"flex flex-row gap-2"}> <WifiIcon className={"h-6 inline"}/> { wifiMac && ( <span className={"inline-block"}>{ wifiMac }</span>)} </div>)}
+                            { !flashingInProgress && hz && ( <span className={"block"}>Chip Freq.: {hz}</span>)}
+                            { bt && (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M292.6 171.1L249.7 214l-.3-86 43.2 43.1m-43.2 219.8l43.1-43.1-42.9-42.9-.2 86zM416 259.4C416 465 344.1 512 230.9 512S32 465 32 259.4 115.4 0 228.6 0 416 53.9 416 259.4zm-158.5 0l79.4-88.6L211.8 36.5v176.9L138 139.6l-27 26.9 92.7 93-92.7 93 26.9 26.9 73.8-73.8 2.3 170 127.4-127.5-83.9-88.7z"/></svg>)}
+                            {wifi && (<div className={"flex flex-row gap-2"}><WifiIcon className={"h-6 inline"}/>
+                                {wifiMac && (<span className={"inline-block"}>{wifiMac}</span>)} </div>)}
 
                         </div>
                         { !flashingInProgress && <p className={"text-sm  text-center"}>Nun wird die Firmware aufgespielt.</p> }
@@ -476,6 +484,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             SetState(undefined);
                             SetFlashProgress(undefined)
                             SetWifi(false)
+                            SetBt(false)
                             SetWifiMac(undefined);
                             SetVendorID(undefined);
                             SetProductID(undefined);
