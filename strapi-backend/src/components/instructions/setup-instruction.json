@@ -45,6 +45,12 @@
       "type": "component",
       "repeatable": true,
       "component": "instructions.relation-to-setup"
+    },
+    "flashInstruction": {
+      "displayName": "Flash Instruction",
+      "type": "component",
+      "repeatable": true,
+      "component": "firmware.flash-instruction"
     }
   }
 }

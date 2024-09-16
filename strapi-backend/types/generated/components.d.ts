@@ -36,9 +36,37 @@ export interface FirmwareFlashConfig extends Schema.Component {
     description: '';
   };
   attributes: {
-    name: Attribute.String;
-    attributes: Attribute.Component<'firmware.flash-config-attribute', true> &
-      Attribute.Required;
+    uploadSpeed: Attribute.Integer &
+      Attribute.SetMinMax<{
+        min: 1;
+        max: 5000000;
+      }> &
+      Attribute.DefaultTo<115200>;
+    monitorSpeed: Attribute.Integer &
+      Attribute.SetMinMax<{
+        min: 1;
+        max: 5000000;
+      }> &
+      Attribute.DefaultTo<115200>;
+    preRequirementText: Attribute.Blocks;
+  };
+}
+
+export interface FirmwareFlashInstruction extends Schema.Component {
+  collectionName: 'components_firmware_flash_instructions';
+  info: {
+    displayName: 'Flash Instruction';
+    icon: 'cog';
+    description: '';
+  };
+  attributes: {
+    binary: Attribute.Media;
+    flashAddress: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'0x000000'>;
+    type: Attribute.Enumeration<
+      ['bootloader', 'firmware', 'partiontable', 'bundle', 'others']
+    >;
   };
 }
 
@@ -172,6 +200,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
       Attribute.Required &
       Attribute.DefaultTo<false>;
     relations: Attribute.Component<'instructions.relation-to-setup', true>;
+    flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
   };
 }
 
@@ -293,6 +322,7 @@ declare module '@strapi/types' {
       'firm.firm-roles': FirmFirmRoles;
       'firmware.flash-config-attribute': FirmwareFlashConfigAttribute;
       'firmware.flash-config': FirmwareFlashConfig;
+      'firmware.flash-instruction': FirmwareFlashInstruction;
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
       'instructions.base-instruction': InstructionsBaseInstruction;
