@@ -44,10 +44,10 @@ export function mapUseCase(useCase: any): UseCase {
 
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
-            <span
-                className={"inline-flex items-center leading-6  dark:text-white text-black"}>
-                <span className={"mr-0.5 text-orange-500 text-xl leading-6"}>#</span>{ name }
-            </span>
+        <span
+            className={"inline-flex items-center rounded-md dark:dark:bg-gray-100/10 bg-orange-50 px-2 py-1 text-xs font-medium text-orange-500 ring-1 ring-inset ring-orange-500/10"}>
+            { name }
+        </span>
     );
 }
 
