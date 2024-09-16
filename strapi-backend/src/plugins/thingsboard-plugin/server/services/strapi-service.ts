@@ -205,7 +205,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       populate: { use_case : { populate: { setupSteps: { populate: '*'}}}}
     });
 
-    const cMs = this.replaceUUIDsForDeployment(deployment.deployed, deployment.use_case.setupSteps)
+    const cMs = deployment.use_case.setupSteps.map((step) => step.__component === "instructions.setup-instruction" ? this.replaceUUIDsForDeployment(deployment.deployed, step) : step);
 
     try {
       return cMs;
@@ -368,7 +368,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         replacementDictionary[deployed.template.tenantId.id] = deployed.tenantId.id;
       }
     });
-    return JSON.parse(JSON.stringify(objectToReplaceWithin).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+    return JSON.parse(JSON.stringify(objectToReplaceWithin).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gim"), (matched) => {
       return replacementDictionary[matched]
     }))
   }

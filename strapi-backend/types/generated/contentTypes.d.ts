@@ -909,7 +909,9 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       'oneToOne',
       'api::firm.firm'
     >;
-    status: Attribute.Enumeration<['created', 'deploying', 'deployed']> &
+    status: Attribute.Enumeration<
+      ['created', 'deploying', 'deployed', 'failed', 'updating']
+    > &
       Attribute.Required &
       Attribute.DefaultTo<'created'>;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;

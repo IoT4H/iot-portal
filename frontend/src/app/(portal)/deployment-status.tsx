@@ -9,7 +9,9 @@ export enum State {
     none,
     created,
     deploying,
-    deployed
+    deployed,
+    failed,
+    updating
 }
 
 export const pollStatus  = (id: number, setState: Function) => {
@@ -20,9 +22,16 @@ export const pollStatus  = (id: number, setState: Function) => {
             }
         }).then((newState) => {
             switch (newState.status) {
+                case "failed":
+                    setState(State.failed);
+                    resolve(false);
+                    break;
                 case "deployed":
                     setState(State.deployed);
                     resolve(false);
+                    break;
+                case "updating":
+                    setState(State.updating);
                     break;
                 case "deploying":
                     setState(State.deploying);
@@ -56,10 +65,11 @@ export default function Status ({ id } : { id: number}) {
     const orangeColor = "text-orange-500 fill-orange-500 bg-orange-400/20";
     const yellowColor = "text-yellow-600 fill-yellow-600 bg-yellow-500/20";
     const greenColor = "text-green-600 fill-green-600 bg-green-500/20";
+    const redColor = "text-red-600 fill-red-600 bg-red-500/20";
 
 
     useEffect(() => {
-        setPulse(state === State.created || state === State.deploying );
+        setPulse([State.created, State.deploying, State.updating].includes(state));
     }, [state])
 
 
@@ -68,7 +78,7 @@ export default function Status ({ id } : { id: number}) {
     });
 
     useEffect(() => {
-        if(inView && state !== State.deployed && !pollingStarted) {
+        if(inView && ![State.deployed, State.failed].includes(state) && !pollingStarted) {
             SetPollingStarted(true);
             pollStatus(id, setState);
         }
@@ -77,8 +87,10 @@ export default function Status ({ id } : { id: number}) {
     return state !== State.none ? (
         <span ref={ref}  className={`inline-flex flex-shrink-0 items-center justify-center rounded-md px-2.5 py-1 text-md h-10 gap-0.5 font-medium w-max ${
             state === State.created && orangeColor || 
-            state === State.deploying && yellowColor || 
-            state === State.deployed && greenColor
+            state === State.deploying && yellowColor ||
+            state === State.updating && yellowColor ||
+            state === State.deployed && greenColor||
+            state === State.failed && redColor
         }`}>
             <svg className={"h-[1.5em] aspect-square"} viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"  >
               <circle cx="20" cy="20" r="10" fill="inherit" opacity="0.2">
@@ -100,8 +112,14 @@ export default function Status ({ id } : { id: number}) {
                 state === State.deploying && (
                     "in Bearbeitung"
                 ) ||
+                state === State.updating && (
+                    "Aktualisierung"
+                ) ||
                 state === State.deployed && (
                     "Bereit"
+                ) ||
+                state === State.failed && (
+                    "Fehlgeschlagen"
                 )
             }
         </span>

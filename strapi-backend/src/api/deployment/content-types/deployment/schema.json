@@ -19,37 +19,34 @@
     "use_case": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::use-case.use-case",
-      "configurable": false
+      "target": "api::use-case.use-case"
     },
     "firm": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::firm.firm",
-      "configurable": false
+      "target": "api::firm.firm"
     },
     "status": {
       "type": "enumeration",
       "enum": [
         "created",
         "deploying",
-        "deployed"
+        "deployed",
+        "failed",
+        "updating"
       ],
       "default": "created",
-      "required": true,
-      "configurable": false
+      "required": true
     },
     "sync": {
       "type": "boolean",
       "default": false,
-      "required": true,
-      "configurable": false
+      "required": true
     },
     "CustomerUID": {
       "type": "customField",
       "customField": "plugin::thingsboard-plugin.thingsboardUserId",
       "unique": true,
-      "configurable": false,
       "deactivate": true,
       "required": false
     },
