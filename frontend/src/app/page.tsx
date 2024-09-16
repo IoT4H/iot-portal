@@ -20,12 +20,11 @@ export default async function LandingPage() {
 
     return (
         <main className="flex h-full flex-col items-center justify-between p-24 text-center justify-center align-middle">
-            <CustomMarkdown className={'markdown mx-8'}>{page && page.content}</CustomMarkdown>
-            <h2>
+            <CustomMarkdown className={'markdown mx-8 text-justify'}>{page && page.content}</CustomMarkdown>
+            <div className={"mt-8 pt-12"}>
                 <img src={"/undraw_arrow orange.svg"} className={"absolute w-32 -ml-32 -mt-12"}/>
                 <Link href={'/home'} className={'p-3 px-8 rounded bg-orange-500/20 hover:bg-orange-500/50 cursor-pointer'}>Go to <b>Home</b></Link>
-            </h2>
-
+            </div>
         </main>
     )
 }

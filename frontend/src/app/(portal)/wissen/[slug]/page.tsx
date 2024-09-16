@@ -18,12 +18,12 @@ export default async function Page({params}: { params: { slug: string } })  {
 
     return  (
                 !!page &&
-                    <article className={"px-8"}>
+                    <article>
                         <div className={"flex md:flex-row flex-col gap-8"}>
                             <div>
                                 <div className={"flex flex-col h-full"}>
-                                    <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 mt-[1em] border-orange-500 flex-grow-0"}>{page.word}</h2>
-                                    <p className={"my-auto text-gray-100 flex-grow py-2"}>{page.shortdescription}</p>
+                                    <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 mt-[1em] border-orange-500 flex-grow-0 inline-block w-max"}>{page.word}</h2>
+                                    <p className={"my-auto text-gray-700 dark:text-gray-100 flex-grow py-2"}>{page.shortdescription}</p>
                                     <div className={"w-8 rounded h-[2px] bg-orange-500/50 mx-auto mt-auto flex-grow-0"}></div>
                                 </div>
                             </div>

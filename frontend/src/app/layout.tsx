@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: {params: Params}) {
 export default async function RootLayout(props: any) {
 
     return (
-        <html lang="de">
+        <html lang="de" className={"dark"}>
         <body className={`${inter.className} min-h-screen h-max flex flex-col dark:bg-black bg-orange-100/20`}>
             <PromptAreaComponent />
             <AuthWrapper>

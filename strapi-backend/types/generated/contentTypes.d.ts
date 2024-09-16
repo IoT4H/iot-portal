@@ -1005,6 +1005,7 @@ export interface ApiFirmFirm extends Schema.CollectionType {
       Attribute.Required &
       Attribute.DefaultTo<false>;
     Address: Attribute.Component<'general.address'>;
+    darkLogo: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &

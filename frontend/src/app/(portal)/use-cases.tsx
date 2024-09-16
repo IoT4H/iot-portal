@@ -57,7 +57,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
         <>
             <div className="flex justify-between gap-x-6 py-5 snap-center">
                 <Link href={"/usecase/" + useCase.slug} className={"w-full"}>
-                    <div className="flex flex-row gap-x-4 rounded-xl p-8 cursor-pointer w-full min-h-64 bg-gray-400/10 hover:bg-gray-400/20 border border-gray-500/25 overflow-hidden h-full">
+                    <div className="flex flex-row gap-x-4 rounded-xl p-8 cursor-pointer w-full min-h-64 bg-zinc-200 hover:bg-zinc-300 dark:bg-gray-400/10 dark:hover:bg-gray-400/20 border border-gray-500/25 overflow-hidden h-full">
                         <div className={"flex flex-shrink-0 items-center flex-row w-64 min-h-[16rem] -m-8 mr-8"}>
                         {
                             useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (

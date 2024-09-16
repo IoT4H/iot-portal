@@ -44,7 +44,7 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
             return null;
         }
 
-        return  <GalleryImage className={" max-h-64 w-full object-contain bg-gray-500/20 mb-[1.5rem] last:mb-0"}  alt={image.alternativeText || ""} thumbnailSrc={image.previewUrl || image.url} caption={image.caption || ""} src={image.url} />;
+        return  <GalleryImage className={" max-h-64 w-full object-contain mb-[1.5rem] last:mb-0"}  alt={image.alternativeText || ""} thumbnailSrc={image.previewUrl || image.url} caption={image.caption || ""} src={image.url} />;
     },
     quote : ({ children, plainText }) => {
         return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</blockquote>;
