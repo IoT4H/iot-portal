@@ -398,8 +398,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   replaceUUIDsForDeployment(deployedProfiles: Array<ComponentStructure>, objectToReplaceWithin: any) {
     let replacementDictionary: Array<string> = new Array<string>();
     deployedProfiles.forEach((deployed: ComponentStructure) => {
-      if(deployed.id && deployed.template) {
+      if (deployed.id && deployed.template) {
         replacementDictionary[deployed.template.id] = deployed.id;
+      }
+      if (deployed.tenantId && deployed.template.tenantId) {
         replacementDictionary[deployed.template.tenantId.id] = deployed.tenantId.id;
       }
     });
