@@ -213,7 +213,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
 
     try {
-      template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+      template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gim"), (matched) => {
         return replacementDictionary[matched]
       }));
     } catch (e) {

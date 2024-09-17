@@ -96,24 +96,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
       let deployDict: any = {};
       let fullReference: Array<{ reference: any, template: any}> = [];
+      let refMap = new Map<any, any>();
 
-     const allDummies = await Promise.allSettled(useCase.components.flatMap((c) =>
-      c.Reference.map((r) => {
-        return strapi.plugin(pluginId)
-          .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
-            deployDict[r.id] = response.id.id;
-            fullReference.push({reference: response.id, template: r});
-            return response
-          });
-      })
-    ));
+      let constructJson = []
 
-      //console.warn("ID ARRAY", deployDict);
+      try {
+       const allDummies = await Promise.allSettled(useCase.components.flatMap((c) =>
+        c.Reference.map((r) => {
+          return strapi.plugin(pluginId)
+            .service('thingsboardService').createDummytThingsboardComponentForTenant(firm.TenentUID, r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase()).then((response) => {
+              deployDict[r.id] = response.id.id;
+              fullReference.push({reference: response.id, template: r});
+              refMap.set(r, response.id);
+              return response
+            });
+        })
+      ));
+
+      console.warn("ID ARRAY", refMap);
 
       const allCopies = await Promise.allSettled(useCase.components.flatMap((c) =>
         c.Reference.map((r) => {
           return strapi.plugin(pluginId)
-            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, deployDict[r.id], firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.name).then((response) => {
+            .service('thingsboardService').syncThingsboardComponentForTenant(r.id,r.tenantId.id, refMap.get(r).id, firm.TenentUID,r.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase(), deployDict, deployment.name).then((response) => {
               //console.warn(response)
               if(response.id.entityType.replace(/[^a-zA-Z\d]/gm, "").toLowerCase() === "dashboard") {
                 strapi.plugin(pluginId)
@@ -127,32 +132,62 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       ));
 
       const findTemplate = (id: any) => {
-        const f = fullReference.find((v) => {
-          return v.reference.id === id.id;
-        })
-        if(f) {
-          return f.template;
+        try {
+          if(id === undefined) {
+            throw new Error("searching for undefined id isn't possible");
+          }
+          const f = fullReference.find((v) => {
+            return v.reference.id === id.id && v.reference.entityType === id.entityType;
+          })
+          if(f) {
+            return f.template;
+          }
+        } catch (e) {
+          strapi.log.error(e);
         }
         return {}
       }
 
-      const constructJson = allCopies.map((result: any) => {
+      constructJson = allCopies.map((result: any) => {
         if(result.status === 'fulfilled') {
           return Object.assign(result.value.id, { tenantId: result.value.tenantId, template: findTemplate(result.value.id) } );
         }
+
+        if (result.error) {
+          console.error(result.error);
+        }
+
         return null;
       }).filter((result) => {
         return result !== null;
       });
 
+        if (constructJson.length !== useCase.components.reduce((accumulator, component) => {
+          return accumulator + Array.of(...component.Reference).length
+        }, 0)) {
+          throw new Error("Not all elements had been properly deployed. Canceling deployment.");
+        }
+        strapi.entityService.update('api::deployment.deployment', deploymentId, {
+          data: {
+            id: deploymentId,
+            deployed: constructJson,
+            status: 'deployed'
+          }
+        });
+      } catch (e) {
+        strapi.log.error(e);
+        strapi.entityService.update('api::deployment.deployment', deploymentId, {
+          data: {
+            id: deploymentId,
+            deployed: constructJson,
+            status: "failed"
+          }
+        });
 
-    strapi.entityService.update('api::deployment.deployment', deploymentId,{
-      data: {
-        id: deploymentId,
-        deployed: constructJson,
-        status: 'deployed'
+        //clean up unneeded thingsboard entities and profiles
+
+
       }
-    });
 
   },
   async createNewDeployment(useCaseId: number, firmID: number, title: string, description: string) {
