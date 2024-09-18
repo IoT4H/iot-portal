@@ -51,6 +51,11 @@
       "type": "component",
       "repeatable": true,
       "component": "firmware.flash-instruction"
+    },
+    "flashConfig": {
+      "type": "component",
+      "repeatable": false,
+      "component": "firmware.flash-config"
     }
   }
 }

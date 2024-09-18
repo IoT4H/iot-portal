@@ -201,6 +201,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
       Attribute.DefaultTo<false>;
     relations: Attribute.Component<'instructions.relation-to-setup', true>;
     flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
+    flashConfig: Attribute.Component<'firmware.flash-config'>;
   };
 }
 
