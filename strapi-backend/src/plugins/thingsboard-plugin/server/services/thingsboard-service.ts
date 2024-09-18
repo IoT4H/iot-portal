@@ -196,6 +196,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     switch (componentType) {
       case "dashboard":
         delete template.assignedCustomers;
+
+
+        //unpleasant solution to handle renaming of aliases
+        //potential conflicts since its thingsboard is working on name string instead of UUIDs
+        if(template.configuration?.entityAliases) {
+          Object.keys(template.configuration.entityAliases).forEach((key) => {
+            if (template.configuration.entityAliases[key].filter) {
+
+                if (Array.isArray(template.configuration.entityAliases[key].filter.deviceTypes)) {
+                  template.configuration.entityAliases[key].filter.deviceTypes = template.configuration.entityAliases[key].filter.deviceTypes.map((dT) => {
+                    return title + " | " + dT;
+                  });
+                }
+                if (Array.isArray(template.configuration.entityAliases[key].filter.assetTypes)) {
+                  template.configuration.entityAliases[key].filter.assetTypes = template.configuration.entityAliases[key].filter.assetTypes.map((dT) => {
+                    return title + " | " + dT;
+                  });
+                }
+
+              }
+          })
+        }
+
         break;
       case "assetprofile":
         delete template.defaultRuleChainId;
@@ -213,7 +236,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
 
     try {
-      template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gi"), (matched) => {
+      template = JSON.parse(JSON.stringify(template).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gim"), (matched) => {
         return replacementDictionary[matched]
       }));
     } catch (e) {

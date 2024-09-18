@@ -909,7 +909,9 @@ export interface ApiDeploymentDeployment extends Schema.CollectionType {
       'oneToOne',
       'api::firm.firm'
     >;
-    status: Attribute.Enumeration<['created', 'deploying', 'deployed']> &
+    status: Attribute.Enumeration<
+      ['created', 'deploying', 'deployed', 'failed', 'updating']
+    > &
       Attribute.Required &
       Attribute.DefaultTo<'created'>;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
@@ -1005,6 +1007,7 @@ export interface ApiFirmFirm extends Schema.CollectionType {
       Attribute.Required &
       Attribute.DefaultTo<false>;
     Address: Attribute.Component<'general.address'>;
+    darkLogo: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
@@ -1030,6 +1033,7 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
     text: Attribute.Blocks;
     slug: Attribute.UID<'api::glossar.glossar', 'word'>;
     shortdescription: Attribute.Text;
+    thumbnail: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1060,7 +1064,13 @@ export interface ApiPagePage extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    url: Attribute.String & Attribute.Required & Attribute.Unique;
+    url: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }> &
+      Attribute.DefaultTo<'/'>;
     content: Attribute.Blocks & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1112,9 +1122,10 @@ export interface ApiStartpageStartpage extends Schema.SingleType {
     singularName: 'startpage';
     pluralName: 'startseites';
     displayName: 'Startseite';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1130,7 +1141,6 @@ export interface ApiStartpageStartpage extends Schema.SingleType {
       }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::startpage.startpage',
       'oneToOne',
@@ -1190,7 +1200,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
   attributes: {
     Titel: Attribute.String & Attribute.Required;
     description: Attribute.RichText & Attribute.Required;
-    thumbnail: Attribute.Media;
+    thumbnail: Attribute.Media & Attribute.Required;
     pictures: Attribute.Media;
     slug: Attribute.UID<'api::use-case.use-case', 'Titel'> & Attribute.Required;
     Images: Attribute.Component<'firmware.test', true>;
@@ -1199,27 +1209,30 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
       'oneToMany',
       'api::tag.tag'
     >;
-    summary: Attribute.Text;
+    summary: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 200;
+      }>;
     setupDuration: Attribute.Integer &
       Attribute.Required &
       Attribute.SetMinMax<{
-        min: 0;
+        min: 1;
       }> &
-      Attribute.DefaultTo<30>;
+      Attribute.DefaultTo<0>;
     complexity: Attribute.Integer &
       Attribute.Required &
       Attribute.SetMinMax<{
         min: 1;
         max: 5;
       }> &
-      Attribute.DefaultTo<1>;
+      Attribute.DefaultTo<0>;
     instructions: Attribute.Component<'instructions.instructions', true> &
       Attribute.Required;
     costs: Attribute.Decimal &
       Attribute.SetMinMax<{
         min: 0;
-      }> &
-      Attribute.DefaultTo<0>;
+      }>;
     firms: Attribute.Relation<
       'api::use-case.use-case',
       'oneToMany',
@@ -1239,11 +1252,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'instructions.list-instruction',
         'instructions.text-instruction'
       ]
-    > &
-      Attribute.Required &
-      Attribute.SetMinMax<{
-        min: 1;
-      }>;
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

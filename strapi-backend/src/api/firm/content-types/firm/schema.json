@@ -59,6 +59,14 @@
       "repeatable": false,
       "component": "general.address",
       "required": false
+    },
+    "darkLogo": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": false
     }
   }
 }

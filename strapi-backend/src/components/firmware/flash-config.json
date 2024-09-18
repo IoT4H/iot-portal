@@ -7,14 +7,20 @@
   },
   "options": {},
   "attributes": {
-    "name": {
-      "type": "string"
+    "uploadSpeed": {
+      "type": "integer",
+      "max": 5000000,
+      "min": 1,
+      "default": 115200
     },
-    "attributes": {
-      "type": "component",
-      "repeatable": true,
-      "component": "firmware.flash-config-attribute",
-      "required": true
+    "monitorSpeed": {
+      "type": "integer",
+      "max": 5000000,
+      "min": 1,
+      "default": 115200
+    },
+    "preRequirementText": {
+      "type": "blocks"
     }
   }
 }

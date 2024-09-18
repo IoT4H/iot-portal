@@ -55,39 +55,41 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
 
     return (
         <>
-            <li className="flex justify-between gap-x-6 py-5 snap-center">
+            <div className="flex justify-between gap-x-6 py-5 snap-center">
                 <Link href={"/usecase/" + useCase.slug} className={"w-full"}>
-                    <div className="flex flex-row gap-x-4 rounded-xl p-4 cursor-pointer w-full hover:bg-gray-400/10">
-                        <div className={"flex flex-shrink-0 flex-grow-0 items-center flex-row aspect-square h-56 w-56 overflow-hidden rounded"}>
+                    <div className="flex flex-row gap-x-4 rounded-xl p-8 cursor-pointer w-full min-h-64 bg-zinc-200 hover:bg-zinc-300 dark:bg-gray-400/10 dark:hover:bg-gray-400/20 border border-gray-500/25 overflow-hidden h-full">
+                        <div className={"flex flex-shrink-0 items-center flex-row w-64 min-h-[16rem] -m-8 mr-8"}>
                         {
                             useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (
                                     <img src={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover gallery-image"}/>
                             ) || (
-                                <div className={" w-full h-full flex items-center justify-center bg-black/20"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                                <div className={" w-full h-full flex items-center justify-center bg-black/20  gallery-image"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
                         }
                         </div>
-                        <div className={"flex-grow w-full"}>
-                            <div className="flex flex-row items-center pb-2 z-10">
+                        <div className={"flex-grow w-full h-full flex flex-col gap-4"}>
+                            <div className="flex flex-row items-center z-10 flex-grow-0">
                                 <h3 className={"font-bold text-inherit text-2xl"}>{ useCase.title }</h3>
                             </div>
-                            <div className="flex flex-row gap-2 mb-4 flex-wrap">
+                            <div className="flex flex-row gap-2 flex-wrap flex-grow-0 flex-shrink">
                                 {
                                      [...useCase.devices.map((i :any) => {
                                          return i.device.data && i.device.data.attributes.name;
                                      }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"dark:text-gray-300 text-sm text-justify"}>{ useCase.summary }</p>
-                            <div className="flex flex-row gap-2 my-2 flex-wrap h-12 w-full mt-6">
+                            <p className={"dark:text-gray-300 text-sm text-justify flex-grow"}>{ useCase.summary }</p>
+                            <div className="flex flex-row gap-2 flex-wrap w-full flex-grow-0">
                                 {
-                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (<img className={"h-full"} key={f.name} title={f.name} src={getStrapiURLForFrontend(f.Logo.data.attributes.formats.small.url)} alt={f.name}/>))
+                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (
+                                        <img className={"h-12 object-center object-contain"} key={f.name} title={f.name} src={getStrapiURLForFrontend(f.Logo.data.attributes.formats ? f.Logo.data.attributes.formats.small.url : f.Logo.data.attributes.url)} alt={f.name}/>
+                                    ))
                                 }
                             </div>
                         </div>
                     </div>
                 </Link>
-            </li>
+            </div>
         </>
     );
 }
@@ -100,11 +102,11 @@ export function ListUseCase ({  title,
 }) {
     return (
         <>
-            <div className="flex-auto rounded bg-white dark:bg-zinc-800 p-4 shadow max-h-full sticky top-0">
-                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 ml-[1em] mt-[1em] py-1 border-orange-500 "}>{ title }</h2>
-                <ul role="list" className="divide-y dark:divide-gray-100/10">
+            <div className="flex-auto rounded bg-white dark:bg-zinc-800 p-8 shadow max-h-full sticky top-0">
+                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 mt-[1em] py-1 border-orange-500 "}>{ title }</h2>
+                <div>
                     { children }
-                </ul>
+                </div>
             </div>
         </>
     );

@@ -38,7 +38,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                             Authorization: `Bearer ${Auth.getToken()}`
                         }
                     }).then((response) => {
-                    if(response.complete) {
+                    if(response !== null && response.complete) {
                         SetSetupDevice(false);
                     } else {
                         SetSetupDevice(true);

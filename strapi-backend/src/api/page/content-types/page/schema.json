@@ -15,7 +15,10 @@
     "url": {
       "type": "string",
       "required": true,
-      "unique": true
+      "unique": true,
+      "regex": "^(\\/(?:\\w|\\d|\\/)*)$",
+      "default": "/",
+      "minLength": 1
     },
     "content": {
       "type": "blocks",

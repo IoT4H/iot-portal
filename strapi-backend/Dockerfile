@@ -8,12 +8,12 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /app/
 # Install dependencies based on the preferred package manager
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 WORKDIR /app/src/plugins/thingsboard-plugin
 # Install dependencies based on the preferred package manager
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 ENV PATH /app/node_modules/.bin:$PATH
