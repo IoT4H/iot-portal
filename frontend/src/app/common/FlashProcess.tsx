@@ -274,7 +274,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                                         UART Bridge Controller &quot;</b> sein. </p></> :
                                 <>
                                     <span className={"text-xl font-bold text-center"}>Verbindung wird auf gebaut</span>
-                                    <div className={"relative flex flex-row justify-center mt-4"}><Spinner ></Spinner></div>
+                                    <div className={"relative flex flex-row justify-center mt-4"}><Spinner className={"h-24"}></Spinner></div>
                                 </>
                         }
                     </div>
@@ -300,16 +300,17 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
             <Instruction
                 title={"Flashen"}
                 content={
-                    <div className={" flex flex-col place-content-center h-full items-center"}>
+                    <div className={" flex flex-col gap-4 place-content-center h-full items-center"}>
                         <div className={"flex flex-col items-center gap-2 mb-4"}>
                             <img src={"/Espressif_White_Logo_EN_Vertical.svg"} className={"min-w-[42px] w-24 mb-2"}/>
                             { chip && ( <span className={"block font-bold"}>{chip}</span>)}
                             { !flashingInProgress && vendorID && ( <span className={"block"}>VendorID: {vendorID}</span>)}
                             { !flashingInProgress && productID && ( <span className={"block"}>ProductID: {productID}</span>)}
                             { !flashingInProgress && hz && ( <span className={"block"}>Chip Freq.: {hz}</span>)}
-                            { bt && (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M292.6 171.1L249.7 214l-.3-86 43.2 43.1m-43.2 219.8l43.1-43.1-42.9-42.9-.2 86zM416 259.4C416 465 344.1 512 230.9 512S32 465 32 259.4 115.4 0 228.6 0 416 53.9 416 259.4zm-158.5 0l79.4-88.6L211.8 36.5v176.9L138 139.6l-27 26.9 92.7 93-92.7 93 26.9 26.9 73.8-73.8 2.3 170 127.4-127.5-83.9-88.7z"/></svg>)}
-                            {wifi && (<div className={"flex flex-row gap-2"}><WifiIcon className={"h-6 inline"}/>
-                                {wifiMac && (<span className={"inline-block"}>{wifiMac}</span>)} </div>)}
+                            { (wifi || bt)  && (<div className={"flex flex-row gap-2"}>
+                                { bt && (<span title={"Bluetooth"}><svg className={"h-6 inline fill-white"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M292.6 171.1L249.7 214l-.3-86 43.2 43.1m-43.2 219.8l43.1-43.1-42.9-42.9-.2 86zM416 259.4C416 465 344.1 512 230.9 512S32 465 32 259.4 115.4 0 228.6 0 416 53.9 416 259.4zm-158.5 0l79.4-88.6L211.8 36.5v176.9L138 139.6l-27 26.9 92.7 93-92.7 93 26.9 26.9 73.8-73.8 2.3 170 127.4-127.5-83.9-88.7z"/></svg></span>)}
+                                { wifi && <WifiIcon className={"h-6 inline"} title={"WLAN"}/> }
+                                { wifiMac && (<span className={"inline-block"}>{wifiMac}</span>)} </div>)}
 
                         </div>
                         { !flashingInProgress && <p className={"text-sm  text-center"}>Nun wird die Firmware aufgespielt.</p> }
@@ -397,7 +398,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     };
 
                     reader.readAsBinaryString(file);
-                }), address: 0x0000}];
+                }), address: 0x1000}];
 
             //------ validate
 
@@ -569,7 +570,7 @@ const ProgressBar = ({progress}:{progress?: number}) => {
 
 const Instruction = ({title, content, action}: { title: string, content: React.ReactNode, action?: React.ReactNode }) => {
     return (
-        <div className={"flex flex-col h-full pb-8 place-content-between"}>
+        <div className={"flex flex-col h-full gap-4 place-content-between"}>
             <span className={"block text-2xl font-bold text-center pb-4 flex-grow-0 flex-shrink-0"}> { title }</span>
             <div className={" flex-grow flex-shrink-0"}>
                     { content }
