@@ -164,6 +164,7 @@ export interface InstructionsRelationToSetup extends Schema.Component {
         }
       >;
     displayName: Attribute.String;
+    direction: Attribute.Enumeration<['to', 'from']> & Attribute.Required;
   };
 }
 

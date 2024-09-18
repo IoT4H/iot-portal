@@ -548,7 +548,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
   });
   },
-  async createThingsboardComponentsRelationForTenant(tenantId: string, componentType: string, componentId: string, toComponentType: string,  toComponentId: string, type: string , typeGroup: string = "COMMON") {
+  async createThingsboardComponentsRelationForTenant(tenantId: string, componentType: string, componentId: string, toComponentType: string,  toComponentId: string, type: string , typeGroup: string = "COMMON", direction: "from" | "to" = "to") {
     return new Promise<any>((resolve, reject) => {
 
       this.axiosAsTenant(tenantId, {
@@ -557,12 +557,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         }, data: JSON.stringify({
 
             from: {
-              id: componentId,
-              entityType: componentType
+              id: direction === "to" ? componentId : toComponentId,
+              entityType: direction === "to" ? componentType : toComponentType
           },
             to: {
-              id: toComponentId,
-              entityType: toComponentType
+              id: direction === "to" ? toComponentId : componentId ,
+              entityType: direction === "to" ? toComponentType : componentType
             },
             type: type,
             typeGroup: typeGroup,
