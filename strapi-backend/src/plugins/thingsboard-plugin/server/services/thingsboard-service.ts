@@ -557,12 +557,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         }, data: JSON.stringify({
 
             from: {
-              id: direction === "to" ? componentId : toComponentId,
-              entityType: direction === "to" ? componentType : toComponentType
+              id: direction === "from" ? componentId : toComponentId,
+              entityType: direction === "from" ? componentType : toComponentType
           },
             to: {
-              id: direction === "to" ? toComponentId : componentId ,
-              entityType: direction === "to" ? toComponentType : componentType
+              id: direction === "from" ? toComponentId : componentId ,
+              entityType: direction === "from" ? toComponentType : componentType
             },
             type: type,
             typeGroup: typeGroup,

@@ -10,7 +10,9 @@ import * as React from "react";
 export const createRelation = (deploymentId: string, linkingComponent: any, relatedComponent: any, relation: any) => {
 
 
-    fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${linkingComponent.entityType.split("_")[0].toLowerCase()}/${linkingComponent.id}/relation`, {}, {
+    fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${linkingComponent.entityType.split("_")[0].toLowerCase()}/${linkingComponent.id}/relation`, {
+        direction: relation.direction
+    }, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${Auth.getToken()}`
