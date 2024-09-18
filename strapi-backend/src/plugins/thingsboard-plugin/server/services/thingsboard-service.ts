@@ -221,11 +221,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
         break;
       case "assetprofile":
-        delete template.defaultRuleChainId;
         delete template.defaultEdgeRuleChainId;
         break;
       case "deviceprofile":
-        delete template.defaultRuleChainId;
         delete template.defaultEdgeRuleChainId;
         break;
       case "rulechainmetadata":
