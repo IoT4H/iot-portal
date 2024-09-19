@@ -164,6 +164,7 @@ export interface InstructionsRelationToSetup extends Schema.Component {
         }
       >;
     displayName: Attribute.String;
+    direction: Attribute.Enumeration<['to', 'from']> & Attribute.Required;
   };
 }
 
@@ -201,6 +202,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
       Attribute.DefaultTo<false>;
     relations: Attribute.Component<'instructions.relation-to-setup', true>;
     flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
+    flashConfig: Attribute.Component<'firmware.flash-config'>;
   };
 }
 

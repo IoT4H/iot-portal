@@ -149,12 +149,25 @@ export default function Step(stepData: StepData) {
         }
     }, [,progress])
 
+    const defineIcon = useCallback((name: string) => {
+            if(name.match(/Einkauf/gim)) {
+                return HeroIcons.ShoppingBagIcon;
+            }
+            if(name.match(/container|lager/gim)) {
+                return HeroIcons.CubeIcon;
+            }
+            if(name.match(/Gateway/gim)) {
+                return HeroIcons.CpuChipIcon;
+            }
+            return HeroIcons.WrenchScrewdriverIcon;
+    }, [])
+
     return (
         <>
             <div className={`w-full flex flex-row group rounded-2xl bg-zinc-900/50 peer ${progress === 100 && 'done'}`}>
                 <div className={"w-16 flex-shrink-0 flex-grow-0 flex flex-col"}>
                     <div className={`w-16 aspect-square p-2 mb-0 bg-zinc-700/80 rounded-l-2xl`}>
-                        <StepStatus color={color} progress={stepData.state?.progress} Icon={HeroIcons.ShoppingBagIcon}/>
+                        <StepStatus color={color} progress={stepData.state?.progress} Icon={defineIcon(stepData.data.meta.name)}  />
                     </div>
                     <div className={"flex-grow flex flex-row justify-center -mb-8"}>
                         <div className={`h-full border-l border-zinc-500/50 group-[:last-of-type]:hidden `} style={progress === 100 ? {borderColor: color} : {}}></div>

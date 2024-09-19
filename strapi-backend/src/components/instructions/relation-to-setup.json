@@ -23,6 +23,14 @@
     },
     "displayName": {
       "type": "string"
+    },
+    "direction": {
+      "type": "enumeration",
+      "enum": [
+        "to",
+        "from"
+      ],
+      "required": true
     }
   }
 }

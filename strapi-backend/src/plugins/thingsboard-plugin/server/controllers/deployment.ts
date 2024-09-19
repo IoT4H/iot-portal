@@ -143,7 +143,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
     const tenentUID = te.firm.TenentUID;
     const body = JSON.parse(ctx.request.body);
-    return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined)
+    return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined, ctx.query.direction || "to")
   }
 
 });
