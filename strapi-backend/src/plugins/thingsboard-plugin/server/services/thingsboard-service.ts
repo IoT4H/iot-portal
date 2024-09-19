@@ -553,13 +553,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/relation`, headers: {
           'Content-Type': 'application/json'
         }, data: JSON.stringify({
+
             from: {
-              id: direction === "to" ? componentId : toComponentId,
-              entityType: direction === "to" ? componentType : toComponentType
-            },
+              id: direction === "from" ? componentId : toComponentId,
+              entityType: direction === "from" ? componentType : toComponentType
+          },
             to: {
-              id: direction === "to" ? toComponentId : componentId ,
-              entityType: direction === "to" ? toComponentType : componentType
+              id: direction === "from" ? toComponentId : componentId ,
+              entityType: direction === "from" ? toComponentType : componentType
             },
             type: type,
             typeGroup: typeGroup,
