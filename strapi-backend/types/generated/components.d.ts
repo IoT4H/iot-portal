@@ -49,6 +49,7 @@ export interface FirmwareFlashConfig extends Schema.Component {
       }> &
       Attribute.DefaultTo<115200>;
     preRequirementText: Attribute.Blocks;
+    deviceConnectName: Attribute.String;
   };
 }
 

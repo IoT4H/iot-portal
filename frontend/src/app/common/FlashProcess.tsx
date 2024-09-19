@@ -2,6 +2,7 @@
 import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { ArrowDownTrayIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { WifiIcon } from "@heroicons/react/24/solid";
+import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import CryptoJS from "crypto-js";
@@ -173,7 +174,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
             try {
                 const flashOptions = {
                     transport,
-                    baudrate: 921600,
+                    baudrate: stepData.data.flashConfig?.uploadSpeed || 921600,
                     terminal: espLoaderTerminal,
                 } as LoaderOptions;
                 SetEsploader(new ESPLoader(flashOptions));
@@ -269,9 +270,12 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     <div className={" flex flex-col place-content-center h-full"}>
                         {
                             state !== ConnectionState.CONNECTING ?
-                                <><p className={"text-sm  text-center mb-4"}>Wählen Sie nun den ESP zum Verbinden aus. </p>
-                                    <p className={"text-sm  text-center"}>Dies sollte in der Regal der <b>&quot; CP2102 USB to
-                                        UART Bridge Controller &quot;</b> sein. </p></> :
+                                <>
+                                    <p className={"text-sm  text-center mb-4"}>Wählen Sie nun das Gerät zum Verbinden aus. </p>
+                                    {
+                                        stepData.data.flashConfig?.deviceConnectName && <p className={"text-sm  text-center"}>Dies sollte in der Regal der <b>&quot; { stepData.data.flashConfig?.deviceConnectName } &quot;</b> sein. </p>
+                                    }
+                                </> :
                                 <>
                                     <span className={"text-xl font-bold text-center"}>Verbindung wird auf gebaut</span>
                                     <div className={"relative flex flex-row justify-center mt-4"}><Spinner className={"h-24"}></Spinner></div>
@@ -353,11 +357,13 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             {
                             // @ts-ignore
                             window.navigator.serial && (<span className={"text-center text-red-500 font-bold mb-2"}> Nutzen Sie einen unterstützen Browser für diese Funktion! <span className={"block"}>Chrome oder Edge ab Version 89 </span><span className={"block"}>Opera ab Version 75</span></span>)
-                        }
+                            }
                             <ArrowDownTrayIcon className={"h-16 mb-8"} />
-                            <p className={"text-sm  text-center"}>
-                                Stellen Sie sicher, dass der notwendige Treiber installiert ist.<br/> <br/>
-                                Sie können diesen <a href={"https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads"} target={"_blank"} className={"underline underline-offset-2 text-orange-500 font-bold"}>hier</a> bei Silicon Labs herunterladen. </p>
+                            <div>
+                                {
+                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText} className={"text-center"} /> )
+                                }
+                            </div>
                         </div>}
                 action={// @ts-ignore
                     window.navigator.serial ? <div className={"btn-primary w-min"} onClick={() => SetStep(Steps.ANSCHLIESSEN)}>Erledigt</div> : undefined} />
