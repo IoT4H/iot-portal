@@ -1,4 +1,5 @@
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
+import Link from "next/link";
 import * as React from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -27,6 +28,9 @@ export default function CustomMarkdown({children, className, ...rest} : { childr
             },
             blockquote(props) {
                 return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</blockquote>;
+            },
+            a: (props) => {
+                return props.href ? <Link href={props.href} target={"_blank"}>{ props.children } </Link> : <span> { props.children } </span>
             }
         }
     } {...rest} >{ children }</ReactMarkdown>

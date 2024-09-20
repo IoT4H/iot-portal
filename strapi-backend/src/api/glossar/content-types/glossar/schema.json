@@ -4,7 +4,7 @@
   "info": {
     "singularName": "glossar",
     "pluralName": "glossars",
-    "displayName": "Glossar",
+    "displayName": "Wissenbasis",
     "description": ""
   },
   "options": {
@@ -26,11 +26,12 @@
       "type": "text"
     },
     "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     }
   }
 }

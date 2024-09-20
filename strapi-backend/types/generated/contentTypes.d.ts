@@ -1022,7 +1022,7 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
   info: {
     singularName: 'glossar';
     pluralName: 'glossars';
-    displayName: 'Glossar';
+    displayName: 'Wissenbasis';
     description: '';
   };
   options: {
