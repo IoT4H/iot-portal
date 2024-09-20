@@ -1,6 +1,7 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
+import * as React from "react";
 
 
 export const dynamic = 'force-dynamic';
@@ -73,16 +74,16 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                         </div>
                         <div className={"flex-grow w-full h-full flex flex-col gap-4"}>
                             <div className="flex flex-row items-center z-10 flex-grow-0">
-                                <h3 className={"font-bold text-inherit text-2xl"}>{ useCase.title }</h3>
+                                <h2 className="text-inherit font-bold text-2xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{useCase.title}</h2>
                             </div>
                             <div className="flex flex-row gap-2 flex-wrap flex-grow-0 flex-shrink">
                                 {
-                                     [...useCase.devices.map((i :any) => {
+                                    [...useCase.devices.map((i :any) => {
                                          return i.device.data && i.device.data.attributes.name;
                                      }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"dark:text-gray-300 text-sm text-justify flex-grow"}>{ useCase.summary }</p>
+                            <p className={"dark:text-gray-300 text-sm text-justify my-auto"}>{ useCase.summary }</p>
                         </div>
                     </div>
                 </Link>
