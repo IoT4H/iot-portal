@@ -8,11 +8,12 @@
   "options": {},
   "attributes": {
     "binary": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
       "allowedTypes": [
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "flashAddress": {
       "type": "string",

@@ -1,9 +1,12 @@
 "use client"
+import { fi } from "@faker-js/faker";
 import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { ArrowDownTrayIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { WifiIcon } from "@heroicons/react/24/solid";
+import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
+import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import CryptoJS from "crypto-js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import * as React from "react";
@@ -51,6 +54,8 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const [wifiMac, SetWifiMac] = useState<string | undefined>();
     const [hz, SetHz] = useState<string | undefined>();
     const [flashProgress, SetFlashProgress] = useState<number>();
+    const [fileFlashIndex, SetFileFlashIndex] = useState<number>();
+    const [fileFlashCount, SetFileFlashCount] = useState<number>();
     const [flashingInProgress, SetFlashingInProgress] = useState<boolean>(false);
     const [errors, SetErrors] = useState<Array<string>>(new Array<string>());
 
@@ -147,7 +152,12 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 SetHz(data.match(new RegExp(/\d+(k|m|g)hz/im))[0]);
             }
 
-            if(data.match("Hash of data verified.")) {
+
+            if(data.match(new RegExp(/(Wrote)/gim)) && (fileFlashIndex || -1) === fileFlashCount) {
+                SetStep(Steps.UEBERPRUEFEN)
+            }
+
+            if(step === Steps.UEBERPRUEFEN && data.match("Hash of data verified.")) {
                 SetStep(Steps.FERTIG)
             }
         },
@@ -173,7 +183,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
             try {
                 const flashOptions = {
                     transport,
-                    baudrate: 921600,
+                    baudrate: stepData.data.flashConfig?.uploadSpeed || 921600,
                     terminal: espLoaderTerminal,
                 } as LoaderOptions;
                 SetEsploader(new ESPLoader(flashOptions));
@@ -269,9 +279,12 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     <div className={" flex flex-col place-content-center h-full"}>
                         {
                             state !== ConnectionState.CONNECTING ?
-                                <><p className={"text-sm  text-center mb-4"}>Wählen Sie nun den ESP zum Verbinden aus. </p>
-                                    <p className={"text-sm  text-center"}>Dies sollte in der Regal der <b>&quot; CP2102 USB to
-                                        UART Bridge Controller &quot;</b> sein. </p></> :
+                                <>
+                                    <p className={"text-sm  text-center mb-4"}>Wählen Sie nun das Gerät zum Verbinden aus. </p>
+                                    {
+                                        stepData.data.flashConfig?.deviceConnectName && <p className={"text-sm  text-center"}>Dies sollte in der Regel der <b>&quot; { stepData.data.flashConfig?.deviceConnectName } &quot;</b> sein. </p>
+                                    }
+                                </> :
                                 <>
                                     <span className={"text-xl font-bold text-center"}>Verbindung wird auf gebaut</span>
                                     <div className={"relative flex flex-row justify-center mt-4"}><Spinner className={"h-24"}></Spinner></div>
@@ -296,25 +309,34 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
     const InstructionFlash = () => {
 
+        const SpecInfos = () => {
+            return (
+                <>
+                    { vendorID && ( <span className={"block"}>VendorID: {vendorID}</span>)}
+                    { productID && ( <span className={"block"}>ProductID: {productID}</span>)}
+                    { hz && ( <span className={"block"}>Chip Freq.: {hz}</span>)}
+                </>
+            );
+        }
+
         return (
             <Instruction
                 title={"Flashen"}
                 content={
                     <div className={" flex flex-col gap-4 place-content-center h-full items-center"}>
                         <div className={"flex flex-col items-center gap-2 mb-4"}>
-                            <img src={"/Espressif_White_Logo_EN_Vertical.svg"} className={"min-w-[42px] w-24 mb-2"}/>
+                            <img key={"/Espressif_White_Logo_EN_Vertical.svg"} src={"/Espressif_White_Logo_EN_Vertical.svg"} className={"min-w-[42px] w-24 mb-2"}/>
                             { chip && ( <span className={"block font-bold"}>{chip}</span>)}
-                            { !flashingInProgress && vendorID && ( <span className={"block"}>VendorID: {vendorID}</span>)}
-                            { !flashingInProgress && productID && ( <span className={"block"}>ProductID: {productID}</span>)}
-                            { !flashingInProgress && hz && ( <span className={"block"}>Chip Freq.: {hz}</span>)}
+                            { !flashProgress && <SpecInfos />}
                             { (wifi || bt)  && (<div className={"flex flex-row gap-2"}>
                                 { bt && (<span title={"Bluetooth"}><svg className={"h-6 inline fill-white"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M292.6 171.1L249.7 214l-.3-86 43.2 43.1m-43.2 219.8l43.1-43.1-42.9-42.9-.2 86zM416 259.4C416 465 344.1 512 230.9 512S32 465 32 259.4 115.4 0 228.6 0 416 53.9 416 259.4zm-158.5 0l79.4-88.6L211.8 36.5v176.9L138 139.6l-27 26.9 92.7 93-92.7 93 26.9 26.9 73.8-73.8 2.3 170 127.4-127.5-83.9-88.7z"/></svg></span>)}
                                 { wifi && <WifiIcon className={"h-6 inline"} title={"WLAN"}/> }
-                                { wifiMac && (<span className={"inline-block"}>{wifiMac}</span>)} </div>)}
+                                { wifiMac && (<span className={"inline-block"}>{wifiMac}</span>)}
+                            </div>)}
 
                         </div>
-                        { !flashingInProgress && <p className={"text-sm  text-center"}>Nun wird die Firmware aufgespielt.</p> }
-                        { flashingInProgress && <>
+                        { !flashProgress && <p className={"text-sm  text-center"}>Nun wird die Firmware aufgespielt.</p> }
+                        { flashProgress && <>
                             <p className={"text-sm  text-center"}>Bitte warten Sie bis der Prozess abgeschlossen ist.</p>
                             <ProgressBar progress={flashProgress}/>
                         </>}
@@ -353,11 +375,13 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             {
                             // @ts-ignore
                             window.navigator.serial && (<span className={"text-center text-red-500 font-bold mb-2"}> Nutzen Sie einen unterstützen Browser für diese Funktion! <span className={"block"}>Chrome oder Edge ab Version 89 </span><span className={"block"}>Opera ab Version 75</span></span>)
-                        }
+                            }
                             <ArrowDownTrayIcon className={"h-16 mb-8"} />
-                            <p className={"text-sm  text-center"}>
-                                Stellen Sie sicher, dass der notwendige Treiber installiert ist.<br/> <br/>
-                                Sie können diesen <a href={"https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads"} target={"_blank"} className={"underline underline-offset-2 text-orange-500 font-bold"}>hier</a> bei Silicon Labs herunterladen. </p>
+                            <div>
+                                {
+                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText} className={"text-center"} /> )
+                                }
+                            </div>
                         </div>}
                 action={// @ts-ignore
                     window.navigator.serial ? <div className={"btn-primary w-min"} onClick={() => SetStep(Steps.ANSCHLIESSEN)}>Erledigt</div> : undefined} />
@@ -385,20 +409,33 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const flash = () => {
         new Promise<void>(async (resolve) => {
 
-            // @ts-ignore
-            const [fileHandle] = await window.showOpenFilePicker();
-            const file = await fileHandle.getFile();
+            const fileArray: any[] = await Promise.all(Array.from(stepData.data.flashInstruction).map(async (fI: any) => {
+                return ({
+                    data: await new Promise( async (resolve, reject) => {
+                        try {
+                            const response = await fetch(getStrapiURLForFrontend(fI.binary.url));
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            const arrayBuffer = await response.arrayBuffer();
+                            const binaryString = ((buffer) => {
+                                    let binaryString = '';
+                                    const bytes = new Uint8Array(buffer);
+                                    const len = bytes.byteLength;
+                                    for (let i = 0; i < len; i++) {
+                                        binaryString += String.fromCharCode(bytes[i]);
+                                    }
+                                    return binaryString;
+                                })(arrayBuffer);
+                            resolve(binaryString) ;
+                        } catch (error) {
+                            console.error('Error fetching the .bin file:', error);
+                        }
+                    }),
+                    address: fI.flashAddress
+                });
+            }))
 
-            const reader = new FileReader();
-
-
-            const fileArray: any[] = [{data: await new Promise((resolve, reject) => {
-                    reader.onload = (ev: ProgressEvent<FileReader>) => {
-                        ev.target ? resolve(ev.target.result) : reject()
-                    };
-
-                    reader.readAsBinaryString(file);
-                }), address: 0x1000}];
 
             //------ validate
 
@@ -407,15 +444,15 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
             let offset = 0;
             let fileData = null;
 
+
             // check for mandatory fields
             for (let index = 0; index < fileArray.length; index++) {
 
                 //offset fields checks
-                const offSetObj = fileArray[index].address;
-                offset = parseInt(offSetObj.value);
+                offset = parseInt(fileArray[index].address);
 
                 // Non-numeric or blank offset
-                if (Number.isNaN(offset)) console.log( "Offset field in row " + index + " is not a valid address!");
+                if (Number.isNaN(offset)) console.log( `Offset (${offset}) field in row ` + index + " is not a valid address!");
                 // Repeated offset used
                 else if (offsetArr.includes(offset)) console.log( "Offset field in row " + index + " is already in use!");
                 else offsetArr.push(offset);
@@ -442,7 +479,9 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     compress: true,
                     reportProgress: (fileIndex: number, written: number, total: number) => {
                         console.debug(`File ${fileIndex} Progress: ${(written / total) * 100}`)
-                        SetFlashProgress(Math.round((written / total) * 100));
+                        SetFileFlashIndex(fileIndex);
+                        SetFileFlashCount(fileArray.length);
+                        SetFlashProgress(Math.round(((written / total) * 100 / fileArray.length)  + (fileIndex * (100 / fileArray.length))));
                     },
                     calculateMD5Hash: (image: string): string => CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image)).toString(),
                 } as FlashOptions;
@@ -484,6 +523,8 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                         setTimeout(() => {
                             SetState(undefined);
                             SetFlashProgress(undefined)
+                            SetFileFlashIndex(undefined)
+                            SetFileFlashCount(undefined)
                             SetWifi(false)
                             SetBt(false)
                             SetWifiMac(undefined);
