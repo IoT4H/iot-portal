@@ -15,12 +15,12 @@ export type UseCase = {
     pictures?: any[];
     tags: string[];
     devices: any[];
-    setupDuration: number;
-    complexity: number;
+    setupDuration?: number | null;
+    complexity?: number | null;
     instructions: any[];
-    costs: number;
+    costs?: number | null;
     firms: any[];
-    partnerLogos?: any[];
+    partnerLogos: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -31,7 +31,7 @@ export function mapUseCase(useCase: any): UseCase {
         thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes || undefined,
         summary: useCase.attributes.summary,
         description: useCase.attributes.description,
-        pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || undefined,
+        pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || [],
         tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t :any) => t.attributes.name)) || [],
         devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || [],
         setupDuration: useCase.attributes.setupDuration,
@@ -39,7 +39,7 @@ export function mapUseCase(useCase: any): UseCase {
         instructions: useCase.attributes.instructions,
         costs: useCase.attributes.costs,
         firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || [],
-        partnerLogos: useCase.attributes.partnerLogos && useCase.attributes.partnerLogos.data && useCase.attributes.partnerLogos.data.map((b: any) => b.attributes) || undefined,
+        partnerLogos: useCase.attributes.partnerLogos && useCase.attributes.partnerLogos.data && useCase.attributes.partnerLogos.data.map((b: any) => b.attributes) || [],
     }
 }
 
