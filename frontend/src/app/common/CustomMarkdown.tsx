@@ -30,7 +30,7 @@ export default function CustomMarkdown({children, className, ...rest} : { childr
                 return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</blockquote>;
             },
             a: (props) => {
-                return props.href ? <Link href={props.href} target={"_blank"}>{ props.children } </Link> : <span> { props.children } </span>
+                return props.href ? <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 decoration-2 font-bold"} href={props.href} target={"_blank"}>{ props.children }</Link> : <span>{ props.children }</span>
             }
         }
     } {...rest} >{ children }</ReactMarkdown>
