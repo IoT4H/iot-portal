@@ -49,6 +49,7 @@ export interface FirmwareFlashConfig extends Schema.Component {
       }> &
       Attribute.DefaultTo<115200>;
     preRequirementText: Attribute.Blocks;
+    deviceConnectName: Attribute.String;
   };
 }
 
@@ -60,7 +61,7 @@ export interface FirmwareFlashInstruction extends Schema.Component {
     description: '';
   };
   attributes: {
-    binary: Attribute.Media;
+    binary: Attribute.Media & Attribute.Required;
     flashAddress: Attribute.String &
       Attribute.Required &
       Attribute.DefaultTo<'0x000000'>;
