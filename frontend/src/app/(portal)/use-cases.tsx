@@ -83,13 +83,6 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                                 }
                             </div>
                             <p className={"dark:text-gray-300 text-sm text-justify flex-grow"}>{ useCase.summary }</p>
-                            <div className="flex flex-row gap-2 flex-wrap w-full flex-grow-0">
-                                {
-                                    Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 && useCase.partnerLogos.map((pL) => (
-                                        <img className={"h-12 object-center object-contain"} key={pL.hash} src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)} alt={pL.alternativeText}/>
-                                    ))
-                                }
-                            </div>
                         </div>
                     </div>
                 </Link>
@@ -98,9 +91,10 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
     );
 }
 
-export function ListUseCase ({  title,
-                                 children,
-                             }: {
+export function ListUseCase({
+                                title,
+                                children,
+                            }: {
     title: string;
     children: React.ReactNode
 }) {

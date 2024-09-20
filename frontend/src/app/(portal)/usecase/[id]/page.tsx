@@ -2,6 +2,7 @@ import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import * as React from "react";
 
 function Info({ description } : { description: string; }) {
     return (<CustomMarkdown className={"markdown mx-8 text-justify"}>{description}</CustomMarkdown>);
@@ -50,18 +51,21 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
 
     return (<>
         <Info description={useCase.description}/>
-        <div className={"mt-4 mx-8 "}>
+        <div className={"mt-8 mx-8 flex flex-col gap-8"}>
             <PictureGallery pictures={useCase.pictures}/>
-            { Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 && <>
-                <span className={"block mt-8 mb-4"}>Vorgestellt durch: </span>
-                <div className="flex flex-row gap-2 flex-wrap w-full flex-grow-0">
-                    {
-                        useCase.partnerLogos.map((pL) => (
-                            <img className={"h-12 object-center object-contain"} key={pL.hash} src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)} alt={pL.alternativeText}/>
-                        ))
-                    }
-                </div>
-            </> }
+            { Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 &&
+                <div className={"rounded  text-black"}>
+                     <h4 className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">Vorgestellt durch:</h4>
+                    <div className="flex flex-row gap-4 flex-wrap w-full flex-grow-0 mt-4">
+                        {
+                            useCase.partnerLogos.map((pL) => (
+                                <img className={"w-40 object-center object-contain py-2 px-4 bg-white rounded "} key={pL.hash}
+                                     src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)}
+                                     alt={pL.alternativeText}/>
+                            ))
+                        }
+                    </div>
+                </div>}
         </div>
     </>);
 }
