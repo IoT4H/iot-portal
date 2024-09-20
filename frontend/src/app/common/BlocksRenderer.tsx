@@ -1,5 +1,6 @@
 "use client"
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
+import LinkPreviewCard from "@iot-portal/frontend/app/common/LinkPreviewCard";
 import { BlocksRenderer as StrapiBlocksRenderer, BlocksContent } from "@strapi/blocks-react-renderer";
 import Link from "next/link";
 import * as React from "react";
@@ -37,7 +38,7 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
     "list-item": ({children,plainText}) => {
         return <li className={"list-outside  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</li>
     },
-    link: ({ children, plainText, url }) => <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 "} href={url}>{children || plainText}</Link>,
+    link: ({ children, plainText, url }) => <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 relative "} href={url}><LinkPreviewCard href={url} />{children || plainText}</Link>,
     image: ({ image }) => {
 
         if(!image.url) {
