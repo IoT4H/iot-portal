@@ -22,12 +22,9 @@ export default async function Home() {
                         populate: "*"
                     }
                 },
-                firms: {
+                partnerLogos: {
                     populate: '*',
-                    Logo: {
-                        populate: "*"
-                    }
-                },
+                }
             }
         }
     ;

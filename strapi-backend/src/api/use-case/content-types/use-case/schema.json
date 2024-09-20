@@ -102,6 +102,13 @@
         "instructions.text-instruction"
       ],
       "required": false
+    },
+    "partnerLogos": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": true
     }
   }
 }

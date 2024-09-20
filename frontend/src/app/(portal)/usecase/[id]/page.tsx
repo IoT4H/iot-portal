@@ -31,12 +31,9 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
                 pictures: {
                     populate: '*',
                 },
-                firms: {
+                partnerLogos: {
                     populate: '*',
-                    Logo: {
-                        populate: "*"
-                    }
-                },
+                }
             },
             filters: {
                 slug: {
@@ -55,14 +52,12 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
         <Info description={useCase.description}/>
         <div className={"mt-4 mx-8 "}>
             <PictureGallery pictures={useCase.pictures}/>
-            { Array.isArray(useCase.firms) && useCase.firms.length > 0 && <>
+            { Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 && <>
                 <span className={"block mt-8 mb-4"}>Vorgestellt durch: </span>
                 <div className="flex flex-row gap-2 flex-wrap w-full flex-grow-0">
                     {
-                        useCase.firms.map((f: any) => f.Logo && f.Logo.data && (
-                            <img className={"h-12 object-center object-contain"} key={f.name} title={f.name}
-                                 src={getStrapiURLForFrontend(f.Logo.data.attributes.formats ? f.Logo.data.attributes.formats.small.url : f.Logo.data.attributes.url)}
-                                 alt={f.name}/>
+                        useCase.partnerLogos.map((pL) => (
+                            <img className={"h-12 object-center object-contain"} key={pL.hash} src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)} alt={pL.alternativeText}/>
                         ))
                     }
                 </div>

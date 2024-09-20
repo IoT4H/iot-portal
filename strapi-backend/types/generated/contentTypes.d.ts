@@ -1253,6 +1253,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'instructions.text-instruction'
       ]
     >;
+    partnerLogos: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

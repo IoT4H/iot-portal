@@ -20,6 +20,7 @@ export type UseCase = {
     instructions: any[];
     costs: number;
     firms: any[];
+    partnerLogos?: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -37,7 +38,8 @@ export function mapUseCase(useCase: any): UseCase {
         complexity: useCase.attributes.complexity,
         instructions: useCase.attributes.instructions,
         costs: useCase.attributes.costs,
-        firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || []
+        firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || [],
+        partnerLogos: useCase.attributes.partnerLogos && useCase.attributes.partnerLogos.data && useCase.attributes.partnerLogos.data.map((b: any) => b.attributes) || undefined,
     }
 }
 
@@ -53,6 +55,8 @@ export function Badge({ name } : { name: string; color?: string; }) {
 
 export function ListItemUseCase({useCase}: {useCase: UseCase}) {
 
+    console.log(useCase.partnerLogos)
+
     return (
         <>
             <div className="flex justify-between gap-x-6 py-5 snap-center">
@@ -60,8 +64,8 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                     <div className="flex flex-row gap-x-4 rounded-xl p-8 cursor-pointer w-full min-h-64 bg-zinc-200 hover:bg-zinc-300 dark:bg-gray-400/10 dark:hover:bg-gray-400/20 border border-gray-500/25 overflow-hidden h-full">
                         <div className={"flex flex-shrink-0 items-center flex-row w-64 min-h-[16rem] -m-8 mr-8"}>
                         {
-                            useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (
-                                    <img src={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url} className={" w-full h-full object-cover gallery-image"}/>
+                            useCase.thumbnail && useCase.thumbnail.url && (
+                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)} className={" w-full h-full object-cover gallery-image"}/>
                             ) || (
                                 <div className={" w-full h-full flex items-center justify-center bg-black/20  gallery-image"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
@@ -81,8 +85,8 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             <p className={"dark:text-gray-300 text-sm text-justify flex-grow"}>{ useCase.summary }</p>
                             <div className="flex flex-row gap-2 flex-wrap w-full flex-grow-0">
                                 {
-                                    useCase.firms.map((f :any) => f.Logo && f.Logo.data && (
-                                        <img className={"h-12 object-center object-contain"} key={f.name} title={f.name} src={getStrapiURLForFrontend(f.Logo.data.attributes.formats ? f.Logo.data.attributes.formats.small.url : f.Logo.data.attributes.url)} alt={f.name}/>
+                                    Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 && useCase.partnerLogos.map((pL) => (
+                                        <img className={"h-12 object-center object-contain"} key={pL.hash} src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)} alt={pL.alternativeText}/>
                                     ))
                                 }
                             </div>
