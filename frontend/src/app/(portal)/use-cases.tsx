@@ -83,7 +83,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                                      }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"dark:text-gray-300 text-sm text-justify flex-grow"}>{ useCase.summary }</p>
+                            <p className={"dark:text-gray-300 text-sm text-justify my-auto"}>{ useCase.summary }</p>
                         </div>
                     </div>
                 </Link>

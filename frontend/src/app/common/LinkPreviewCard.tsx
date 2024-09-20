@@ -51,9 +51,9 @@ const LinkPreviewCard = ({ href } : { href: string}) => {
     return <>
         { wordPage && (
             <div
-                className={"hidden group-hover/link:block hover:block absolute min-h-72 w-72 bg-transparent left-[calc(50%_-_9rem)] -mt-4 pt-6"}>
+                className={"hidden group-hover/link:block hover:block absolute min-h-72 w-72 bg-transparent left-[calc(50%_-_9rem)] -mt-4 pt-6 "}>
                 <div
-                    className={"bg-zinc-700 rounded-xl overflow-hidden w-full h-full flex flex-col dark:text-white border border-zinc-600"}>
+                    className={"bg-zinc-700 rounded-xl overflow-hidden w-full h-full flex flex-col dark:text-white border border-zinc-300/50"}>
                     <div className={"aspect-video h-36"}>
                         {
                             (wordPage.thumbnail?.data?.attributes?.formats?.small?.url || wordPage.thumbnail?.data?.attributes?.url) ? (
@@ -74,8 +74,8 @@ const LinkPreviewCard = ({ href } : { href: string}) => {
                     </div>
                     <div className={" py-4 px-6"}>
                         <h3
-                            className="dark:text-white font-bold text-xl mb-2 border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{wordPage?.word}</h3>
-                        <p className={"font-normal"}>{wordPage?.shortdescription }</p>
+                            className="dark:text-white font-bold text-lg mb-2 border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{wordPage?.word}</h3>
+                        <p className={"font-normal text-sm text-left break-words whitespace-pre-wrap"}>{wordPage?.shortdescription }</p>
                     </div>
                 </div>
             </div>
