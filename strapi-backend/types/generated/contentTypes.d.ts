@@ -1200,10 +1200,9 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
   attributes: {
     Titel: Attribute.String & Attribute.Required;
     description: Attribute.RichText & Attribute.Required;
-    thumbnail: Attribute.Media & Attribute.Required;
+    thumbnail: Attribute.Media;
     pictures: Attribute.Media;
     slug: Attribute.UID<'api::use-case.use-case', 'Titel'> & Attribute.Required;
-    Images: Attribute.Component<'firmware.test', true>;
     tags: Attribute.Relation<
       'api::use-case.use-case',
       'oneToMany',
@@ -1214,21 +1213,13 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 200;
       }>;
-    setupDuration: Attribute.Integer &
-      Attribute.Required &
-      Attribute.SetMinMax<{
-        min: 1;
-      }> &
-      Attribute.DefaultTo<0>;
+    setupDuration: Attribute.Integer & Attribute.DefaultTo<0>;
     complexity: Attribute.Integer &
-      Attribute.Required &
       Attribute.SetMinMax<{
         min: 1;
         max: 5;
-      }> &
-      Attribute.DefaultTo<0>;
-    instructions: Attribute.Component<'instructions.instructions', true> &
-      Attribute.Required;
+      }>;
+    instructions: Attribute.Component<'instructions.instructions', true>;
     costs: Attribute.Decimal &
       Attribute.SetMinMax<{
         min: 0;
@@ -1253,6 +1244,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         'instructions.text-instruction'
       ]
     >;
+    partnerLogos: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -144,10 +144,10 @@ export default async function UseCase(props: { children: React.ReactNode, params
                             </div>
                             <p className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
                             <div className={"flex flex-row justify-evenly gap-8 mt-auto"}>
-                                <div className={"text-xs flex flex-col items-center gap-2 text-center"}
+                                { useCase.devices.length > 0 && <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>
-                                     {useCase.devices
+                                     2{useCase.devices
                                         .filter((i) => i.device.data.attributes.type == 'sensor')
                                         .map((i) => {
                                             return i.amount;
@@ -155,11 +155,11 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                             return pv + c;
                                         }, 0)
                                     }<span className={"sr-only"}>Sensoren werden gebraucht.</span>
-                                </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"}
+                                </div> }
+                                { useCase.devices.length > 0 && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Microcontroller"}>
                                     <CpuChipIcon className={"w-8"}/>
-                                    {useCase.devices
+                                    3{ useCase.devices
                                         .filter((i) => i.device.data.attributes.type == 'microcontroller')
                                         .map((i) => {
                                             return i.amount;
@@ -167,22 +167,22 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                             return pv + c;
                                         }, 0)
                                     }
-                                </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"}
+                                </div>}
+                                { !!useCase.costs && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Kosten"}>
                                     <CurrencyEuroIcon className={"w-8"}/>
                                     {useCase.costs}€
-                                </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"}
+                                </div> }
+                                { !!useCase.setupDuration && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Aufbaudauer"}>
                                     <ClockIcon className={"w-8"}/>
-                                    {useCase.setupDuration}min
-                                </div>
-                                <div className={"text-xs flex flex-col items-center gap-2  text-center"}
+                                    {useCase.setupDuration}<span>min</span>
+                                </div> }
+                                { !!useCase.complexity && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Schwierigkeit"}>
                                     <AcademicCapIcon className={"w-8"}/>
                                     Level {useCase.complexity}
-                                </div>
+                                </div> }
                             </div>
                             <Suspense fallback={<Loading />}>
                                 <SetupButton slug={useCase.slug}></SetupButton>
