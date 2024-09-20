@@ -84,15 +84,17 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                                       className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                     </div>
                                 ) : (
-                                    <div className={" w-full flex items-center justify-center aspect-video bg-black/20 max-w-[50%] "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                                    <div className={"flex items-center justify-center aspect-video bg-black/20 w-full md:w-6/12 "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                                 )
                             }
                             <div className={"flex flex-shrink flex-col w-full md:w-6/12"}>
-                                <div className={"pr-12 relative"}>
+                                <div className={"w-full relative pr-[10.5rem]"}>
                                     <div className={"absolute top-2 right-0 "}>
                                         <Status id={props.params.id}></Status>
                                     </div>
-                                    <h1 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{setup.name}</h1>
+                                    <div className={"block border-solid border-b-4 pr-2 border-orange-500 "}><h1
+                                        className={"dark:text-white font-bold text-3xl capitalize text-pretty break-words hyphens-auto"}>{setup.name}</h1>
+                                    </div>
                                 </div>
                                 <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 flex-grow text-justify"}> {setup.description || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
                             </div>

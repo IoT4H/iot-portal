@@ -117,33 +117,33 @@ export default async function UseCase(props: { children: React.ReactNode, params
                         {
                             useCase.thumbnail && !!useCase.thumbnail.url && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url ? (
                                 <div
-                                    className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
+                                    className={" w-full md:w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                 >
                                     <GalleryImage thumbnailSrc={getStrapiURLForFrontend() + useCase.thumbnail.formats.medium.url } src={getStrapiURLForFrontend() + useCase.thumbnail.url}  alt={""}  caption={useCase.thumbnail.caption}
                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                 </div>
                             ) : (
-                                <div className={" flex items-center justify-center aspect-video bg-black/20  w-full md:w-6/12 min-w-6/12 "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
+                                <div className={" flex items-center justify-center aspect-video bg-black/20  w-full md:w-6/12 "}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
                             )
                         }
-                        <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12"}>
+                        <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12 gap-4"}>
                             <div className={"pr-12 relative"}>
                                 <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
                                     title: (await generateMetadata({params: props.params})).title || "",
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>
-                                <h1 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500 capitalize "}>{useCase.title}</h1>
+                                <div className={"block w-min border-solid border-b-4 pr-2 border-orange-500 "}><h1 className={"dark:text-white font-bold text-3xl capitalize "}>{useCase.title}</h1></div>
                             </div>
-                            <div className="flex flex-row gap-2 mt-4 flex-wrap text-orange-500">
+                            <div className="flex flex-row gap-2 flex-wrap text-orange-500 empty:hidden">
                                 {
                                     [...useCase.devices.map((i: any) => {
                                         return i.device.data && i.device.data.attributes.name;
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-600 dark:text-gray-200 py-4 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
-                            <div className={"flex flex-row justify-evenly gap-8 my-4 mt-auto"}>
+                            <p className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
+                            <div className={"flex flex-row justify-evenly gap-8 mt-auto"}>
                                 <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>
                                     <SignalIcon className={"w-8"}/>
