@@ -45,7 +45,7 @@ FROM base as runtime
 RUN apk add --no-cache vips-dev
 
 WORKDIR /opt/app
-
+ENV TZ=Europe/Berlin
 COPY --from=build /app ./
 
 ENV PATH /opt/node_modules/.bin:$PATH
