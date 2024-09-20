@@ -16,14 +16,16 @@
       "type": "string"
     },
     "text": {
-      "type": "blocks"
+      "type": "blocks",
+      "required": true
     },
     "slug": {
       "type": "uid",
       "targetField": "word"
     },
     "shortdescription": {
-      "type": "text"
+      "type": "text",
+      "required": true
     },
     "thumbnail": {
       "type": "media",

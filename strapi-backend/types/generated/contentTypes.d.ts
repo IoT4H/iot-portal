@@ -1030,9 +1030,9 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
   };
   attributes: {
     word: Attribute.String;
-    text: Attribute.Blocks;
+    text: Attribute.Blocks & Attribute.Required;
     slug: Attribute.UID<'api::glossar.glossar', 'word'>;
-    shortdescription: Attribute.Text;
+    shortdescription: Attribute.Text & Attribute.Required;
     thumbnail: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

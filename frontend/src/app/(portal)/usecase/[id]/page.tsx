@@ -55,7 +55,7 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
             <PictureGallery pictures={useCase.pictures}/>
             { Array.isArray(useCase.partnerLogos) && useCase.partnerLogos.length > 0 &&
                 <div className={"rounded  text-black"}>
-                     <h4 className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">Vorgestellt durch:</h4>
+                     <h3 className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">Vorgestellt durch:</h3>
                     <div className="flex flex-row gap-4 flex-wrap w-full flex-grow-0 mt-4">
                         {
                             useCase.partnerLogos.map((pL) => (
