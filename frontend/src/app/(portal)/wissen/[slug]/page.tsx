@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     return word && page ? {
         title: page.title + " - " + word.word,
         openGraph: {
-            images: [word.thumbnail && (getStrapiURL(word.thumbnail?.data.attributes.formats?.medium?.url || word.thumbnail?.data.attributes.url))],
+            images: [word.thumbnail && (getStrapiURL(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
             title: page.title + " - " + word.word,
             type: 'website',
             description: word.shortdescription
