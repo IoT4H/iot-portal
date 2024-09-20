@@ -69,8 +69,8 @@ export async function generateMetadata({ params }: {params: Params}) {
         },
         twitter: {
             card: 'summary_large_image',
-            title: page.title,
-            description: page.description,
+            title: page.title + " - " + useCase.title,
+            description: useCase.summary,
             images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
         }
     } : {};
