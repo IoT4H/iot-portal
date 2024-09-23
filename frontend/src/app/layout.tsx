@@ -41,6 +41,9 @@ export default async function RootLayout(props: any) {
 
     return (
         <html lang="de" className={"dark"}>
+        <head>
+            <link rel="icon" type="image/png" href="/favicon.png"></link>
+        </head>
         <body className={`${inter.className} min-h-screen h-max flex flex-col dark:bg-black bg-orange-100/20`}>
             <PromptAreaComponent />
             <AuthWrapper>
