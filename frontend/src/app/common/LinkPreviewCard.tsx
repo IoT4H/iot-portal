@@ -37,7 +37,7 @@ const LinkPreviewCard = ({ href } : { href: string}) => {
 
     useEffect(() => {
         if(href) {
-            const matches = href.match("/wissen/(.*)/?$");
+            const matches = href.match(".*/wissen/(.*)/?$");
             console.log(href,matches)
             if (matches !== null && matches !== undefined) {
                 SetWordSlug(matches[1]);
