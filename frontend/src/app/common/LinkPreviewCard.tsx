@@ -51,7 +51,7 @@ const LinkPreviewCard = ({ href } : { href: string}) => {
     return <>
         { wordPage && (
             <div
-                className={"hidden group-hover/link:block hover:block absolute min-h-72 w-72 bg-transparent left-[calc(50%_-_9rem)] -mt-4 pt-6 "}>
+                className={"hidden group-hover/link:block hover:block absolute z-10 min-h-72 w-72 bg-transparent left-[calc(50%_-_9rem)] -mt-4 pt-6 "}>
                 <div
                     className={"bg-zinc-700 rounded-xl overflow-hidden w-full h-full flex flex-col dark:text-white border border-zinc-300/50"}>
                     <div className={"aspect-video h-36"}>
