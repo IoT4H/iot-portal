@@ -43,11 +43,11 @@ export default function Infopage() {
                                 <Link href={"/wissen/" + word.attributes.slug} className={"mx-auto min-w-[20rem] max-w-[28rem] block  h-full"}>
                                     <div className={"rounded bg-white border border-zinc-300/70 dark:bg-zinc-500/30 dark:border-gray-500/50  flex flex-col h-full"}>
                                         {
-                                            word.attributes.thumbnail && word.attributes.thumbnail.data && !!word.attributes.thumbnail.data.attributes.url && word.attributes.thumbnail.data.attributes.formats && word.attributes.thumbnail.data.attributes.formats.medium && !!word.attributes.thumbnail.data.attributes.formats.medium.url ? (
+                                            word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url ? (
                                                 <div
                                                     className={" w-full flex-shrink-0 aspect-video cursor-pointer rounded-t overflow-hidden not-sr-only"}
                                                 >
-                                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.formats.medium.url } src={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.url}  alt={""}  caption={word.attributes.thumbnail.data.attributes.caption}
+                                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url) } src={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.url}  alt={""}  caption={word.attributes.thumbnail.data.attributes.caption}
                                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                                 </div>
                                             ) : (

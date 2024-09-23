@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     return word && page ? {
         title: page.title + " - " + word.word,
         openGraph: {
-            images: [word.thumbnail && (getStrapiURL(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
+            images: [word.thumbnail && (getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
             title: page.title + " - " + word.word,
             type: 'website',
             description: word.shortdescription
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: {params: Params}) {
             card: 'summary_large_image',
             title: page.title + " - " + word.word,
             description: page.shortdescription,
-            images: [word.thumbnail && (getStrapiURL(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
+            images: [word.thumbnail && (getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
         }
     } : {};
 }
@@ -93,7 +93,7 @@ export default async function Page({params}: { params: { slug: string } })  {
                                     <div
                                         className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                     >
-                                        <GalleryImage thumbnailSrc={getStrapiURLForFrontend(page.thumbnail?.formats?.medium?.url || page.thumbnail.url)} src={getStrapiURLForFrontend(page.thumbnail.url)}  alt={""}  caption={page.thumbnail.caption}
+                                        <GalleryImage thumbnailSrc={getStrapiURLForFrontend(page.thumbnail?.data?.attributes?.formats?.medium?.url || page.thumbnail?.data?.attributes?.url)} src={getStrapiURLForFrontend(page.thumbnail?.data?.attributes?.url)} alt={``} caption={page.thumbnail?.data?.attributes?.caption}
                                                       className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                     </div>
                                 ) : (
