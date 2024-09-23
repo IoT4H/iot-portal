@@ -150,10 +150,10 @@ export default function Step(stepData: StepData) {
     }, [,progress])
 
     const defineIcon = useCallback((name: string) => {
-            if(name.match(/Einkauf/gim)) {
+            if(name.match(/Einkauf|Beschaffung/gim)) {
                 return HeroIcons.ShoppingBagIcon;
             }
-            if(name.match(/container|lager/gim)) {
+            if(name.match(/container|Lager|Storage|Aufbewahrung/gim)) {
                 return HeroIcons.CubeIcon;
             }
             if(name.match(/Gateway/gim)) {
@@ -176,7 +176,7 @@ export default function Step(stepData: StepData) {
                 <div className={"w-full"}>
                     <div className={`step-header w-full h-16 flex flex-row bg-zinc-700/80 rounded-r-2xl cursor-pointer`} onClick={() => toggleOpen()}>
                         <div className={"flex-grow flex flex-col justify-center px-2 pl-2"}>
-                            <span className={"text-xs align-bottom font-light"}>Step {stepData.data.index}</span>
+                            <span className={"text-xs align-bottom font-light"}>Schritt {stepData.data.index}</span>
                             <h1 className={"text-xl font font-bold"}>{ stepData.data.meta.name }</h1>
                         </div>
                         { stepData.locked && <div className={" flex-grow-0 flex-shrink-0 h-16 flex flex-col justify-center items-center"}>
