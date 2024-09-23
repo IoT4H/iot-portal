@@ -47,9 +47,6 @@ body {
   height: 12em;
 }
 
-.markdown p img {
-  object-fit: cover;
-}
 
 /*img.gallery-image {*/
 /*  background-image: url("/image.svg");*/
