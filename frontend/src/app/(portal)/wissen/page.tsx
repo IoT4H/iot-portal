@@ -17,13 +17,16 @@ export default function Infopage() {
         SetLoading(true);
         fetchAPI('/api/glossars', {
             fields: '*',
-            populate: '*',
+            populate: {
+                thumbnail: {
+                    populate: "*"
+                }
+            },
             sort: [
                 "word"
             ]
         }).then(
             (response => {
-                console.log(response)
                 SetWords(response.data);
                 SetLoading(false);
             })
