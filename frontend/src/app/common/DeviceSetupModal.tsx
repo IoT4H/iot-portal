@@ -95,7 +95,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
 
     return <>
     { (!step.data.setup || step.state.setup.progress < 100) ?
-        <ModalUI onClose={onClose} name={`${step.data.meta.name} einrichten`}>
+        <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
             <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
                 <div className={""}>
                     <p className={"w-full text-center mt-4"}>Geben Sie nun die Informationen an.</p>
