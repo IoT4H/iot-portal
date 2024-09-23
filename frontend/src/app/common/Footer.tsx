@@ -68,9 +68,9 @@ export default async function Footer() {
                         })
                     }
                 </nav>
-                <div className={"flex flex-row h-28 dark:m-8 w-max flex-grow-0 flex-shrink rounded bg-white/80 "}>
-                    <img src={"/Gefördert_vom_BMBF.svg"} className={" dark:ml-2 flex-grow-0"}/>
-                    <img src={"/institute_kurz.png"} className={"dark:mr-2  flex-grow-0"}/>
+                <div className={"flex flex-row h-32 my-4 mr-4 w-max flex-grow-0 flex-shrink gap-4"}>
+                    <img src={"/Gefördert_vom_BMBF.svg"} className={"flex-grow-0 rounded bg-white/80"}/>
+                    <img src={"/institute_kurz.png"} className={"flex-grow-0 px-8 rounded bg-white/80"}/>
                 </div>
             </footer>
         </div>
