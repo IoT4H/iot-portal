@@ -193,7 +193,6 @@ export default function Step(stepData: StepData) {
                             {
                                 ["instructions.list-instruction"].includes(stepData.data.__component) && (
                                     <form id={"taskForm"} >
-                                        <span className={"pb-2 mt-4"}>Zu erledigen: </span>
                                     {
                                         stepData.data.tasks.map((task: any) => {
                                             let taskProgress = 0;
