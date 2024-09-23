@@ -19,7 +19,7 @@ export default function Infopage() {
             fields: '*',
             populate: {
                 thumbnail: {
-                    populate: "*"
+                    populate: true
                 }
             },
             sort: [
@@ -39,15 +39,16 @@ export default function Infopage() {
                 <div className={`grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-16 mt-4`}>
                     {
                         Array.isArray(words) && words.map((word: any, index) => {
+
                             return <div key={word.attributes.slug} className={"w-full h-full"}>
                                 <Link href={"/wissen/" + word.attributes.slug} className={"mx-auto min-w-[20rem] max-w-[28rem] block  h-full"}>
                                     <div className={"rounded bg-white border border-zinc-300/70 dark:bg-zinc-500/30 dark:border-gray-500/50  flex flex-col h-full"}>
                                         {
-                                            word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url ? (
+                                            word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url ? (
                                                 <div
                                                     className={" w-full flex-shrink-0 aspect-video cursor-pointer rounded-t overflow-hidden not-sr-only"}
                                                 >
-                                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url) } src={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.url}  alt={""}  caption={word.attributes.thumbnail.data.attributes.caption}
+                                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url) } src={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.url}  alt={""}  caption={word.attributes.thumbnail.data.attributes.caption}
                                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                                 </div>
                                             ) : (
