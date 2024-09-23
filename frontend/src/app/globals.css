@@ -47,17 +47,14 @@ body {
   height: 12em;
 }
 
-.markdown p img {
-  object-fit: cover;
-}
 
-img.gallery-image {
-  background-image: url("/image.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 30%;
-  /* animation: skeleton-loading 1s linear infinite alternate; */
-}
+/*img.gallery-image {*/
+/*  background-image: url("/image.svg");*/
+/*  background-position: center;*/
+/*  background-repeat: no-repeat;*/
+/*  background-size: 30%;*/
+/*  !* animation: skeleton-loading 1s linear infinite alternate; *!*/
+/*}*/
 
 
 

@@ -65,7 +65,7 @@ export default async function Page({params}: { params: { slug: string } })  {
         fields: '*',
         populate: {
             thumbnail: {
-                populate: true
+                populate: "*"
             }
         },
         filters: {
@@ -89,7 +89,7 @@ export default async function Page({params}: { params: { slug: string } })  {
                                 </div>
                             </div>
                             {
-                                page.thumbnail?.formats?.url ? (
+                                page.thumbnail?.data?.attributes?.formats?.medium?.url || page.thumbnail?.data?.attributes?.url ? (
                                     <div
                                         className={" w-full md:w-6/12 min-w-6/12 shrink aspect-video cursor-pointer rounded overflow-hidden not-sr-only"}
                                     >
