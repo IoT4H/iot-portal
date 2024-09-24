@@ -182,20 +182,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       template.tenantId.id = toTenantId;
     }
 
-    if(title) {
-      if(template.title) {
-        template.title = title + " | " + template.title;
-      }
-
-      if(template.name) {
-        template.name = title + " | " + template.name;
-      }
-
-    }
-
     switch (componentType) {
       case "dashboard":
         delete template.assignedCustomers;
+
+        template.configuration.states.default.name = template.title;
 
 
         //unpleasant solution to handle renaming of aliases
@@ -231,6 +222,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         break;
       default:
         break;
+    }
+
+
+    if(title) {
+      if(template.title) {
+        template.title = title + " | " + template.title;
+      }
+
+      if(template.name) {
+        template.name = title + " | " + template.name;
+      }
+
     }
 
     try {
