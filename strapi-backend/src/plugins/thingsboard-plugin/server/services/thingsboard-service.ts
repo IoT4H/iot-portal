@@ -1,6 +1,7 @@
 import { Strapi } from '@strapi/strapi';
 import axios, { AxiosResponse } from "axios";
 import { randomUUID } from "crypto";
+import { createHash } from 'node:crypto'
 import pluginId from "../../admin/src/pluginId";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
@@ -284,7 +285,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       "lastName": "",
       "authority": "TENANT_ADMIN",
       "phone": "",
-      "email": tenantId + "_" + randomUUID() + "-system@system.local",
+      "email": createHash('md5').update(tenantId + "_" + randomUUID()).digest('hex') + "-system@system.local",
       "additionalInfo": {}
     });
     let response: any = null;
@@ -313,7 +314,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       "lastName": "",
       "authority": "CUSTOMER_USER",
       "phone": "",
-      "email": customerId + "_" + randomUUID() + "-system@system.local",
+      "email": createHash('md5').update(customerId + "_" + randomUUID()).digest('hex') + "-system@system.local",
       "additionalInfo": {}
     });
     let response: any = null;

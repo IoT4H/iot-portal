@@ -1,5 +1,6 @@
 import { Strapi } from "@strapi/strapi";
 import { randomUUID } from "crypto";
+import { createHash } from 'node:crypto'
 import { ComponentStructure } from "../../admin/src/components/ComponentStructure";
 import pluginId from "../../admin/src/pluginId";
 
@@ -59,13 +60,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         "firstName": "Portal",
         "lastName": "Default",
         "phone": "",
-        "email": customer.id.id + "_" + randomUUID() + "-system@system.local",
+        "email":  createHash('md5').update(customer.id.id + "_" + randomUUID()).digest('hex') + "-system@system.local",
         "authority": "CUSTOMER_USER",
         "customerId": {
           "id": customer.id.id,
           "entityType": "CUSTOMER"
         },
-        "additionalInfo": {}
+        "additionalInfo": {
+          "defaultDashboardFullscreen": true,
+        }
       });
       updatedFirmState = await strapi.entityService.update('api::firm.firm', id, {
         data: {
