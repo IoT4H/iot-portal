@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     ;
 
     const word: any | undefined = await fetchAPI('/api/glossars', qsPara).then((data) => {
-        return mapUseCase(data.data[0] || undefined);
+        return data.data[0] || null;
     });
 
 
@@ -43,18 +43,18 @@ export async function generateMetadata({ params }: {params: Params}) {
     const page = pageData && pageData.attributes || null;
 
     return word && page ? {
-        title: page.title + " - " + word.word,
+        title: page.title + " - " + word.attributes.word,
         openGraph: {
-            images: [word.thumbnail && (getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
-            title: page.title + " - " + word.word,
+            images: [word.attributes.thumbnail && (getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url))],
+            title: page.title + " - " + word.attributes.word,
             type: 'website',
-            description: word.shortdescription
+            description: word.attributes.shortdescription
         },
         twitter: {
             card: 'summary_large_image',
-            title: page.title + " - " + word.word,
-            description: page.shortdescription,
-            images: [word.thumbnail && (getStrapiURLForFrontend(word.thumbnail?.data?.attributes?.formats?.medium?.url || word.thumbnail?.data?.attributes?.url))],
+            title: page.title + " - " + word.attributes.word,
+            description: word.attributes.shortdescription,
+            images: [word.attributes.thumbnail && (getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url))],
         }
     } : {};
 }
