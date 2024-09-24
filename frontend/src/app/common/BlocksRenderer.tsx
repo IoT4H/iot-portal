@@ -5,7 +5,7 @@ import { BlocksRenderer as StrapiBlocksRenderer, BlocksContent } from "@strapi/b
 import Link from "next/link";
 import * as React from "react";
 
-const BlocksRenderer = ({content, className}: {content: BlocksContent, className?: string}) => <div className={`markdown group/markdown  ${className ? className : ""}`}><StrapiBlocksRenderer content={content} blocks={{
+const BlocksRenderer = ({content, className}: {content: BlocksContent, className?: string}) => <div className={`markdown group/markdown  ${className ? className : ""}`}><StrapiBlocksRenderer content={content || []} blocks={{
     paragraph: ({ children, plainText }) => <p className="w-full text-neutral  my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
     heading: ({ children, plainText, level }) => {
         switch (level) {

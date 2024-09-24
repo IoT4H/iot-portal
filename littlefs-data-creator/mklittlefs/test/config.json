@@ -1,28 +1,9 @@
 {
-    "specs": [
+    "deviceToken": "adasdasdasdasd",
+    "wifi": [
         {
-            "name": "wifi", 
-            "mutliple": true, 
-            "attributes": [
-                {
-                    "name": "ssid",
-                    "label": "SSID",
-                    "hint": "",
-                    "type": "string"
-                },
-                {
-                    "name": "password",
-                    "label": "Password",
-                    "hint": "",
-                    "type": "secret"
-                },
-                {
-                    "name": "password",
-                    "label": "Password",
-                    "hint": "",
-                    "type": "OPEN|WEP|WPA"
-                }
-            ]
+            "ssid": "test",
+            "password": "test"
         }
     ]
 }

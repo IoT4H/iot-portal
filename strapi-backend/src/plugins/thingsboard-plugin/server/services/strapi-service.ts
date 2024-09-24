@@ -168,6 +168,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         if (constructJson.length !== useCase.components.reduce((accumulator, component) => {
           return accumulator + Array.of(...component.Reference).length
         }, 0)) {
+          console.warn(constructJson, useCase.components)
           throw new Error("Not all elements had been properly deployed. Canceling deployment.");
         }
         strapi.entityService.update('api::deployment.deployment', deploymentId, {

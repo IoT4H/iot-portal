@@ -26,7 +26,7 @@ fastify.get('/', async function handler (request, reply) {
 })
 
 // Declare a route
-fastify.post('/flashdata.bin', async function handler (request, reply) {
+fastify.post('/littlefs.bin', async function handler (request, reply) {
 
     console.info("request received")
 
@@ -52,7 +52,7 @@ fastify.post('/flashdata.bin', async function handler (request, reply) {
             mklittlefsCommandPath = "./mklittlefs/mklittlefs"
         }
 
-        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 65536 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
+        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 20480 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
         console.info(`littlefs create command: ${command}`)
         execSync(command);
 

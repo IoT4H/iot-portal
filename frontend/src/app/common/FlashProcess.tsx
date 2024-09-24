@@ -379,7 +379,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             <ArrowDownTrayIcon className={"h-16 mb-8"} />
                             <div>
                                 {
-                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText} className={"text-center"} /> )
+                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText|| []} className={"text-center"} /> )
                                 }
                             </div>
                         </div>}
@@ -409,7 +409,39 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const flash = () => {
         new Promise<void>(async (resolve) => {
 
-            const fileArray: any[] = await Promise.all(Array.from(stepData.data.flashInstruction).map(async (fI: any) => {
+            const fileArray: any[] = [
+
+                //LittleFS Configs
+                {
+                    data: await new Promise( async (resolve, reject) => {
+                        try {
+                            const response = await fetch("http://localhost:3001/littlefs.bin", {
+                                method: "post",
+                                body: JSON.stringify({ "deviceToken": "success"})
+                            });
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            const arrayBuffer = await response.arrayBuffer();
+                            const binaryString = ((buffer) => {
+                                let binaryString = '';
+                                const bytes = new Uint8Array(buffer);
+                                const len = bytes.byteLength;
+                                for (let i = 0; i < len; i++) {
+                                    binaryString += String.fromCharCode(bytes[i]);
+                                }
+                                return binaryString;
+                            })(arrayBuffer);
+                            resolve(binaryString) ;
+                        } catch (error) {
+                            console.error('Error fetching the .bin file:', error);
+                        }
+                    }),
+                    address: "0x310000"
+                }
+
+                // other files
+                , ...(await Promise.all(Array.from(stepData.data.flashInstruction).map(async (fI: any) => {
                 return ({
                     data: await new Promise( async (resolve, reject) => {
                         try {
@@ -434,7 +466,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     }),
                     address: fI.flashAddress
                 });
-            }))
+            })))];
 
 
             //------ validate
