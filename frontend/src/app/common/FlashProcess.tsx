@@ -6,6 +6,7 @@ import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
 import qs from "qs";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -416,8 +417,13 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     data: await new Promise( async (resolve, reject) => {
                         try {
 
-                            const deviceFetch = await fetchAPI(getStrapiURLForFrontend(`/api/thingsboard-plugin/deployment/${stepData.deployment}/device/${stepData.state.device.id}/credentials`));
-                            const deviceToken = (await deviceFetch.json()).credentialsId;
+                            const deviceFetch = await fetchAPI(`/api/thingsboard-plugin/deployment/${stepData.deployment}/device/${stepData.state.device.id}/credentials`, {},
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${Auth.getToken()}`
+                                    }
+                                });
+                            const deviceToken = deviceFetch.credentialsId;
 
                             const response = await fetch(
                                 `http://localhost:3001/littlefs.bin?${qs.stringify({ 
@@ -445,7 +451,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             console.error('Error fetching the .bin file:', error);
                         }
                     }),
-                    address: parseInt(stepData.data.flashConfig?.littlefsOffset || "0x310000")
+                    address: stepData.data.flashConfig?.littlefsOffset || "0x310000"
                 }
 
                 // other files
