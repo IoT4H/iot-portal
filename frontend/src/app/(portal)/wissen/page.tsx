@@ -48,7 +48,7 @@ export default function Infopage() {
                                                 <div
                                                     className={" w-full flex-shrink-0 aspect-video cursor-pointer rounded-t overflow-hidden not-sr-only"}
                                                 >
-                                                    <GalleryImage thumbnailSrc={getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url) } src={getStrapiURLForFrontend() + word.attributes.thumbnail.data.attributes.url}  alt={""}  caption={word.attributes.thumbnail.data.attributes.caption}
+                                                    <img src={getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url) }  alt={""}
                                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                                 </div>
                                             ) : (
