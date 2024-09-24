@@ -315,9 +315,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       "authority": "CUSTOMER_USER",
       "phone": "",
       "email": createHash('md5').update(customerId + "_" + randomUUID()).digest('hex') + "-system@system.local",
-      "additionalInfo": {
-        "defaultDashboardFullscreen": true,
-      }
+      "additionalInfo": {}
     });
     let response: any = null;
     let error: any = null;

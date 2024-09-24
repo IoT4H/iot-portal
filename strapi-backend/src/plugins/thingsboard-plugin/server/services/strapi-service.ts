@@ -66,7 +66,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           "id": customer.id.id,
           "entityType": "CUSTOMER"
         },
-        "additionalInfo": {}
+        "additionalInfo": {
+          "defaultDashboardFullscreen": true,
+        }
       });
       updatedFirmState = await strapi.entityService.update('api::firm.firm', id, {
         data: {
