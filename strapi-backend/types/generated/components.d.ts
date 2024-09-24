@@ -50,6 +50,12 @@ export interface FirmwareFlashConfig extends Schema.Component {
       Attribute.DefaultTo<115200>;
     preRequirementText: Attribute.Blocks;
     deviceConnectName: Attribute.String;
+    littlefsOffset: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'0x310000'>;
+    littelfsSize: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'0x5000'>;
   };
 }
 
@@ -64,7 +70,7 @@ export interface FirmwareFlashInstruction extends Schema.Component {
     binary: Attribute.Media & Attribute.Required;
     flashAddress: Attribute.String &
       Attribute.Required &
-      Attribute.DefaultTo<'0x000000'>;
+      Attribute.DefaultTo<'0x1000'>;
     type: Attribute.Enumeration<
       ['bootloader', 'firmware', 'partiontable', 'bundle', 'others']
     >;

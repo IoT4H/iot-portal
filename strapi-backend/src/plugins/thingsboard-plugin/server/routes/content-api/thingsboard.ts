@@ -58,4 +58,20 @@ export default [
       ]
     },
   },
+  {
+    method: 'GET',
+    path: '/deployment/:setupId/device/:did/credentials',
+    handler: `plugin::${pluginId}.deployment.getDeviceCredentialsForDeploymentByUUID`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
 ]

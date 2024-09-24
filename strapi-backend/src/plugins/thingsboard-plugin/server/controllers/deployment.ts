@@ -142,8 +142,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async createComponentsRelation(ctx) {
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
     const tenentUID = te.firm.TenentUID;
-    const body = JSON.parse(ctx.request.body);
+    const body = JSON.parse(ctx.request.body)
     return strapi.plugin(pluginId).service('thingsboardService').createThingsboardComponentsRelationForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.pid, body.toId.entityType.toUpperCase(), body.toId.id, body.type, body.typeGroup || undefined, ctx.query.direction || "to")
+  },
+  async getDeviceCredentialsForDeploymentByUUID(ctx) {
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    return strapi.plugin(pluginId).service('thingsboardService').getDeviceCredentialsForDeploymentByUUID(tenentUID, ctx.params.did)
   }
-
 });

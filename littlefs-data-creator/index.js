@@ -52,7 +52,7 @@ fastify.post('/littlefs.bin', async function handler (request, reply) {
             mklittlefsCommandPath = "./mklittlefs/mklittlefs"
         }
 
-        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 20480 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
+        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 61440 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
         console.info(`littlefs create command: ${command}`)
         execSync(command);
 

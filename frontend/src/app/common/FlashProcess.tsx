@@ -1,5 +1,4 @@
 "use client"
-import { fi } from "@faker-js/faker";
 import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { ArrowDownTrayIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { WifiIcon } from "@heroicons/react/24/solid";
@@ -8,6 +7,7 @@ import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import CryptoJS from "crypto-js";
+import qs from "qs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import * as React from "react";
 
@@ -415,7 +415,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 {
                     data: await new Promise( async (resolve, reject) => {
                         try {
-                            const response = await fetch("http://localhost:3001/littlefs.bin", {
+                            const response = await fetch(`http://localhost:3001/littlefs.bin?${qs.stringify({ littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`, {
                                 method: "post",
                                 body: JSON.stringify({ "deviceToken": "success"})
                             });
@@ -437,7 +437,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             console.error('Error fetching the .bin file:', error);
                         }
                     }),
-                    address: "0x310000"
+                    address: parseInt(stepData.data.flashConfig?.littlefsOffset || "0x310000")
                 }
 
                 // other files
