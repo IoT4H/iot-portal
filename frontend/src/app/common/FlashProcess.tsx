@@ -415,10 +415,18 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 {
                     data: await new Promise( async (resolve, reject) => {
                         try {
-                            const response = await fetch(`http://localhost:3001/littlefs.bin?${qs.stringify({ littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`, {
-                                method: "post",
-                                body: JSON.stringify({ "deviceToken": "success"})
-                            });
+
+                            const deviceFetch = await fetchAPI(getStrapiURLForFrontend(`/api/thingsboard-plugin/deployment/${stepData.deployment}/device/${stepData.state.device.id}/credentials`));
+                            const deviceToken = (await deviceFetch.json()).credentialsId;
+
+                            const response = await fetch(
+                                `http://localhost:3001/littlefs.bin?${qs.stringify({ 
+                                littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
+                                {
+                                    method: "post",
+                                    body: JSON.stringify({ "deviceToken": deviceToken})
+                                }
+                            );
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
                             }
