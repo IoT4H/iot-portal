@@ -52,15 +52,12 @@ jobs:
         include:
           - name: backend
             context: ./strapi-backend
-            dockerfile: Dockerfile
             image: portal-api
           - name: frontend
             context: ./frontend
-            dockerfile: Dockerfile
             image: portal-ui
           - name: littlefs-creator
             context: ./littlefs-data-creator
-            dockerfile: Dockerfile
             image: portal-littlefs-creator
     env:
       TAG: ${{needs.generate-version.outputs.version}}
