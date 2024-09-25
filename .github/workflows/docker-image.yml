@@ -64,13 +64,17 @@ jobs:
             image: portal-littlefs-creator
     env:
       TAG: ${{needs.generate-version.outputs.version}}
-      GHCR_REPO_NAME: ghcr.io/${{ github.repository_owner }}
+      GHCR_REPO_NAME: ghcr.io/${{github.repository_owner}}
     steps:
       - uses: actions/checkout@v4
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: Active buildx build
         run: docker buildx create --use
+      - name: lowercase github.repository
+        run: |
+          REPO_NAME=$(echo ${{env.GHCR_REPO_NAME}}/${{ matrix.image }} | tr '[A-Z]' '[a-z]')
+          echo "GHCR_REPO_NAME=$REPO_NAME" >> "$GITHUB_ENV"
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -78,8 +82,8 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64
-          cache-from: type=registry,ref=${{env.GHCR_REPO_NAME}}/${{ matrix.image }}:${{ github.ref_name }}-buildcache
-          cache-to: type=registry,ref=${{env.GHCR_REPO_NAME}}/${{ matrix.image }}:${{ github.ref_name }}-buildcache,mode=max
+          cache-from: type=registry,ref=${{env.GHCR_REPO_NAME}}:${{ github.ref_name }}-buildcache
+          cache-to: type=registry,ref=${{env.GHCR_REPO_NAME}}:${{ github.ref_name }}-buildcache,mode=max
           build-args: |
             APP_VERSION=${{needs.generate-version.outputs.version}}
-          tags: ${{env.GHCR_REPO_NAME}}/${{ matrix.image }}:${{env.TAG}}
+          tags: ${{env.GHCR_REPO_NAME}}:${{env.TAG}}
