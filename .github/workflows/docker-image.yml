@@ -64,3 +64,31 @@ jobs:
           echo VERSION=$VERSION
           docker tag ghcr.io/iot4h/portal-ui ghcr.io/iot4h/portal-ui:$VERSION
           docker push ghcr.io/iot4h/portal-ui:$VERSION
+  littlefs-creator:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      #
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Build the Docker frontend
+        run: docker build ./frontend  --cache-from ghcr.io/iot4h/portal-littlefs-creator:latest --tag ghcr.io/iot4h/portal-littlefs-creator --label "runnumber=${GITHUB_RUN_ID}"
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # This strips the git ref prefix from the version.
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # This strips the "v" prefix from the tag name.
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # This uses the Docker `latest` tag convention.
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag ghcr.io/iot4h/portal-littlefs-creator ghcr.io/iot4h/portal-littlefs-creator:$VERSION
+          docker push ghcr.io/iot4h/portal-littlefs-creator:$VERSION
