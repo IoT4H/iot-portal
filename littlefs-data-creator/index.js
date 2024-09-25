@@ -62,8 +62,8 @@ fastify.post('/littlefs.bin', async function handler (request, reply) {
 
             // clean up files
 
-            //tmpobj.removeCallback();
-            //tmpFile.removeCallback();
+            tmpobj.removeCallback();
+            tmpFile.removeCallback();
         })
         return reply.type('application/octet-stream').send(stream)
     } catch (err) {

@@ -5,7 +5,7 @@ import { WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
 import qs from "qs";
@@ -426,7 +426,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             const deviceToken = deviceFetch.credentialsId;
 
                             const response = await fetch(
-                                `http://localhost:3001/littlefs.bin?${qs.stringify({ 
+                                `${getLittleFSURL()}?${qs.stringify({ 
                                 littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
                                 {
                                     method: "post",
