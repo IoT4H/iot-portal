@@ -13,7 +13,7 @@ jobs:
     env:
       VERSION: ''
     outputs:
-      version: ${{ env.VERSION }}
+      version: ${{ steps.generate-dev-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,10 +35,14 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           printf "Generated Version: %s\n" "$VERSION"
+      - name: Test
+        run: |
+          printf "Generated Version: %s\n" "${{ steps.generate-dev-version.outputs.version }}"
   build:
     runs-on: ubuntu-latest
+    needs: generate-version
     permissions:
       packages: write
       contents: read
@@ -60,6 +64,7 @@ jobs:
             image: portal-littlefs-creator
     env:
       TAG: ${{needs.generate-version.outputs.version}}
+      GHCR_REPO_NAME: ghcr.io/${{ github.repository_owner }}
     steps:
       - uses: actions/checkout@v4
       - name: Log in to registry
