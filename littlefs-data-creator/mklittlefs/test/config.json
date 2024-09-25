@@ -1,9 +1,0 @@
-{
-    "deviceToken": "adasdasdasdasd",
-    "wifi": [
-        {
-            "ssid": "test",
-            "password": "test"
-        }
-    ]
-}
