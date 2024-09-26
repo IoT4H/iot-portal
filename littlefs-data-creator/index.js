@@ -21,7 +21,7 @@ await fastify.register(cors, {
     origin: ["*"]
 })
 
-fastify.get('/', async function handler (request, reply) {
+fastify.get('/littlefs.bin', async function handler (request, reply) {
     reply.body = "alive"
 })
 
