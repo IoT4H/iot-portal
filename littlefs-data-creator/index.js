@@ -22,7 +22,7 @@ await fastify.register(cors, {
 })
 
 fastify.get('/', async function handler (request, reply) {
-    reply.body = "test"
+    reply.body = "alive"
 })
 
 // Declare a route
