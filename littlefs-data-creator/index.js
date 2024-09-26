@@ -22,7 +22,7 @@ await fastify.register(cors, {
 })
 
 fastify.get('/littlefs.bin', async function handler (request, reply) {
-    reply.body = "alive"
+    reply.send("alive");
 })
 
 // Declare a route
