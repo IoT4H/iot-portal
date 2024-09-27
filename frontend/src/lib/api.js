@@ -36,7 +36,7 @@ export function getStrapiURLForFrontend(path = "") {
 export function getLittleFSURL() {
     APITool.init();
 
-    return APITool.FrontendStrapiURL;
+    return APITool.LittlefsURL;
 }
 
 /**
