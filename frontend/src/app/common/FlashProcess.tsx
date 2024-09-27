@@ -430,7 +430,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                                 littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
                                 {
                                     method: "post",
-                                    body: JSON.stringify({ "deviceToken": deviceToken})
+                                    body: deviceToken //JSON.stringify({ "deviceToken": deviceToken}) #chnaged for demo purpose
                                 }
                             );
                             if (!response.ok) {
