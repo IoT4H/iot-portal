@@ -643,6 +643,13 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           })
     }
 
+  },
+  async getDeviceCredentialsForDeploymentByUUID(tenantId: string, componentId: string){
+    return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${componentId}/credentials` })
+      .then((response: any) => {
+        return response.data
+      })
   }
+
 
 });

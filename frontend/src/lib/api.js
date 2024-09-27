@@ -32,6 +32,13 @@ export function getStrapiURLForFrontend(path = "") {
     ).replace(/\/$/, "")}${path}`;
 }
 
+
+export function getLittleFSURL() {
+    APITool.init();
+
+    return APITool.FrontendStrapiURL;
+}
+
 /**
  * Helper to make GET requests to Strapi API endpoints
  * @param {string} path Path of the API route
@@ -50,9 +57,9 @@ export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
 
     // Build request URL
     const queryString = qs.stringify(urlParamsObject);
-    const requestUrl = `${await getStrapiURL(
+    const requestUrl = `${(getStrapiURL(
         `${path}${queryString ? `?${queryString}` : ""}`
-    )}`;
+    ))}`;
 
     // Trigger API call
     try {

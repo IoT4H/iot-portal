@@ -22,6 +22,7 @@ export type UseCase = {
     costs?: number | null;
     firms: any[];
     partnerLogos: any[];
+    setupSteps: any[];
 }
 
 export function mapUseCase(useCase: any): UseCase {
@@ -41,6 +42,7 @@ export function mapUseCase(useCase: any): UseCase {
         costs: useCase.attributes.costs,
         firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || [],
         partnerLogos: useCase.attributes.partnerLogos && useCase.attributes.partnerLogos.data && useCase.attributes.partnerLogos.data.map((b: any) => b.attributes) || [],
+        setupSteps: useCase.attributes.setupSteps || []
     }
 }
 

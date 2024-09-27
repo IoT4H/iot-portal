@@ -1,13 +1,14 @@
 "use client"
-import { fi } from "@faker-js/faker";
 import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { ArrowDownTrayIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
+import qs from "qs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import * as React from "react";
 
@@ -379,7 +380,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             <ArrowDownTrayIcon className={"h-16 mb-8"} />
                             <div>
                                 {
-                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText} className={"text-center"} /> )
+                                    !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText|| []} className={"text-center"} /> )
                                 }
                             </div>
                         </div>}
@@ -409,7 +410,52 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const flash = () => {
         new Promise<void>(async (resolve) => {
 
-            const fileArray: any[] = await Promise.all(Array.from(stepData.data.flashInstruction).map(async (fI: any) => {
+            const fileArray: any[] = [
+
+                //LittleFS Configs
+                {
+                    data: await new Promise( async (resolve, reject) => {
+                        try {
+
+                            const deviceFetch = await fetchAPI(`/api/thingsboard-plugin/deployment/${stepData.deployment}/device/${stepData.state.device.id}/credentials`, {},
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${Auth.getToken()}`
+                                    }
+                                });
+                            const deviceToken = deviceFetch.credentialsId;
+
+                            const response = await fetch(
+                                `${getLittleFSURL()}?${qs.stringify({ 
+                                littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
+                                {
+                                    method: "post",
+                                    body: JSON.stringify({ "deviceToken": deviceToken})
+                                }
+                            );
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            const arrayBuffer = await response.arrayBuffer();
+                            const binaryString = ((buffer) => {
+                                let binaryString = '';
+                                const bytes = new Uint8Array(buffer);
+                                const len = bytes.byteLength;
+                                for (let i = 0; i < len; i++) {
+                                    binaryString += String.fromCharCode(bytes[i]);
+                                }
+                                return binaryString;
+                            })(arrayBuffer);
+                            resolve(binaryString) ;
+                        } catch (error) {
+                            console.error('Error fetching the .bin file:', error);
+                        }
+                    }),
+                    address: stepData.data.flashConfig?.littlefsOffset || "0x310000"
+                }
+
+                // other files
+                , ...(await Promise.all(Array.from(stepData.data.flashInstruction).map(async (fI: any) => {
                 return ({
                     data: await new Promise( async (resolve, reject) => {
                         try {
@@ -434,7 +480,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     }),
                     address: fI.flashAddress
                 });
-            }))
+            })))];
 
 
             //------ validate

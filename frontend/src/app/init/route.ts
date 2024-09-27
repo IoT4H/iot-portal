@@ -11,9 +11,7 @@ export async function GET(request: Request, context: { params: Params }) {
 // Add a new header
     newHeaders.set('Content-Type', 'application/json')
 
-    const { StrapiURL, serverStrapiUrl } = getUrls();
+    console.log("send init parameter ", getUrls())
 
-    console.log("send init parameter ", { StrapiURL: StrapiURL, serverStrapiUrl: serverStrapiUrl })
-
-    return NextResponse.json({ StrapiURL: StrapiURL, serverStrapiUrl: serverStrapiUrl }, { status: 200, headers: newHeaders } )
+    return NextResponse.json(getUrls(), { status: 200, headers: newHeaders } )
 }

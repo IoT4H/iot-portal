@@ -168,6 +168,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         if (constructJson.length !== useCase.components.reduce((accumulator, component) => {
           return accumulator + Array.of(...component.Reference).length
         }, 0)) {
+          console.warn(constructJson, useCase.components)
           throw new Error("Not all elements had been properly deployed. Canceling deployment.");
         }
         strapi.entityService.update('api::deployment.deployment', deploymentId, {
@@ -295,9 +296,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
-    "id": number, flashProcess: boolean, tasks?: any[], meta: any}, progress: number, subprogress?: any) {
-    delete step.meta;
+    "id": number, flashProcess: boolean, tasks?: any[], device: any, index: number, meta: any}, progress: number, subprogress?: any) {
     //console.warn(deploymentId, step, progress, subprogress);
+    for (let attribute in step) {
+      if(!["__component","id", "flashProcess", "tasks", "device"].includes(attribute)){
+        delete step[attribute];
+      }
+    }
+
     const deployment: any = await strapi.entityService.findOne('api::deployment.deployment', deploymentId,{
       fields: ['stepStatus']
     });
@@ -367,7 +373,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       case "instructions.setup-instruction":
         if(data.parameter.flash) {
           returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-            ...data.step.data
+            ...data.step.data,
+            __component: data.step.data.__component,
+            id: data.step.data.id,
+            thingsboard_profile: data.step.data.thingsboard_profile
           }, null, {
             flash: { progress: 100 }
           });
@@ -385,14 +394,21 @@ export default ({ strapi }: { strapi: Strapi }) => ({
             );
           returnPromise = returnPromise.then((response) => {
               strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-                ...data.step.data
+                ...data.step.data,
+                __component: data.step.data.__component,
+                id: data.step.data.id,
+                thingsboard_profile: data.step.data.thingsboard_profile,
+                device: response.id
               }, null, {
                 setup: {progress: 100}
               });
               resolve(response);
           }, (reason) => {
             strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-              ...data.step.data
+              ...data.step.data,
+              __component: data.step.data.__component,
+              id: data.step.data.id,
+              thingsboard_profile: data.step.data.thingsboard_profile
             }, null, { setup: { progress: 0 }});
             strapi.log.warn(`${data.step.data.__component} action failed`);
             reject(reason);
@@ -402,14 +418,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         break;
       case "instructions.text-instruction":
         returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-          ...data.step.data
+          ...data.step.data,
+          __component: data.step.data.__component,
+          id: data.step.data.id,
         }, 100, {})
         returnPromise.then((response) => resolve(response), (reason) => reject(reason));
         break;
       case "instructions.list-instruction":
         //console.warn("data: " + JSON.stringify(data));
         returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-          ...data.step.data
+          ...data.step.data,
+          __component: data.step.data.__component,
+          id: data.step.data.id,
         }, null, data.parameter)
         returnPromise.then((response) => resolve(response), (reason) => reject(reason));
       default:

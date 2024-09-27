@@ -7,3 +7,4 @@ README.md
 .git
 mklittlefs/debug
 .gitignore
+mklittlefs/mklittlefs.exe

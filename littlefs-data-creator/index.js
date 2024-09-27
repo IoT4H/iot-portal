@@ -21,12 +21,12 @@ await fastify.register(cors, {
     origin: ["*"]
 })
 
-fastify.get('/', async function handler (request, reply) {
-    reply.body = "test"
+fastify.get('/littlefs.bin', async function handler (request, reply) {
+    reply.send("alive");
 })
 
 // Declare a route
-fastify.post('/flashdata.bin', async function handler (request, reply) {
+fastify.post('/littlefs.bin', async function handler (request, reply) {
 
     console.info("request received")
 
@@ -52,7 +52,7 @@ fastify.post('/flashdata.bin', async function handler (request, reply) {
             mklittlefsCommandPath = "./mklittlefs/mklittlefs"
         }
 
-        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 65536 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
+        const command = `${mklittlefsCommandPath} -p 256 -b 4096 -s 61440 -d 5 -c "${tmpobj.name}" "${tmpFile.name}"`;
         console.info(`littlefs create command: ${command}`)
         execSync(command);
 
@@ -62,8 +62,8 @@ fastify.post('/flashdata.bin', async function handler (request, reply) {
 
             // clean up files
 
-            //tmpobj.removeCallback();
-            //tmpFile.removeCallback();
+            tmpobj.removeCallback();
+            tmpFile.removeCallback();
         })
         return reply.type('application/octet-stream').send(stream)
     } catch (err) {

@@ -1,6 +1,6 @@
 import ShareButton from "@iot-portal/frontend/app/(portal)/usecase/[id]/share-button";
 import SetupButton from "@iot-portal/frontend/app/(portal)/usecase/setup-button";
-import Tabs from "@iot-portal/frontend/app/(portal)/usecase/tabs";
+import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
@@ -78,6 +78,8 @@ export async function generateMetadata({ params }: {params: Params}) {
 
 export default async function UseCase(props: { children: React.ReactNode, params: {  id: number } }) {
 
+
+
     const qsPara =
         {
             fields: '*',
@@ -94,6 +96,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                         populate: "*"
                     }
                 },
+                setupSteps: true
             },
             filters: {
                 slug: {
@@ -192,7 +195,9 @@ export default async function UseCase(props: { children: React.ReactNode, params
                     <div className={"pb-8"}>
                         <div className={"flex flex-row border-b mb-8 border-gray-300/50"}>
                             <Suspense>
-                                <Tabs/>
+                                <Tab name={"Info"} link={`/usecase/${props.params.id}/`}/>
+                                {/*<Tab name={"Bilder"} link={`/usecase/${params.id}/bilder/`}/>*/}
+                                { useCase.setupSteps.length > 0  && <Tab name={"Anleitung"} link={`/usecase/${props.params.id}/instructions/`}/> }
                             </Suspense>
                         </div>
                         <div className={"w-full"}>

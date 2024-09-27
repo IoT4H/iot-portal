@@ -19,7 +19,7 @@
       "type": "string",
       "regex": "0x[0-9A-F]*",
       "required": true,
-      "default": "0x000000"
+      "default": "0x1000"
     },
     "type": {
       "type": "enumeration",

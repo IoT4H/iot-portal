@@ -24,6 +24,18 @@
     },
     "deviceConnectName": {
       "type": "string"
+    },
+    "littlefsOffset": {
+      "type": "string",
+      "default": "0x310000",
+      "required": true,
+      "regex": "0x[0-9A-F]*"
+    },
+    "littelfsSize": {
+      "type": "string",
+      "regex": "0x[0-9A-F]*",
+      "default": "0x5000",
+      "required": true
     }
   }
 }

@@ -5,21 +5,23 @@ export class APITool {
     static StrapiURL: string = "";
     static FrontendStrapiURL: string = "";
     static ServerStrapiURL: string = "";
+    static LittlefsURL: string = "";
     static initComplete = false;
 
     static isServer() {
         return typeof window === 'undefined';
     }
 
-    static init(): {StrapiURL: string, serverStrapiUrl: string} {
+    static init(): {StrapiURL: string, serverStrapiUrl: string, littlefsUrl: string} {
 
             if (APITool.isServer()) {
-                const {StrapiURL, serverStrapiUrl} = getUrls();
+                const {StrapiURL, serverStrapiUrl, littlefsUrl} = getUrls();
 
                 APITool.FrontendStrapiURL = StrapiURL;
                 APITool.ServerStrapiURL = serverStrapiUrl;
+                APITool.LittlefsURL = littlefsUrl;
                 APITool.initComplete = true;
-                return {StrapiURL, serverStrapiUrl};
+                return { StrapiURL, serverStrapiUrl, littlefsUrl };
             } else if(!APITool.initComplete) {
 
                 const request = new XMLHttpRequest();
@@ -32,13 +34,15 @@ export class APITool {
                     APITool.StrapiURL = data.StrapiURL;
                     APITool.FrontendStrapiURL = data.StrapiURL;
                     APITool.ServerStrapiURL = data.serverStrapiUrl;
+                    APITool.LittlefsURL = data.littlefsUrl;
                     console.info(`Frontend STRAPI API URL is: ${APITool.FrontendStrapiURL}`);
                     console.info(`Server STRAPI API URL is: ${APITool.ServerStrapiURL}`);
+                    console.info(`Littlefs URL is: ${APITool.LittlefsURL}`);
                     APITool.initComplete = true;
 
                 }
             }
 
-        return {StrapiURL: APITool.FrontendStrapiURL, serverStrapiUrl: APITool.ServerStrapiURL};
+        return {StrapiURL: APITool.FrontendStrapiURL, serverStrapiUrl: APITool.ServerStrapiURL, littlefsUrl: APITool.LittlefsURL};
     }
 }
