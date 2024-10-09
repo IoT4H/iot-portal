@@ -1,6 +1,7 @@
 version: '3.5'
 services:
   frontend:
+    image: ghcr.io/iot4h/portal-ui
     environment:
        NEXT_PUBLIC_STRAPI_API_URL: "http://localhost:1337"
     build:
@@ -18,6 +19,7 @@ services:
       POSTGRES_USER: strapi
       POSTGRES_DB: strapi
   strapi:
+    image: ghcr.io/iot4h/portal-api
     build:
       context: ./strapi-backend
     restart: unless-stopped
@@ -32,6 +34,7 @@ services:
     depends_on:
       - portaldb
   flashdata:
+    image: ghcr.io/iot4h/portal-littlefs-creator
     build:
       context: ./littlefs-data-creator
     restart: unless-stopped
@@ -58,4 +61,3 @@ volumes:
     external: true
   mytb-logs:
     external: true
-

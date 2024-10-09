@@ -42,7 +42,7 @@ const Header = async () => {
 
 
     return (
-        <header className="sticky top-0 h-16 z-40 bg-orange-100 dark:bg-zinc-900 backdrop-blur-sm">
+        <header className="sticky top-0 h-16 z-40 bg-orange-100 dark:bg-zinc-800 backdrop-blur-sm">
             <nav
                 className="mx-auto h-full flex max-w-7xl items-center justify-between p-2 lg:px-8 border-solid border-b border-gray-400/30 dark:border-gray-50/30"
                 aria-label="Global">

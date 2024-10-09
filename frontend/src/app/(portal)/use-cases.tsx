@@ -1,4 +1,5 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon } from "@heroicons/react/16/solid";
 import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import * as React from "react";
@@ -62,30 +63,40 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
 
     return (
         <>
-            <div className="flex justify-between gap-x-6 py-5 snap-center">
-                <Link href={"/usecase/" + useCase.slug} className={"w-full"}>
-                    <div className="flex flex-row gap-x-4 rounded-xl p-8 cursor-pointer w-full min-h-64 bg-zinc-200 hover:bg-zinc-300 dark:bg-gray-400/10 dark:hover:bg-gray-400/20 border border-gray-500/25 overflow-hidden h-full">
-                        <div className={"flex flex-shrink-0 items-center flex-row w-64 min-h-[16rem] -m-8 mr-8"}>
-                        {
-                            useCase.thumbnail && useCase.thumbnail.url && (
-                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)} className={" w-full h-full object-cover gallery-image"}/>
-                            ) || (
-                                <div className={" w-full h-full flex items-center justify-center bg-black/20  gallery-image"}><PhotoIcon className={"w-16 h-16 text-black/70"}></PhotoIcon></div>
-                            )
-                        }
+            <div className="flex justify-between gap-x-6 snap-center">
+                <Link href={"/usecase/" + useCase.slug} className={"w-full group/card"}>
+                    <div className="flex flex-col-reverse cursor-pointer w-full min-h-64 dark:bg-zinc-900 overflow-hidden h-full border border-gray-500/25 group-hover/card:border-orange-500/25">
+                        <div className={"flex flex-grow-0 flex-shrink-0 items-center flex-row w-full h-64 relative "}>
+                            {
+                                useCase.thumbnail && useCase.thumbnail.url && (
+                                    <img
+                                        src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)}
+                                        className={" w-full h-full object-cover gallery-image"}/>
+                                ) || (
+                                    <div
+                                        className={" w-full h-full flex items-center justify-center bg-black/20  gallery-image"}>
+                                        <PhotoIcon className={"w-16 h-16 text-black/70 dark:text-white/30"}></PhotoIcon>
+                                    </div>
+                                )
+                            }
+                            <button
+                                className={"absolute bottom-2 right-2 text-right mt-auto ml-auto font-bold bg-orange-500/90 text-white pl-4 pr-2 py-2 w-max flex flex-row gap-2 items-center invisible group-hover/card:visible"}>
+                                <span>Erfahre mehr</span><ChevronRightIcon className={"h-6"}/></button>
+
                         </div>
-                        <div className={"flex-grow w-full h-full flex flex-col gap-4"}>
-                            <div className="flex flex-row items-center z-10 flex-grow-0">
-                                <h2 className="text-inherit font-bold text-2xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{useCase.title}</h2>
+                        <div
+                            className={"w-full h-full flex flex-col gap-4 p-8 min-h-[auto]"}>
+                            <div className="">
+                                <h2 className="text-inherit font-bold text-2xl border-solid border-b-[0.2em] inline-block max-w-full pr-[0.5em] py-1 border-orange-500 pb-[1px]">{useCase.title}</h2>
                             </div>
-                            <div className="flex flex-row gap-2 flex-wrap flex-grow-0 flex-shrink">
+                            <div className="flex flex-row gap-2 flex-wrap flex-grow-0 flex-shrink empty:hidden">
                                 {
                                     [...useCase.devices.map((i :any) => {
                                          return i.device.data && i.device.data.attributes.name;
                                      }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"dark:text-gray-300 text-sm text-justify my-auto"}>{ useCase.summary }</p>
+                            <p className={"dark:text-gray-300 text-sm text-justify min-w-0 min-h-0 overflow-hidden text-ellipsis hyphens-auto break-words  flex-grow-0 flex-shrink text-wrap"}>{ useCase.summary }</p>
                         </div>
                     </div>
                 </Link>
@@ -98,14 +109,13 @@ export function ListUseCase({
                                 title,
                                 children,
                             }: {
-    title: string;
+    title?: string;
     children: React.ReactNode
 }) {
     return (
         <>
-            <div className="flex-auto rounded bg-white dark:bg-zinc-800 p-8 shadow max-h-full sticky top-0">
-                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 mt-[1em] py-1 border-orange-500 "}>{ title }</h2>
-                <div>
+            <div className="flex-auto rounded shadow max-h-full sticky top-0">
+                <div className={"grid grid-cols-1 sm:grid-cols-2 gap-8 mt-4"}>
                     { children }
                 </div>
             </div>
