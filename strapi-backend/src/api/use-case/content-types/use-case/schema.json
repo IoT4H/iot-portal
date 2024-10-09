@@ -48,8 +48,9 @@
     },
     "summary": {
       "type": "text",
-      "minLength": 200,
-      "required": true
+      "minLength": 100,
+      "required": true,
+      "maxLength": 210
     },
     "setupDuration": {
       "type": "integer",

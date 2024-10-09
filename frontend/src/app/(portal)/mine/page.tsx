@@ -7,6 +7,9 @@ import { Auth } from "@iot-portal/frontend/lib/auth";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
+import BaseBody from "@iot-portal/frontend/app/common/baseBody";
+import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
+import BaseHeadline from "@iot-portal/frontend/app/common/baseHeadline";
 
 const dynamic = 'force-dynamic';
 
@@ -42,14 +45,21 @@ export default function Mine() {
 
 
     return (
-        <div className="flex flex-row content-stretch gap-12">
-            <ListDeployments title={"Meine Use-Cases"}>
-                {
-                    deployments && deployments.length > 0 && deployments.map((u: any) =>
-                        <ListItemDeployment key={u.id} deployment={u}/>
-                    )
-                }
-            </ListDeployments>
-        </div>
+        <>
+            <BaseHeadline>
+                Meine Anwendungsfälle
+            </BaseHeadline>
+            <BaseBody>
+                <div className="flex flex-row content-stretch gap-12">
+                    <ListDeployments>
+                        {
+                            deployments && deployments.length > 0 && deployments.map((u: any) =>
+                                <ListItemDeployment key={u.id} deployment={u}/>
+                            )
+                        }
+                    </ListDeployments>
+                </div>
+            </BaseBody>
+        </>
     );
 }
