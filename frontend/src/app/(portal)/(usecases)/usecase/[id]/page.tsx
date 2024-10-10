@@ -59,6 +59,7 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
                     <div className="flex flex-row gap-4 flex-wrap w-full flex-grow-0 mt-4">
                         {
                             useCase.partnerLogos.map((pL) => (
+                                /* eslint-disable-next-line @next/next/no-img-element */
                                 <img className={"w-40 object-center object-contain py-2 px-4 bg-white rounded "} key={pL.hash}
                                      src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)}
                                      alt={pL.alternativeText}/>

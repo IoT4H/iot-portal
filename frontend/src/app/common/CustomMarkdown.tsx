@@ -41,7 +41,7 @@ export default function CustomMarkdown({children, className, ...rest}: { childre
                 const thumbnail = rest.src.replace("/uploads/", "/uploads/thumbnail_")
 
                 return <GalleryImage className={" max-h-64 w-full object-contain mb-[1.5rem] last:mb-0"} {...rest}
-                                     src={rest.src}/>;
+                                     src={rest.src} thumbnailSrc={rest.src}/>;
             },
             p: (props) => {
                 return <p

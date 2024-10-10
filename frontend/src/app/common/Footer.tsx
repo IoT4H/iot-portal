@@ -69,7 +69,9 @@ export default async function Footer() {
                     }
                 </nav>
                 <div className={"flex flex-row h-32 my-4 mr-4 w-max flex-grow-0 flex-shrink gap-4"}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={"/Gefördert_vom_BMBF.svg"} className={"flex-grow-0 rounded bg-white/80"}/>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={"/institute_kurz.png"} className={"flex-grow-0 px-8 rounded bg-white/80"}/>
                 </div>
             </footer>

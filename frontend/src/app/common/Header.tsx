@@ -8,6 +8,7 @@ import { Suspense } from "react";
 function Logo() {
     return (
             <Link href="/" className="-m-1.5 p-1.5 flex">
+                { /* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="h-10 w-auto" src="/iot4h.svg" alt="IoT4H" />
                 <h1 className="text-black dark:text-white text-3xl font-bold border-black/50 dark:border-white/50 border-l-2 pl-4 ">Portal</h1>
             </Link>

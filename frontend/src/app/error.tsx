@@ -18,6 +18,7 @@ export default function Error({
     return (
         <div className={"mx-auto w-max h-full p-4 text-center leading-10 rounded border border-red-500  my-16 flex-auto bg-white dark:bg-zinc-900 shadow max-h-full sticky top-"}>
             <h2 className={"text-xl"}>Oops! Da ist etwas schief gegangen.</h2>
+            { /* eslint-disable-next-line @next/next/no-img-element */ }
             <img src={"/fixing_bugs.svg"}  className={"h-32 mx-auto my-8"}/>
             <button
                 onClick={

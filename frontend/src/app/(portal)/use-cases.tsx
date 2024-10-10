@@ -69,8 +69,8 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                         <div className={"flex flex-grow-0 flex-shrink-0 items-center flex-row w-full h-64 relative "}>
                             {
                                 useCase.thumbnail && useCase.thumbnail.url && (
-                                    <img
-                                        src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)}
+                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)}
                                         className={" w-full h-full object-cover gallery-image"}/>
                                 ) || (
                                     <div
