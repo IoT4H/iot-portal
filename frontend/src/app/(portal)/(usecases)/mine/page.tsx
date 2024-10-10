@@ -46,9 +46,6 @@ export default function Mine() {
 
     return (
         <>
-            <BaseHeadline>
-                Meine Anwendungsfälle
-            </BaseHeadline>
             <BaseBody>
                 <div className="flex flex-row content-stretch gap-12">
                     <ListDeployments>

@@ -46,9 +46,9 @@ export default async function Home() {
 
     return (
         <>
-            <BaseHeadline>
-                    UseCase
-            </BaseHeadline>
+            {/*<BaseHeadline>*/}
+            {/*        Anwendungsfälle*/}
+            {/*</BaseHeadline>*/}
             <BaseBody>
                 <div className="flex flex-row content-stretch gap-12">
                     <ListUseCase>

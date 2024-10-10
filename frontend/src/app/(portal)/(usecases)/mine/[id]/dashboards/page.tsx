@@ -1,5 +1,5 @@
 "use client"
-import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/mine/[id]/dashboards";
+import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/(usecases)/mine/[id]/dashboards";
 
 const dynamic = 'force-dynamic';
 

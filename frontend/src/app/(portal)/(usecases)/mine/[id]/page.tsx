@@ -1,6 +1,6 @@
 "use client"
-import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/mine/[id]/dashboards";
-import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/mine/[id]/configurationSteps";
+import MyDeploymentPage from "@iot-portal/frontend/app/(portal)/(usecases)/mine/[id]/dashboards";
+import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/(usecases)/mine/[id]/configurationSteps";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import { useRouter } from 'next/navigation';

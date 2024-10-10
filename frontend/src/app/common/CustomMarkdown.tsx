@@ -10,27 +10,27 @@ export default function CustomMarkdown({children, className, ...rest}: { childre
         {
             h1: (props) => {
                 return <h1
-                    className="dark:text-white font-bold text-3xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h1>;
+                    className="dark:text-white font-extrabold text-3xl "><span className={"border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]"}>{props.children}</span></h1>;
             },
             h2: (props) => {
                 return <h2
-                    className="dark:text-white font-bold text-2xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h2>;
+                    className="dark:text-white font-extrabold text-2xl "><span className={"border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]"}>{props.children}</span></h2>;
             },
             h3: (props) => {
                 return <h3
-                    className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h3>;
+                    className="dark:text-white font-extrabold text-xl  "><span className={"border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]"}>{props.children}</span></h3>;
             },
             h4: (props) => {
                 return <h4
-                    className="dark:text-white font-bold text-lg  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h4>;
+                    className="dark:text-white font-bold text-xl  "><span className={"inline-block"}>{props.children}</span></h4>;
             },
             h5: (props) => {
                 return <h5
-                    className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h5>;
+                    className="dark:text-white font-bold text-lg  "><span className={"inline-block"}>{props.children}</span></h5>;
             },
             h6: (props) => {
                 return <h6
-                    className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{props.children}</h6>;
+                    className="dark:text-white font-bold text-md  "><span className={"inline-block"}>{props.children}</span></h6>;
             },
             img: (props) => {
                 const {node, ...rest} = props;
