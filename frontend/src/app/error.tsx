@@ -1,5 +1,6 @@
 'use client' // Error components must be Client Components
 
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import { useEffect } from 'react'
 
 export default function Error({
@@ -16,15 +17,15 @@ export default function Error({
 
     return (
         <div className={"mx-auto w-max h-full p-4 text-center leading-10 rounded border border-red-500  my-16 flex-auto bg-white dark:bg-zinc-800 shadow max-h-full sticky top-"}>
-            <h2 className={"text-xl"}>Something went wrong!</h2>
+            <h2 className={"text-xl"}>Oops! Da ist etwas schief gegangen.</h2>
             <button
                 onClick={
                     // Attempt to recover by trying to re-render the segment
                     () => reset()
                 }
-                className={"font-bold underline-offset-2 underline decoration-orange-500"}
+                className={"font-bold underline decoration-orange-500 underline-offset-4"}
             >
-                Try again
+                <ChevronRightIcon className={"h-[1em] inline text-orange-500"}/> Erneut versuchen <ChevronLeftIcon className={"h-[1em] inline text-orange-500"}/>
             </button>
         </div>
     )
