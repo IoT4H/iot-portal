@@ -12,7 +12,10 @@ export default async function Page({params}: { params: { catchAll: string[] } })
         },
     })).data;
 
-    const page = Array.isArray(data) && data.length > 0 ? data[0].attributes : { url: "", content: []};
+    if(Array.isArray(data) && data.length === 0) {
+        throw new Error("page not found");
+    }
+    const page =  data[0].attributes;
 
     return  (
                 !!page &&
