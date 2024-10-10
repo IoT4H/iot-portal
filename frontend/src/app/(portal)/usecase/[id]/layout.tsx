@@ -2,6 +2,7 @@ import ShareButton from "@iot-portal/frontend/app/(portal)/usecase/[id]/share-bu
 import SetupButton from "@iot-portal/frontend/app/(portal)/usecase/setup-button";
 import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
+import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
@@ -175,17 +176,17 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                 { !!useCase.costs && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Kosten"}>
                                     <CurrencyEuroIcon className={"w-8"}/>
-                                    {useCase.costs}€
+                                    <span>{useCase.costs}€</span>
                                 </div> }
                                 { !!useCase.setupDuration && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Aufbaudauer"}>
                                     <ClockIcon className={"w-8"}/>
-                                    {useCase.setupDuration}<span>min</span>
+                                    <span>{useCase.setupDuration} min</span>
                                 </div> }
                                 { !!useCase.complexity && <div className={"text-xs flex flex-col items-center gap-2  text-center"}
                                      title={"Schwierigkeit"}>
                                     <AcademicCapIcon className={"w-8"}/>
-                                    Level {useCase.complexity}
+                                    <span>Level {useCase.complexity}</span>
                                 </div> }
                             </div>
                             <Suspense fallback={<Loading />}>

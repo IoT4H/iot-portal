@@ -1,6 +1,6 @@
 "use client"
-import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/mine/[id]/configurationSteps";
-import Loading from "@iot-portal/frontend/app/(portal)/mine/[id]/start/loading";
+import ConfigurationSteps from "@iot-portal/frontend/app/(portal)/(usecases)/mine/[id]/configurationSteps";
+import Loading from "@iot-portal/frontend/app/(portal)/(usecases)/mine/[id]/start/loading";
 import TextWithHeadline, { StepSkeleton } from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { Suspense } from "react";
 

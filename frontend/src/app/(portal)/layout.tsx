@@ -32,13 +32,13 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
     const links: Link[] = [
         {
-            title: "Use-Cases",
-            href: "/usecase",
+            title: "Anwendungsfälle",
+            href: "/usecase/",
             deactived: () => false,
         },
         {
-            title: "Meine Use-Cases",
-            href: "/mine",
+            title: "Meine Anwendungsfälle",
+            href: "/mine/",
             deactived: () => !isAuth,
         }
     ];

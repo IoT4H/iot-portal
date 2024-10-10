@@ -1,4 +1,5 @@
 import { ArrowTopRightOnSquareIcon, ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
+import { activeLink } from "@iot-portal/frontend/app/common/activeLink";
 import AuthHeader from "@iot-portal/frontend/app/common/AuthHeader";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
@@ -62,7 +63,7 @@ const Header = async () => {
 
                             }
 
-                            return (<Link key={item.id} href={item.attributes.url} className={`group flex items-center gap-2  border-b-4 pb-4 mt-3 hover:border-orange-500 border-gray-400/30 px-4 py-2`} target={item.attributes.target}>{ item.attributes.title }
+                            return (<Link key={item.id} href={item.attributes.url} className={`group flex items-center gap-2  border-b-4 pb-4 mt-3 hover:border-orange-500 border-gray-400/30 ${activeLink(item.attributes.url) ? 'border-orange-500/30' : ''} px-4 py-2`} target={item.attributes.target}>{ item.attributes.title }
                                 {!samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline"}/>}
                                 { item.attributes.children.data.length > 0 && (<div className={"submenu fixed left-0 right-0 w-auto top-12 mx-auto max-w-7xl h-auto hidden group-hover:block min-h-[20em] pt-8 z-40"}>
                                 <div className={"rounded shadow-2xl  cursor-default dark:shadow-orange-500/20 w-1/2 mx-auto min-w-[30%] border-solid border border-orange-500 bg-orange-50 box-content dark:bg-zinc-900 pt-6 px-16 pb-8 text-black dark:text-white"}>
