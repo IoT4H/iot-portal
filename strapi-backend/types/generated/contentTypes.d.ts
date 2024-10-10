@@ -1211,8 +1211,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
     summary: Attribute.Text &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
-        minLength: 100;
-        maxLength: 210;
+        minLength: 200;
       }>;
     setupDuration: Attribute.Integer & Attribute.DefaultTo<0>;
     complexity: Attribute.Integer &
