@@ -1,6 +1,6 @@
-import ShareButton from "@iot-portal/frontend/app/(portal)/usecase/[id]/share-button";
-import SetupButton from "@iot-portal/frontend/app/(portal)/usecase/setup-button";
-import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
+import ShareButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/[id]/share-button";
+import SetupButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
+import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";

@@ -1,6 +1,6 @@
 "use client"
 import { CursorArrowRaysIcon } from "@heroicons/react/24/solid";
-import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
+import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
