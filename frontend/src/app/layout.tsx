@@ -5,10 +5,8 @@ import Header from "@iot-portal/frontend/app/common/Header";
 import PageBlockingSpinner, { LoadingWrapper } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import PromptAreaComponent from "@iot-portal/frontend/app/common/promptArea";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
-import { APITool } from "@iot-portal/frontend/lib/APITool";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
-import { Suspense } from "react";
 
 const inter = Inter({ subsets: ['latin'] });
 

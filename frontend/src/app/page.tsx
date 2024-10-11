@@ -26,7 +26,7 @@ export default async function LandingPage() {
                 <div className={"mt-16 mx-auto w-max h-max relative"}>
                     { /* eslint-disable-next-line @next/next/no-img-element */ }
                     <img src={"/undraw_arrow orange.svg"} className={"absolute w-32 -ml-32 -mt-8"}/>
-                    <Link href={'/home'} className={'py-3 px-8 rounded bg-orange-500/20 hover:bg-orange-500/50 cursor-pointer box-border block'}>Go to <b>Home</b></Link>
+                    <Link href={'/usecase'} className={'py-3 px-8 rounded bg-orange-500/20 hover:bg-orange-500/50 cursor-pointer box-border block'}><strong>Anwendungsfälle</strong> ansehen</Link>
                 </div>
             </main>
         </BaseBody>
