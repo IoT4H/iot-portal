@@ -14,6 +14,8 @@ export default function Page() {
     const router = useRouter();
     const urlparams = useParams();
 
+    const [signupError, SetSignupError] = useState<any>("");
+
 
     const [firstname, SetFirstname] = useState("");
     const [lastname, SetLastname] = useState("");
@@ -64,8 +66,12 @@ export default function Page() {
                 if (res.jwt) {
                     Auth.setToken(res.jwt);
                     router.push(`/home`);
-                    LoadingState.endLoading();
                 }
+
+                LoadingState.endLoading();
+            }).catch((error: string) => {
+                SetSignupError(error);
+                LoadingState.endLoading();
             });
         }
     }, [formValid, firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
