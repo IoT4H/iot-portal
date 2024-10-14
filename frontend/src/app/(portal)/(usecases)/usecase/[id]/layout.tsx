@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     return useCase && page ? {
         title: page.title + " - " + useCase.title,
         openGraph: {
-            images: [useCase.thumbnail && useCase.thumbnail.formats && useCase.thumbnail.formats.medium && !!useCase.thumbnail.formats.medium.url && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
+            images: [useCase.thumbnail && useCase.thumbnail.formats && (getStrapiURL() + useCase.thumbnail.formats.medium.url)],
             title: page.title + " - " + useCase.title,
             type: 'website',
             description: useCase.summary
