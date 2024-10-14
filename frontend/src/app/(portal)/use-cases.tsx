@@ -31,7 +31,7 @@ export function mapUseCase(useCase: any): UseCase {
         id: useCase.id,
         title: useCase.attributes.Titel,
         slug: useCase.attributes.slug,
-        thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes && useCase.attributes.thumbnail.data.attributes.url || undefined,
+        thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes && useCase.attributes.thumbnail.data.attributes.url && useCase.attributes.thumbnail.data.attributes || undefined,
         summary: useCase.attributes.summary,
         description: useCase.attributes.description,
         pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || [],
