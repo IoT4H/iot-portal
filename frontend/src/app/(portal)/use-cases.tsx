@@ -70,7 +70,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             {
                                 useCase.thumbnail && useCase.thumbnail.url && (
                                     /* eslint-disable-next-line @next/next/no-img-element */
-                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium.url || useCase.thumbnail.url)}
+                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium?.url || useCase.thumbnail.url)}
                                         className={" w-full h-full object-cover gallery-image"}/>
                                 ) || (
                                     <div
