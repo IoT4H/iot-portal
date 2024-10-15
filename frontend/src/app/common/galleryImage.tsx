@@ -9,6 +9,7 @@ export default function GalleryImage({src, thumbnailSrc, className,  alt, captio
 
     const gallery = useContext(GalleryContext);
 
+    {/* eslint-disable-next-line @next/next/no-img-element */}
     const image = <img src={thumbnailSrc || src} data-src={src} className={` cursor-zoom-in gallery-image ${className}`} title={caption} onClick={(event) => {
 
         const list: string[] = [];

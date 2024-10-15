@@ -29,7 +29,7 @@ export default async function Footer() {
 
     return (
         <div className={"mt-auto"}>
-            <footer className={"flex flex-row items-start content-stretch bottom-0 h-auto mt-16 bg-orange-100 dark:bg-zinc-900 border-solid border-t border-gray-400/30"}>
+            <footer className={"flex flex-row items-start content-stretch bottom-0 h-auto mt-16 bg-orange-100 dark:bg-zinc-800 border-solid border-t border-gray-400/30"}>
                 <nav className="mr-auto h-full flex flex-row flex-wrap max-w-7xl items-center justify-start gap-16 p-8 lg:px-16 ">
                     {
                         menus && menus.attributes.items.data.sort((s: any, sv: any) => s.attributes.order - sv.attributes.order).map((item: any) => {
@@ -69,7 +69,9 @@ export default async function Footer() {
                     }
                 </nav>
                 <div className={"flex flex-row h-32 my-4 mr-4 w-max flex-grow-0 flex-shrink gap-4"}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={"/Gefördert_vom_BMBF.svg"} className={"flex-grow-0 rounded bg-white/80"}/>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={"/institute_kurz.png"} className={"flex-grow-0 px-8 rounded bg-white/80"}/>
                 </div>
             </footer>

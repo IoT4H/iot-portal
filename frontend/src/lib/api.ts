@@ -46,7 +46,7 @@ export function getLittleFSURL() {
  * @param {Object} options Options passed to fetch
  * @returns Parsed API call response
  */
-export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
+export async function fetchAPI(path: string, urlParamsObject = {}, options = {}) {
     // Merge default and user options
     const mergedOptions = Object.assign({}, {
         headers: {

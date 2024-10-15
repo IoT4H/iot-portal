@@ -326,6 +326,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 content={
                     <div className={" flex flex-col gap-4 place-content-center h-full items-center"}>
                         <div className={"flex flex-col items-center gap-2 mb-4"}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img key={"/Espressif_White_Logo_EN_Vertical.svg"} src={"/Espressif_White_Logo_EN_Vertical.svg"} className={"min-w-[42px] w-24 mb-2"}/>
                             { chip && ( <span className={"block font-bold"}>{chip}</span>)}
                             { !flashProgress && <SpecInfos />}

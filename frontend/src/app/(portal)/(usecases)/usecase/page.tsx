@@ -1,5 +1,8 @@
 import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import BaseBody from "@iot-portal/frontend/app/common/baseBody";
+import BaseHeadline from "@iot-portal/frontend/app/common/baseHeadline";
+import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
 import { fetchAPI } from '@iot-portal/frontend/lib/api'
 
 export const dynamic = 'force-dynamic';
@@ -37,21 +40,28 @@ export default async function Home() {
                 }
             });
         return useCasesData ? useCasesData.data.map(
-            (useCase: any): UseCase => (mapUseCase(useCase))) : [];
+            (useCase: any): UseCase => { let uc = mapUseCase(useCase); console.log(uc); return uc }) : [];
     })();
 
 
     return (
-        <div className="flex flex-row content-stretch gap-12">
-            <ListUseCase title={"Use-Cases"}>
-                {
-                    useCases.length > 0 && useCases.map((u: UseCase) =>
-                        <ListItemUseCase key={u.id} useCase={u}/>
-                    )
-                }
-            </ListUseCase>
+        <>
+            {/*<BaseHeadline>*/}
+            {/*        Anwendungsfälle*/}
+            {/*</BaseHeadline>*/}
+            <BaseBody>
+                <div className="flex flex-row content-stretch gap-12">
+                    <ListUseCase>
+                        {
+                            useCases.length > 0 && useCases.map((u: UseCase) =>
+                                <ListItemUseCase key={u.id} useCase={u}/>
+                            )
+                        }
+                    </ListUseCase>
 
 
-        </div>
+                </div>
+            </BaseBody>
+        </>
     );
 }

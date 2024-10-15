@@ -35,8 +35,7 @@ export default function Infopage() {
 
     return (
             <div className="flex-auto max-h-full ">
-                <h2 className={"text-black dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 mt-[1em] py-1 border-orange-500 "}>Wissensseiten</h2>
-                <div className={`grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-16 mt-4`}>
+                <div className={`grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-16`}>
                     {
                         Array.isArray(words) && words.map((word: any, index) => {
 
@@ -47,7 +46,7 @@ export default function Infopage() {
                                             word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url ? (
                                                 <div
                                                     className={" w-full flex-shrink-0 aspect-video cursor-pointer rounded-t overflow-hidden not-sr-only"}
-                                                >
+                                                >{/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img src={getStrapiURLForFrontend(word.attributes.thumbnail?.data?.attributes?.formats?.medium?.url || word.attributes.thumbnail?.data?.attributes?.url) }  alt={""}
                                                                   className={"relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "} aria-hidden={"true"} />
                                                 </div>

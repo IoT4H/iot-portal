@@ -1,5 +1,6 @@
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
+import { notFound } from 'next/navigation'
 
 export default async function Page({params}: { params: { catchAll: string[] } })  {
 
@@ -12,7 +13,10 @@ export default async function Page({params}: { params: { catchAll: string[] } })
         },
     })).data;
 
-    const page = Array.isArray(data) && data.length > 0 ? data[0].attributes : { url: "", content: []};
+    if(Array.isArray(data) && data.length === 0) {
+        notFound();
+    }
+    const page =  data[0].attributes;
 
     return  (
                 !!page &&

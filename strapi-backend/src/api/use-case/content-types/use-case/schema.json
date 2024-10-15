@@ -48,7 +48,7 @@
     },
     "summary": {
       "type": "text",
-      "minLength": 200,
+      "minLength": 100,
       "required": true
     },
     "setupDuration": {

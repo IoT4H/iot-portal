@@ -376,6 +376,7 @@ const ConfigProgress = ({ onClose } : {onClose?: Function}) => {
                 content={
                     <div className={" flex flex-col place-content-center h-full items-center"}>
                         <div className={"flex flex-col items-center gap-2 mb-4"}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={"/Espressif_White_Logo_EN_Vertical.svg"} className={"min-w-[42px] w-24 mb-2"}/>
                             { chip && ( <span className={"block font-bold"}>{chip}</span>)}
                             { !flashingInProgress && vendorID && ( <span className={"block"}>VendorID: {vendorID}</span>)}

@@ -1,6 +1,7 @@
 "use client"
 import { CursorArrowRaysIcon } from "@heroicons/react/24/solid";
-import { Tab } from "@iot-portal/frontend/app/(portal)/usecase/tabs";
+import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
+import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
@@ -71,7 +72,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
         <>
         <Suspense> {
             setup && (
-                <>
+                <BaseBody>
                     <article
                         className="block rounded bg-white dark:bg-zinc-800 p-6 shadow max-h-full sticky top-0 flex flex-col gap-4">
                         <div className={"flex md:flex-row flex-col gap-8"}>
@@ -124,7 +125,7 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                     {
                         LoadingState.endLoading()
                     }
-                </>)
+                </BaseBody>)
 
 
         }
