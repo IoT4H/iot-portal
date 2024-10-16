@@ -4,6 +4,7 @@ import { FieldSetInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
@@ -150,12 +151,9 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
 
         //TODO: move FlashProgress out into Step
     }
-        {/*{*/}
-        {/*    error && createPortal(*/}
-        {/*        <Prompt type={PromptType.Error} text={error || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetError(undefined)} />,*/}
-        {/*        document.getElementById('promptArea')!*/}
-        {/*    )*/}
-        {/*}*/}
+        {
+            error && <Prompt type={PromptType.Error} text={error || ""} actions={[{text : "Schließen", actionFunction: () => {}}]} onClose={() => SetError(undefined)} />
+        }
     </>;
 }
 export default Modal;

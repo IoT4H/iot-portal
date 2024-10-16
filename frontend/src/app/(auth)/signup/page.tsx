@@ -1,12 +1,13 @@
 "use client"
 import Button from "@iot-portal/frontend/app/common/button";
-import { FieldSetInput, FieldSetCheckbox, RequiredStar } from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetCheckbox, FieldSetInput, RequiredStar } from "@iot-portal/frontend/app/common/FieldSet";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 
 export default function Page() {
@@ -14,7 +15,7 @@ export default function Page() {
     const router = useRouter();
     const urlparams = useParams();
 
-    const [signupError, SetSignupError] = useState<any>("");
+    const [signupError, SetSignupError] = useState<any>(undefined);
 
 
     const [firstname, SetFirstname] = useState("");
@@ -65,12 +66,13 @@ export default function Page() {
             }).then((res) => {
                 if (res.jwt) {
                     Auth.setToken(res.jwt);
-                    router.push(`/home`);
+                    router.push(`/usecase`);
                 }
 
-                LoadingState.endLoading();
-            }).catch((error: string) => {
-                SetSignupError(error);
+                if(res.error) {
+                    SetSignupError(res.error);
+                }
+
                 LoadingState.endLoading();
             });
         }
@@ -162,6 +164,7 @@ export default function Page() {
                     <Button disabled={!formValid} type={"submit"} >Registrieren</Button>
                 </div>
             </div>
+            { signupError?.message === "Email or Username are already taken" && <Prompt type={PromptType.Warning} title={"Bereits vorhanden"} text={"Es scheint als gäbe es den Account schon. Versuchen Sie sich doch mal einzuloggen!" } actions={[{text: "Login", actionFunction: () => router.push(`/login`)},{text: "Erneut Versuchen", actionFunction: () => {}}]} onClose={() => SetSignupError(undefined)}/> }
         </form>
     </div>;
 }
