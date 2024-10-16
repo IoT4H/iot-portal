@@ -132,13 +132,14 @@ export default async function UseCase(props: { children: React.ReactNode, params
                             )
                         }
                         <div className={"flex flex-shrink flex-col w-full md:w-6/12 min-w-6/12 gap-4"}>
-                            <div className={"pr-12 relative"}>
-                                <ShareButton className={"absolute top-2 right-2 w-8 aspect-square"} shareData={{
+                            <div className={"pr-14 relative"}>
+                                <ShareButton className={"absolute top-0 right-0 block w-10 h-10 p-1 flex-shrink-0 flex-grow-0 aspect-square"} shareData={{
                                     title: (await generateMetadata({params: props.params})).title || "",
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>
-                                <div className={"block w-min border-solid border-b-4 pr-2 border-orange-500 "}><h1 className={"dark:text-white font-bold text-3xl capitalize "}>{useCase.title}</h1></div>
+                                <div className={"inline-block   " +
+                                    "block w-min border-solid border-b-4 pr-2 border-orange-500  text-pretty break-words hyphens-auto"}><h1 className={"dark:text-white font-bold text-3xl capitalize  w-max"}>{useCase.title} test t a23 asd asd asd asd d</h1></div>
                             </div>
                             <div className="flex flex-row gap-2 flex-wrap text-orange-500 empty:hidden">
                                 {
@@ -147,7 +148,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
+                            <p className={"text-sm text-gray-600 dark:text-gray-200 text-justify break-words hyphens-auto"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
                             <div className={"flex flex-row justify-evenly gap-8 mt-auto"}>
                                 { useCase.devices.length > 0 && <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>
