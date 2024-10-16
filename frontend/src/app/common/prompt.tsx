@@ -5,13 +5,14 @@ import {
     QuestionMarkCircleIcon,
     InformationCircleIcon
 } from "@heroicons/react/24/solid";
+import { createPortal } from "react-dom";
 
 export enum PromptType { Default, Request , Warning , Error }
 
 export type PromptAction = { text: string, actionFunction: Function };
 
 export type PromptContext = {
-    type: PromptType, text: string, actions : PromptAction[], onClose: Function
+    type: PromptType, text: string, actions : PromptAction[], onClose: Function, title?: string
 }
 
 export const Prompt = (context: PromptContext) => {
@@ -34,6 +35,10 @@ export const Prompt = (context: PromptContext) => {
     }
 
     const headline = () => {
+        if(context.title) {
+            return context.title;
+        }
+
         switch (context.type) {
             case PromptType.Request:
                 return "Aufforderung";
@@ -70,8 +75,8 @@ export const Prompt = (context: PromptContext) => {
     }
 
 
-   return (
-        <div className={"hidden bg-orange-100/20 dark:bg-zinc-700 rounded-xl min-w-[30vw] first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
+   return createPortal(
+        <div className={"absolute mx-auto my-auto bg-orange-100/20 dark:bg-zinc-700 rounded min-w-[30vw] md:max-w-xl first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
             <div className={"px-6 py-3 font-bold text-2xl bg-orange-100/90 dark:bg-zinc-800/90"}>
                {
                    headers()
@@ -80,13 +85,10 @@ export const Prompt = (context: PromptContext) => {
             <div className={"px-6 py-3 text-center"}>
                 { context.text }
             </div>
-            <div className={"px-6 py-3 flex flex-row gap-3 justify-between"}>
+            <div className={"px-6 py-3 flex flex-row gap-8 justify-around"}>
                 { context.actions.map((action) => {
-                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={"ml-auto dark:bg-zinc-800 dark:hover:bg-zinc-900 cursor-pointer p-3 px-6 w-min rounded"}>{action.text}</div>
+                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={"bg-orange-500/50 hover:bg-orange-500 cursor-pointer p-3 px-8 w-full text-center rounded"}>{action.text}</div>
                 })}
             </div>
-        </div>
-   )
+        </div>, document.getElementById("promptArea")!)
 }
-
-
