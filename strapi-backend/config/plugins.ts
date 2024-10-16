@@ -21,17 +21,17 @@ export default {
     config: {
       provider: 'nodemailer',
       providerOptions: {
-        host: '',
-        port: 465,
-        secure: true,
+        host: process.env.EMAILHOST || '',
+        port: process.env.EMAILPORT || 465,
+        secure: process.env.EMAILSECURE || true,
         auth: {
-          user: '',
-          pass: '',
+          user: process.env.EMAILUSER || '',
+          pass: process.env.EMAILPASSWORD || '',
         },
         tls: { rejectUnauthorized: false },
       },
       settings: {
-        defaultFrom: '',
+        defaultFrom: process.env.EMAILFROM || '',
       },
     }
   }
