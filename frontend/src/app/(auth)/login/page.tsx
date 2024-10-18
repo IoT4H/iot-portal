@@ -45,9 +45,9 @@ export default function Page() {
 
 
     return <div
-        className={"relative py-8  w-full max-w-screen-lg flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
-            <form className="flex-auto max-h-full sticky top-0 pl-4"  onSubmit={(event) => {event.preventDefault();login();}}>
-                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 px-2 py-1 border-orange-500"}>Login</h2>
+        className={"relative w-full my-8 max-w-screen-lg flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
+            <form className="flex-auto max-h-full sticky top-0"  onSubmit={(event) => {event.preventDefault();login();}}>
+                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 px-2 pb-1 border-orange-500"}>Login</h2>
                 <div className="my-6 w-full">
                     <div className={"mx-auto w-96  flex flex-col gap-y-8"}>
                         <div className={"mt-4 flex flex-col gap-8"}>
