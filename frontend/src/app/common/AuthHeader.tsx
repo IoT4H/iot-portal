@@ -16,10 +16,18 @@ const LoggedIn = ({user} : {user: any}) => (
             <UserIcon className={"h-8 rounded-3xl bg-white text-gray-400 border-orange-500 border aspect-square"}></UserIcon>
         </div>
         <div className={"flex flex-col justify-center text-sm"}>
-            <span className={"capitalize text-md font-bold"}>{user?.firstname} {user?.lastname}</span> : <TextSkeleton className={"w-20"}/>
-            <span className={"capitalize text-sm"}>{(user?.firm && user?.firm.name) && (user?.firm.name === `${user?.firstname} ${user?.lastname}` ? "Persönlicher Account" : user?.firm.name)}</span> : <TextSkeleton className={"w-20"}/>
-        </div>
-        <div className={"flex flex-col justify-center"} onClick={() => Auth.logout()}>
+            { !!user ?
+                <>
+                    <span className={"capitalize text-md font-bold"}>{user?.firstname} {user?.lastname}</span>
+                    <span className={"capitalize text-sm"}>{(user?.firm && user?.firm.name) && (user?.firm.name === `${user?.firstname} ${user?.lastname}` ? "Persönlicher Account" : user?.firm.name)}</span>
+                </> :
+                <>
+                    <TextSkeleton className={"w-20"}/>
+                    <TextSkeleton className={"w-20"}/>
+                </>
+            }
+                </div>
+                <div className={"flex flex-col justify-center"} onClick={() => Auth.logout()}>
             <ArrowRightOnRectangleIcon className="h-6 w-6 inline-block cursor-pointer"></ArrowRightOnRectangleIcon>
         </div>
     </div>
