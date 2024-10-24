@@ -51,7 +51,7 @@ export class Auth {
             headers: {
                 "Authorization": "Bearer " + this.getToken(),
             },
-            cache: "force-cache"
+            cache: "no-cache"
         });
 
         return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };

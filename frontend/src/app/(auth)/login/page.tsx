@@ -21,8 +21,6 @@ export default function Page() {
     const router = useRouter();
     const urlparams = useParams();
 
-    const promptArea = useRef(document.getElementById('promptArea')!);
-
     const [email, SetEmail] = useState("");
     const [password, SetPassword] = useState("");
 
@@ -36,7 +34,7 @@ export default function Page() {
             formValid
         ) {
             Auth.login(email, password).then((res) => {
-                router.push(`${urlparams.return_url || "/home"}`);
+                router.push(`${urlparams.return_url || "/usecase"}`);
             }).catch((error: string) => {
                 SetLoginError(error);
             });
@@ -56,7 +54,7 @@ export default function Page() {
                             <FieldSetInput label={"Passwort"} id={"password"} type={"password"} autoComplete={"current-password"}
                                            onChange={(e: any) => SetPassword(e.currentTarget.value)}>
                                     <div className="absolute top-0 right-0 text-base leading-7 ">
-                                        <Link href={"/reset-password"}
+                                        <Link href={"/forgot-password"}
                                               className="font-semibold text-orange-400 hover:text-orange-500">
                                             Passwort vergessen?
                                         </Link>

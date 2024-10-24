@@ -8,7 +8,7 @@ export default function Layout ({
 
     return <BaseBody>
             <article
-                className="rounded bg-white dark:bg-zinc-800 w-max mx-auto p-8 shadow max-h-full sticky top-0 flex flex-col gap-4">
+                className="rounded bg-white dark:bg-zinc-800 w-max min-w-[30vw] max-w-full mx-auto p-8 shadow max-h-full sticky top-0 flex flex-col gap-4">
                 <div className={"flex flex-col gap-8"}>
                     {children}
                 </div>
