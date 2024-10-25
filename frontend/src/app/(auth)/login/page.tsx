@@ -21,8 +21,6 @@ export default function Page() {
     const router = useRouter();
     const urlparams = useParams();
 
-    const promptArea = useRef(document.getElementById('promptArea')!);
-
     const [email, SetEmail] = useState("");
     const [password, SetPassword] = useState("");
 
@@ -36,7 +34,7 @@ export default function Page() {
             formValid
         ) {
             Auth.login(email, password).then((res) => {
-                router.push(`${urlparams.return_url || "/home"}`);
+                router.push(`${urlparams.return_url || "/usecase"}`);
             }).catch((error: string) => {
                 SetLoginError(error);
             });
@@ -45,9 +43,9 @@ export default function Page() {
 
 
     return <div
-        className={"relative py-8  w-full max-w-screen-lg flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
-            <form className="flex-auto max-h-full sticky top-0 pl-4"  onSubmit={(event) => {event.preventDefault();login();}}>
-                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 px-2 py-1 border-orange-500"}>Login</h2>
+        className={"relative w-full my-8 max-w-screen-lg flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
+            <form className="flex-auto max-h-full sticky top-0"  onSubmit={(event) => {event.preventDefault();login();}}>
+                <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 px-2 pb-1 border-orange-500"}>Login</h2>
                 <div className="my-6 w-full">
                     <div className={"mx-auto w-96  flex flex-col gap-y-8"}>
                         <div className={"mt-4 flex flex-col gap-8"}>
@@ -56,7 +54,7 @@ export default function Page() {
                             <FieldSetInput label={"Passwort"} id={"password"} type={"password"} autoComplete={"current-password"}
                                            onChange={(e: any) => SetPassword(e.currentTarget.value)}>
                                     <div className="absolute top-0 right-0 text-base leading-7 ">
-                                        <Link href={"/reset-password"}
+                                        <Link href={"/forgot-password"}
                                               className="font-semibold text-orange-400 hover:text-orange-500">
                                             Passwort vergessen?
                                         </Link>
