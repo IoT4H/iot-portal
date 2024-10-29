@@ -16,6 +16,7 @@ export default function Page() {
     const urlparams = useParams();
 
     const [signupError, SetSignupError] = useState<any>(undefined);
+    const [signupComplete, SetSignupComplete] = useState<boolean>(false);
 
 
     const [firstname, SetFirstname] = useState("");
@@ -70,7 +71,15 @@ export default function Page() {
                 }
 
                 if(res.error) {
-                    SetSignupError(res.error);
+                    if(res.error.status == 400) {
+                        if(res.error.message == "This attribute must be unique" || res.error.message == "Email or Username are already taken") {
+                            SetSignupError("Email or Username are already taken");
+                        }
+                    }
+                }
+
+                if(!res.jwt && !res.error) {
+                    SetSignupComplete(true);
                 }
 
                 LoadingState.endLoading();
@@ -164,7 +173,9 @@ export default function Page() {
                     <Button disabled={!formValid} type={"submit"} >Registrieren</Button>
                 </div>
             </div>
-            { signupError?.message === "Email or Username are already taken" && <Prompt type={PromptType.Warning} title={"Bereits vorhanden"} text={"Es scheint als gäbe es den Account schon. Versuchen Sie sich doch mal einzuloggen!" } actions={[{text: "Login", actionFunction: () => router.push(`/login`)},{text: "Erneut Versuchen", actionFunction: () => {}}]} onClose={() => SetSignupError(undefined)}/> }
+            { signupError === "Email or Username are already taken" && <Prompt type={PromptType.Warning} title={"Bereits vorhanden"} text={"Es scheint als gäbe es den Account schon. Versuchen Sie sich doch mal einzuloggen!" } actions={[{text: "Login", actionFunction: () => router.push(`/login`)},{text: "Erneut Versuchen", actionFunction: () => {}}]} onClose={() => SetSignupError(undefined)}/> }
+            { !signupComplete && <Prompt type={PromptType.Default} title={"Registrierung erfolgreich"} text={"Wir haben eine Email versendet um die Email-Adresse zu prüfen. Bitte bestätigen Sie diesen durch den Link in der Email" } actions={[{text: "Login", actionFunction: () => {}}]} onClose={() => { SetSignupComplete(false); router.push(`/login`)}  }/> }
+
         </form>
     </div>;
 }

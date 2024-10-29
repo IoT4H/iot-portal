@@ -76,8 +76,8 @@ export const Prompt = (context: PromptContext) => {
 
 
    return createPortal(
-        <div className={"absolute mx-auto my-auto bg-orange-100/20 dark:bg-zinc-700 rounded min-w-[30vw] md:max-w-xl first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
-            <div className={"px-6 py-3 font-bold text-2xl bg-orange-100/90 dark:bg-zinc-800/90"}>
+        <div className={"absolute mx-auto my-auto bg-orange-100 dark:bg-zinc-700 rounded min-w-[30vw] md:max-w-xl first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
+            <div className={"px-6 py-3 font-bold text-2xl bg-orange-200 dark:bg-zinc-800/90"}>
                {
                    headers()
                }

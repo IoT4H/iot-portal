@@ -30,6 +30,10 @@ export default ({ strapi }: { strapi: Strapi }) => {
       });
       data.thingsboardUserId = tenant.id.id;
     },
+
+
+
+    //Should also delete in thingsboard
   });
 
   strapi.db.lifecycles.subscribe({
@@ -42,7 +46,11 @@ export default ({ strapi }: { strapi: Strapi }) => {
     },
     async beforeDelete(event: any) {
       const firm = await strapi.query('api::firm.firm').findOne(event.params);
-      await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID);
+      if(firm) {
+        await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID);
+      }
+
+      //Should also delete user
     },
     async beforeDeleteMany(event: any) {
       const firms = await strapi.query('api::firm.firm').findMany(event.params);

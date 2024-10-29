@@ -123,7 +123,7 @@ export default (plugin) => {
       }
     }
 
-    const firm = await strapi.entityService.create("api::firm.firm", { data: { name: params.firstname + " " + params.lastname, verified: false, Address: { Country: "Germany"}}});
+    const firm = await strapi.entityService.create("api::firm.firm", { data: { name: params.firstname + " " + params.lastname + " - " + email.toLowerCase() , verified: false, Address: { Country: "Germany"}}});
 
     const newUser = {
       ...params,
