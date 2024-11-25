@@ -49,7 +49,6 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
     useEffect(() => {
 
         if (!!setup && !!profile) {
-            console.log(setup, profile.id.entityType.split("_")[0], profile.id.id)
             fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${profile.id.entityType.split("_")[0]}/${profile.id.id}/components`, {},
                 {
                     headers: {

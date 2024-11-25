@@ -1,10 +1,10 @@
 "use client"
 import { ArrowTopRightOnSquareIcon, ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
-import { getStrapiURL } from "@iot-portal/frontend/lib/api";
+import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 
 export const NavLink = (item: any) => {
@@ -13,27 +13,31 @@ export const NavLink = (item: any) => {
 
     const pathname = usePathname();
 
-    const active = useMemo(() => {
+    const [active, SetActive] = useState<boolean>(false);
+    const [samePage, SetSamePage] = useState<boolean>(false);
+
+    useEffect(() => {
         if(typeof window !== 'undefined') {
-            console.log(location.pathname, item.attributes.url)
-            return pathname.startsWith(item.attributes.url);
+            console.log(pathname, item.attributes.url, pathname.startsWith(item.attributes.url))
+            SetActive(pathname.startsWith(item.attributes.url));
         } else {
-            console.log(typeof window)
-            return false;
+            console.log(typeof window, "window")
+            SetActive(false);
         }
+
     }, [item.attributes.url, pathname]);
 
-    const samePage = useMemo(() => {
+    useEffect(() => {
         try {
-            return (new URL(item.attributes.url)).host === getStrapiURL();
+            SetSamePage((new URL(item.attributes.url)).host === getStrapiURLForFrontend());
         } catch (e) {
-            return true;
+            SetSamePage(true);
         }
-    }, [item.attributes.url])
+    }, [item.attributes.url]);
 
 
     return (
-        <Link key={item.id} href={item.attributes.url} className={`group flex items-center gap-2  border-b-4 pb-4 mt-3 hover:border-orange-500 border-gray-400/30 ${active ? 'border-orange-500/30' : ''} px-4 py-2`} target={item.attributes.target}>{ item.attributes.title }
+        <Link key={item.attributes.title} href={item.attributes.url} className={`group flex items-center gap-2  border-b-4 pb-4 mt-3 hover:border-orange-500 border-gray-400/30 ${active ? 'border-orange-500/30' : ''} px-4 py-2`} target={item.attributes.target}>{ item.attributes.title }
             {
                 !samePage && <ArrowTopRightOnSquareIcon className={"h-[1em] inline"}/>}
             { item.attributes.children.data.length > 0 && (<div className={"submenu fixed left-0 right-0 w-auto top-12 mx-auto max-w-7xl h-auto hidden group-hover:block min-h-[20em] pt-8 z-40"}>

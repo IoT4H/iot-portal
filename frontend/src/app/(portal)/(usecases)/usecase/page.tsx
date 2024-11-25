@@ -40,7 +40,7 @@ export default async function Home() {
                 }
             });
         return useCasesData ? useCasesData.data.map(
-            (useCase: any): UseCase => { let uc = mapUseCase(useCase); console.log(uc); return uc }) : [];
+            (useCase: any): UseCase => { let uc = mapUseCase(useCase); return uc }) : [];
     })();
 
 

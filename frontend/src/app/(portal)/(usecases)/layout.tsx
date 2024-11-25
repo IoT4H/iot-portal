@@ -6,7 +6,7 @@ import { useIsAuth } from "@iot-portal/frontend/lib/auth";
 type Link = {
     href: string;
     title: string;
-    deactived: () => boolean;
+    deactivated: () => boolean;
 }
 
 
@@ -21,12 +21,12 @@ export default function UsecasesLayout({ children }: { children: React.ReactNode
         {
             title: "Anwendungsfälle",
             href: "/usecase/",
-            deactived: () => false,
+            deactivated: () => false,
         },
         {
             title: "Meine Anwendungsfälle",
             href: "/mine/",
-            deactived: () => !isAuth,
+            deactivated: () => !isAuth,
         }
     ];
 
