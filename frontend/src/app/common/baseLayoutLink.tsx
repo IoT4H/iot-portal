@@ -11,7 +11,7 @@ export const BaseLayoutLink = ({  href, title, deactivated } : {  href: string, 
     const pathname = usePathname();
 
     const [active, SetActive] = useState<boolean>(false);
-    const [samePage, SetSamePage] = useState<boolean>(false);
+    const [samePage, SetSamePage] = useState<boolean>(true);
 
     useEffect(() => {
         if(typeof window !== 'undefined') {
