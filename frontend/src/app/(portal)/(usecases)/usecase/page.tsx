@@ -1,8 +1,7 @@
-import { ListItemUseCase, ListUseCase, mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { ListItemUseCase, ListUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
-import BaseHeadline from "@iot-portal/frontend/app/common/baseHeadline";
-import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
+import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { fetchAPI } from '@iot-portal/frontend/lib/api'
 
 export const dynamic = 'force-dynamic';

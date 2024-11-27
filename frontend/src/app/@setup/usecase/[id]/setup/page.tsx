@@ -1,6 +1,7 @@
 "use client"
 import { PlayIcon } from "@heroicons/react/24/solid";
-import { mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingContext, LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";

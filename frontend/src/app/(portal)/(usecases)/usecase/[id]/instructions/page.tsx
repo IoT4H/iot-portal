@@ -1,5 +1,5 @@
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
-import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { CheckBox } from "@iot-portal/frontend/app/common/setup/step";

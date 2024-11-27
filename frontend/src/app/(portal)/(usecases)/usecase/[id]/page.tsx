@@ -1,6 +1,6 @@
-import { mapUseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
+import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import * as React from "react";
 
