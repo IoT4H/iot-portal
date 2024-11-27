@@ -9,7 +9,8 @@ import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWith
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
-import { Badge, mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { Badge, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
+import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import {
     AcademicCapIcon,
     ClockIcon,

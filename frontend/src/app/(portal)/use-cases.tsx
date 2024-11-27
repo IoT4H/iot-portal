@@ -26,27 +26,6 @@ export type UseCase = {
     setupSteps: any[];
 }
 
-export function mapUseCase(useCase: any): UseCase {
-    return {
-        id: useCase.id,
-        title: useCase.attributes.Titel,
-        slug: useCase.attributes.slug,
-        thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes && useCase.attributes.thumbnail.data.attributes.url && useCase.attributes.thumbnail.data.attributes || undefined,
-        summary: useCase.attributes.summary,
-        description: useCase.attributes.description,
-        pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || [],
-        tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t :any) => t.attributes.name)) || [],
-        devices:  (useCase.attributes.Images && useCase.attributes.Images.filter((i:any) => i.device.data !== null)) || [],
-        setupDuration: useCase.attributes.setupDuration,
-        complexity: useCase.attributes.complexity,
-        instructions: useCase.attributes.instructions,
-        costs: useCase.attributes.costs,
-        firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f :any) => f.attributes)) || [],
-        partnerLogos: useCase.attributes.partnerLogos && useCase.attributes.partnerLogos.data && useCase.attributes.partnerLogos.data.map((b: any) => b.attributes) || [],
-        setupSteps: useCase.attributes.setupSteps || []
-    }
-}
-
 
 export function Badge({ name } : { name: string; color?: string; }) {
     return (
@@ -64,7 +43,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
     return (
         <>
             <div className="flex justify-between gap-x-6 snap-center">
-                <Link href={"/usecase/" + useCase.slug} className={"w-full group/card"}>
+                <Link href={"/usecase/" + useCase.slug} className={"w-full group/card"} prefetch={true}>
                     <div className="flex flex-col-reverse cursor-pointer w-full min-h-64 dark:bg-zinc-900 overflow-hidden h-full border border-gray-500/25 group-hover/card:border-orange-500/25">
                         <div className={"flex flex-grow-0 flex-shrink-0 items-center flex-row w-full h-64 relative "}>
                             {
