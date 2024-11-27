@@ -1,8 +1,7 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
-import { mapUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
-import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 
