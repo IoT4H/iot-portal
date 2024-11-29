@@ -11,7 +11,7 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 
 const dynamic = 'force-dynamic';
 
-const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, setup: any, stepData: any, devicesRefresh?: Function}) => {
+const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, setup: any, stepData: any, devicesRefresh: Function}) => {
 
 
     const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
@@ -94,7 +94,7 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
                 {
                     Array.isArray(devices) && devices.map((device: any) => {
                         return (
-                            <DeviceBox key={device.id} device={device} setup={setup} stepData={stepData}/>
+                            <DeviceBox key={device.id} device={device} setup={setup} stepData={stepData} devicesRefresh={loadDevices}/>
                         )
                     })
                 }
