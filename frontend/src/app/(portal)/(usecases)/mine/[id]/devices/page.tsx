@@ -47,6 +47,8 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
     const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
     const loadDevices = useCallback( () => {
+
+        LoadingState.startLoading();
         fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${profile.id.entityType.split("_")[0]}/${profile.id.id}/components`, {},
             {
                 headers: {
@@ -54,6 +56,7 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
                 }
             }).then((respond) => {
             SetDevices(respond.data);
+            LoadingState.endLoading();
         })
     } , [profile, setup])
 
