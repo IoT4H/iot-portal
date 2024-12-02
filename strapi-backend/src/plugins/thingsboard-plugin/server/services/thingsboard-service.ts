@@ -649,7 +649,51 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response: any) => {
         return response.data
       })
+  },
+  async deleteThingsboardComponentForTenant(tenantId: string, componentType: string, uuid: string) {
+    switch (componentType) {
+      case "dashboard":
+        return this.axiosAsTenant(tenantId, {
+          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard`, headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then((response: any) => response?.data);
+
+      case "assetprofile":
+        return this.axiosAsTenant(tenantId, {
+          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile`, headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then((response: any) => response?.data);
+
+      case "deviceprofile":
+        return this.axiosAsTenant(tenantId, {
+          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile`, headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then((response: any) => response?.data);
+
+      case "rulechain":
+        return this.axiosAsTenant(tenantId, {
+          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/`, headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then((response: any) => response?.data);
+
+      /*case "rulechainmetadata":
+        data.nodes = data.nodes.map((n) => {
+          delete n.id;
+          delete n.ruleChainId;
+          return n;
+        })
+        return this.axiosAsTenant(tenantId, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata`, params: { updateRelated: true }, headers: {
+            'Content-Type': 'application/json'
+          }, data: JSON.stringify(data)})
+          .then((response: any) => response?.data);*/
+    }
   }
-
-
 });

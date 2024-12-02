@@ -74,4 +74,20 @@ export default [
       ]
     },
   },
+  {
+    method: 'DELETE',
+    path: '/deployment/:setupId/:type/:did/delete',
+    handler: `plugin::${pluginId}.deployment.deleteComponent`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
 ]
