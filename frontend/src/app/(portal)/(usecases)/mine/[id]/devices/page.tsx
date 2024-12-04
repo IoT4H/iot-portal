@@ -7,30 +7,46 @@ import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinne
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 
 const dynamic = 'force-dynamic';
 
-const DeviceBox = ({device, setup, stepData } : {device: any, setup: any, stepData: any}) => {
+const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, setup: any, stepData: any, devicesRefresh: Function}) => {
 
 
     const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
 
+    const deleteDevice = useCallback( () => {
+
+        LoadingState.startLoading();
+        fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${device.id.entityType.split("_")[0].toLowerCase()}/${device.id.id}/delete`, {},
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then(() => {
+            LoadingState.endLoading();
+            devicesRefresh();
+        })
+    } , [device, setup])
+
+
     return (
-        <div key={device.id.id}  className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center ${device.active !==undefined && "border-l-4" } ${device.active ? "border-green-500" : "border-red-500"}`}>
+        <div className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center ${device.active !==undefined && "border-l-4" } ${device.active ? "border-green-500" : "border-red-500"}`}>
             <span>{device.label.replace(setup.name + " | ", "")}</span>
             <div className={"flex-shrink-0 ml-auto flex flex-row gap-2"}>
                 {stepData.data.flashProcess && <div title={"Flashen"} onClick={toggleFlashModalOpen}
-                                                    className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}>
+                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer hidden"}>
                     <CpuChipIcon className={"w-4 aspect-square"}/>
                     { flashModalOpen && <FlashProgress stepData={stepData} onClose={() => {}}/>}
                 </div>}
                 <div title={"Bearbeiten"}
-                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"}>
+                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer hidden"}>
                     <PencilIcon className={"w-4 aspect-square"}/>
                 </div>
-                <div title={"Löschen"}
+                <div title={"Löschen"} onClick={() => deleteDevice()}
                      className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"}>
                     <TrashIcon className={"w-4 aspect-square"}/>
                 </div>
@@ -46,17 +62,24 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
 
     const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
+    const loadDevices = useCallback( () => {
+
+        LoadingState.startLoading();
+        fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${profile.id.entityType.split("_")[0]}/${profile.id.id}/components`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then((respond) => {
+            SetDevices(respond.data);
+            LoadingState.endLoading();
+        })
+    } , [profile, setup])
+
     useEffect(() => {
 
         if (!!setup && !!profile) {
-            fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${profile.id.entityType.split("_")[0]}/${profile.id.id}/components`, {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${Auth.getToken()}`
-                    }
-                }).then((respond) => {
-                    SetDevices(respond.data);
-                })
+            loadDevices();
         }
 
     }, [profile, setup]);
@@ -75,7 +98,7 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
                                 "thingsboard_profile":  stepData.data.thingsboard_profile,
                                 "form_alternative_label": stepData.data.form_alternative_label,
                                 "form_alternative_label_required" : stepData.data.form_alternative_label_required
-                            }} step={stepData} triggerStateRefresh={() => {}}></DeviceSetupModal>
+                            }} step={stepData} triggerStateRefresh={() => loadDevices()}></DeviceSetupModal>
                             }
                         </>
                 }
@@ -87,7 +110,7 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
                 {
                     Array.isArray(devices) && devices.map((device: any) => {
                         return (
-                            <DeviceBox key={device.id} device={device} setup={setup} stepData={stepData}/>
+                            <DeviceBox key={device.id.id} device={device} setup={setup} stepData={stepData} devicesRefresh={loadDevices}/>
                         )
                     })
                 }
@@ -127,7 +150,7 @@ const Page = ({params}: { params: { id: number } }) => {
                     LoadingState.endLoading();
                 });
 
-                fetchAPI(`/api/thingsboard-plugin/deployment/${respond.id}/steps`, {},
+                fetchAPI(`/api/thingsboard-plugin/deployment/${params.id}/steps`, {},
                     {
                         headers: {
                             Authorization: `Bearer ${Auth.getToken()}`
