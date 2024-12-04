@@ -17,20 +17,36 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
     const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
 
+    const deleteDevice = useCallback( () => {
+
+        LoadingState.startLoading();
+        fetchAPI(`/api/thingsboard-plugin/deployment/${setup.id}/${device.id.entityType.split("_")[0].toLowerCase()}/${device.id.id}/delete`, {},
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then(() => {
+            LoadingState.endLoading();
+            devicesRefresh();
+        })
+    } , [device, setup])
+
+
     return (
-        <div key={device.id.id}  className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center ${device.active !==undefined && "border-l-4" } ${device.active ? "border-green-500" : "border-red-500"}`}>
+        <div className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center ${device.active !==undefined && "border-l-4" } ${device.active ? "border-green-500" : "border-red-500"}`}>
             <span>{device.label.replace(setup.name + " | ", "")}</span>
             <div className={"flex-shrink-0 ml-auto flex flex-row gap-2"}>
                 {stepData.data.flashProcess && <div title={"Flashen"} onClick={toggleFlashModalOpen}
-                                                    className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}>
+                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer hidden"}>
                     <CpuChipIcon className={"w-4 aspect-square"}/>
                     { flashModalOpen && <FlashProgress stepData={stepData} onClose={() => {}}/>}
                 </div>}
                 <div title={"Bearbeiten"}
-                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"}>
+                     className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer hidden"}>
                     <PencilIcon className={"w-4 aspect-square"}/>
                 </div>
-                <div title={"Löschen"}
+                <div title={"Löschen"} onClick={() => deleteDevice()}
                      className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"}>
                     <TrashIcon className={"w-4 aspect-square"}/>
                 </div>
@@ -94,7 +110,7 @@ const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, step
                 {
                     Array.isArray(devices) && devices.map((device: any) => {
                         return (
-                            <DeviceBox key={device.id} device={device} setup={setup} stepData={stepData} devicesRefresh={loadDevices}/>
+                            <DeviceBox key={device.id.id} device={device} setup={setup} stepData={stepData} devicesRefresh={loadDevices}/>
                         )
                     })
                 }

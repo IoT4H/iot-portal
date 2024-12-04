@@ -153,6 +153,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async deleteComponent(ctx){
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
     const tenentUID = te.firm.TenentUID;
-    return strapi.plugin(pluginId).service('thingsboardService').deleteThingsboardComponentForTenant(tenentUID, ctx.params.type.toUpperCase(), ctx.params.did)
+    return strapi.plugin(pluginId).service('thingsboardService').deleteThingsboardComponentForTenant(tenentUID, ctx.params.type.toLowerCase(), ctx.params.did)
   }
 });
