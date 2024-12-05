@@ -55,7 +55,11 @@ export class Auth {
             cache: "no-cache"
         });
 
-        return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        if(u.error.status == 401) {
+            this.logout();
+            return undefined;
+        }
+
         return u && { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
 
