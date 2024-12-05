@@ -55,12 +55,16 @@ export class Auth {
             cache: "no-cache"
         });
 
-        if(u.error.status == 401) {
+        if(u.error?.status === 401) {
             this.logout();
             return undefined;
         }
 
-        return u && { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        if(!!u) {
+            return { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        }
+
+        return undefined;
     }
 
     static isAuth(): boolean {
