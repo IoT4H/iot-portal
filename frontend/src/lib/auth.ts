@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 export type User = {
 
     auth: Auth;
+    email: string;
     firstname: string;
     middlename: string;
     lastname: string;
@@ -55,6 +56,7 @@ export class Auth {
         });
 
         return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        return u && { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
     }
 
     static isAuth(): boolean {
