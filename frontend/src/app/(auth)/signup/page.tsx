@@ -95,16 +95,21 @@ export default function Page() {
     if(signupConfirmed) {
         return <div
             className={"relative w-full max-w-screen-lg  py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
-            <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500"}>Vielen Dank!</h2>
+            <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500"}>{ emailSendConfirmed ? "Vielen Dank!" : "Fehler beim Email-Versand" } </h2>
             { emailSendConfirmed ?
-                <><p className={"p-8 text-center"}>Wir haben Ihnen eine Email geschickt, um ihre Email-Adresse zu verifizieren. <br/>Bitte nutzen Sie den Link in der Email, um diese zu bestätigen.</p>
-                <EnvelopeIcon className={"h-72 aspect-square"} /></> :
-                <><p className={"p-8 text-center"}>Wir haben <u>versucht</u> Ihnen eine Email
-                    zu schicken, um Ihre Email-Adresse zu verifizieren.<br/>
-                    <b className={"text-orange-500"}>Dabei ist es jedoch zu einem Fehler gekommen.</b> <br/>
-                    <b className={"text-orange-500"}>Bitte wenden Sie sich an das Team von IoT4H</b> um das Problem zu identifizieren und Ihren Account freizugeben.
-                </p>
-                <ExclamationTriangleIcon className={"h-72 aspect-square"} /></>
+                <div className={"flex  gap-4  flex-col md:flex-row items-center p-8"}>
+                    <EnvelopeIcon className={"h-32 md:h-44 aspect-square flex-shrink-0"} />
+                    <p className={"p-8 text-center"}>Wir haben Ihnen eine Email geschickt, um ihre Email-Adresse zu verifizieren.<br/>
+                        Bitte nutzen Sie den Link in der Email, um diese zu bestätigen.</p>
+                </div> :
+                <div className={"flex  gap-4  flex-col md:flex-row  items-center p-8"}>
+                    <ExclamationTriangleIcon className={" h-32 md:h-44 aspect-square flex-shrink-0"} />
+                    <p className={"p-8 text-center"}>Wir haben <u>versucht</u> Ihnen eine Email
+                        zu schicken, um Ihre Email-Adresse zu verifizieren.<br/>
+                        <b className={"text-orange-500"}>Dabei ist es jedoch zu einem Fehler gekommen.</b> <br/>
+                        <b className={"text-orange-500"}>Bitte wenden Sie sich an das Team von IoT4H</b> um das Problem zu identifizieren und Ihren Account freizugeben.
+                    </p>
+                </div>
             }
         </div>
     }
