@@ -83,7 +83,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     }
 
     const actionable = () => {
-        return (label.length > 0) && (!config.form_alternative_label_required || name.length > 0) && (description.length > 0);
+        return (label.length > 0) && (!config.form_alternative_label_required || name.length > 0);
     }
 
     useEffect(() => {
@@ -125,10 +125,11 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                         }
                         <div>
                             <FieldSetInput
-                                label={"Beschreibung"}
+                                label={"Beschreibung (Optional)"}
                                 multiline
                                 type="text"
-                                required
+                                placeholder={"Dieses Feld kann optional eine Erklärung zum Gerät enthalten."}
+                                value={""}
                                 name="description"
                                 className={"h-12"}
                                 onChange={(event: any) => SetDescription(event.currentTarget.value)}
