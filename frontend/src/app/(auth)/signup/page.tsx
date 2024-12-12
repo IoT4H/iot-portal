@@ -1,4 +1,6 @@
 "use client"
+import { tr } from "@faker-js/faker";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import Button from "@iot-portal/frontend/app/common/button";
 import { FieldSetCheckbox, FieldSetInput, RequiredStar } from "@iot-portal/frontend/app/common/FieldSet";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -16,6 +18,8 @@ export default function Page() {
     const urlparams = useParams();
 
     const [signupError, SetSignupError] = useState<any>(undefined);
+
+    const [signupConfirmed, SetSignupConfirmed] = useState<boolean>(false);
 
 
     const [firstname, SetFirstname] = useState("");
@@ -73,14 +77,28 @@ export default function Page() {
                     SetSignupError(res.error);
                 }
 
+                if(!res.error && !res.jwt) {
+                    SetSignupConfirmed(true);
+                }
+
                 LoadingState.endLoading();
             });
         }
     }, [formValid, firstname, lastname, email, password, legal, passwordMatch, emailMatch]);
 
+
+    if(signupConfirmed) {
+        return <div
+            className={"relative w-full max-w-screen-lg  py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
+            <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500"}>Vielen Dank!</h2>
+            <p className={"p-8 text-center"}>Wir haben Ihnen eine Email geschickt, um ihre Email-Adresse zu verifizieren. <br/>Bitte nutzen Sie den Link in der Email, um diese zu bestätigen.</p>
+            <EnvelopeIcon className={"h-72 aspect-square"} />
+        </div>
+    }
+
     return <div
         className={"relative w-full max-w-screen-lg  py-8 flex flex-col justify-center items-center flex-wrap top-0 left-0"}>
-        <form className="flex-auto max-h-full sticky top-0 pl-4" onSubmit={(event) => {event.preventDefault();signUp();}}>
+    <form className="flex-auto max-h-full sticky top-0 pl-4" onSubmit={(event) => {event.preventDefault();signUp();}}>
             <h2 className={"dark:text-white font-bold text-3xl border-solid border-b-4 inline-block mb-2 pr-2 py-1 border-orange-500"}>Registrieren</h2>
             <p className={"mx-2 my-4"}>Registriere dich jetzt und tauche ein in die faszinierende Welt des Internets der
                 Dinge (IoT). Mit deinem Konto erhältst du Zugang zu exklusiven Inhalten, Tutorials, Projekten und einer
