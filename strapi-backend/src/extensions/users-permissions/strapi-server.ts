@@ -139,13 +139,15 @@ export default (plugin) => {
     const sanitizedUser = await sanitizeUser(user, ctx);
 
     if (settings.email_confirmation) {
+      let emailSendSuccess = true;
       try {
         await strapi.service('plugin::users-permissions.user').sendConfirmationEmail(sanitizedUser);
       } catch (err) {
-        throw new ApplicationError(err.message);
+        emailSendSuccess = false;
+        console.error(`${err.message} ${user.email}`);
       }
 
-      return ctx.send({ user: sanitizedUser });
+      return ctx.send({ emailSendSuccess: emailSendSuccess, user: sanitizedUser });
     }
 
     const jwt = strapi.service('plugin::users-permissions.jwt').issue(_.pick(user, ['id']));

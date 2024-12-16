@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 export type User = {
 
     auth: Auth;
+    email: string;
     firstname: string;
     middlename: string;
     lastname: string;
@@ -54,7 +55,16 @@ export class Auth {
             cache: "no-cache"
         });
 
-        return u && { auth: this, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        if(u.error?.status === 401) {
+            this.logout();
+            return undefined;
+        }
+
+        if(!!u) {
+            return { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+        }
+
+        return undefined;
     }
 
     static isAuth(): boolean {
