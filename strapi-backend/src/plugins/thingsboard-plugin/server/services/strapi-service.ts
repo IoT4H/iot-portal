@@ -422,7 +422,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               strapi.log.warn(`${data.step.data.__component} action failed`);
               reject(reason);
             });
+          } else {
+            returnPromise.then((response) => resolve(response), (reason) => reject(reason));
           }
+
 
         }
         break;

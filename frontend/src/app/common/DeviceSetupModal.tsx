@@ -9,7 +9,7 @@ import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMappin
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Function, config: any, step: any, triggerStateRefresh?: Function}) => {
 
@@ -18,6 +18,8 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [label, SetLabel] = useState<string>("");
     const [description, SetDescription] = useState<string>("");
     const [gateway, SetGateway] = useState<boolean>(false);
+
+    const [flashProcess, switchFlashProcess] = useState<boolean>(false);
 
 
     const [relations, SetRelations] = useState([]);
@@ -44,16 +46,28 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                 }
             })
         }).then((response) => {
-            console.debug(response)
+            console.log(response)
             if(response && response.id ) {
                 SetComponent(response.id);
             }
-            if(!step.data.flashProcess) {
-                if(!!onClose) onClose();
-            } else if (response.error) {
+
+
+            if (response.error) {
+                console.log("TEST_2")
                 SetError(response.error.message)
             }
+
+            if(step.data.flashProcess === true) {
+                switchFlashProcess(true);
+            }
+
+            if(!response.error && step.data.flashProcess !== true) {
+                console.log("TEST_")
+                if(!!onClose) onClose();
+            }
+
         }, (reason) => {
+            console.log("TEST_3")
             SetError(reason.error.message)
         }).finally(() => {
             LoadingState.endLoading();
@@ -94,8 +108,14 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         console.log(name, relations)
     }, [name, relations]);
 
+    useEffect(() => {
+        if(!(!step.data.setup || step.state.setup.progress < 100)) {
+            switchFlashProcess(true);
+        }
+    }, [step]);
+
     return <>
-    { (!step.data.setup || step.state.setup.progress < 100) ?
+    { (!flashProcess) ?
         <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
             <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
                 <div className={""}>
