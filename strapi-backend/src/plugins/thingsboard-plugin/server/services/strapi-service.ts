@@ -359,7 +359,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     });
 
   },
-  async stepAction(deploymentId: number, data: any) {
+  async stepAction(deploymentId: number, data: any, ignoreStepsProgressUpdate = false) {
+
+    let _ignoreStepsProgressUpdate = ignoreStepsProgressUpdate;
 
     return new Promise<void>(async (resolve, reject) => {
 
@@ -369,18 +371,24 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     let returnPromise;
 
+    if((await this.getInstructionStepsProgressCompleteFromDeployment(deploymentId)).complete) {
+      _ignoreStepsProgressUpdate = true;
+    }
+
     switch (data.step.data.__component) {
       case "instructions.setup-instruction":
         if(data.parameter.flash) {
-          returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-            ...data.step.data,
-            __component: data.step.data.__component,
-            id: data.step.data.id,
-            thingsboard_profile: data.step.data.thingsboard_profile
-          }, null, {
-            flash: { progress: 100 }
-          });
-          returnPromise.then((response) => resolve(response), (reason) => reject(reason));
+          if(!_ignoreStepsProgressUpdate) {
+            returnPromise = strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+              ...data.step.data,
+              __component: data.step.data.__component,
+              id: data.step.data.id,
+              thingsboard_profile: data.step.data.thingsboard_profile
+            }, null, {
+              flash: {progress: 100}
+            });
+            returnPromise.then((response) => resolve(response), (reason) => reject(reason));
+          }
         } else {
           returnPromise = strapi.plugin(pluginId)
             .service('thingsboardService').setupThingsboardDeviceAsset(
@@ -392,27 +400,32 @@ export default ({ strapi }: { strapi: Strapi }) => ({
                 label: data.parameter.label
               }
             );
-          returnPromise = returnPromise.then((response) => {
+          if(!_ignoreStepsProgressUpdate) {
+            returnPromise = returnPromise.then((response) => {
+                strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
+                  ...data.step.data,
+                  __component: data.step.data.__component,
+                  id: data.step.data.id,
+                  thingsboard_profile: data.step.data.thingsboard_profile,
+                  device: response.id
+                }, null, {
+                  setup: {progress: 100}
+                });
+                resolve(response);
+            }, (reason) => {
               strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
                 ...data.step.data,
                 __component: data.step.data.__component,
                 id: data.step.data.id,
-                thingsboard_profile: data.step.data.thingsboard_profile,
-                device: response.id
-              }, null, {
-                setup: {progress: 100}
-              });
-              resolve(response);
-          }, (reason) => {
-            strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {
-              ...data.step.data,
-              __component: data.step.data.__component,
-              id: data.step.data.id,
-              thingsboard_profile: data.step.data.thingsboard_profile
-            }, null, { setup: { progress: 0 }});
-            strapi.log.warn(`${data.step.data.__component} action failed`);
-            reject(reason);
-          });
+                thingsboard_profile: data.step.data.thingsboard_profile
+              }, null, { setup: { progress: 0 }});
+              strapi.log.warn(`${data.step.data.__component} action failed`);
+              reject(reason);
+            });
+          } else {
+            returnPromise.then((response) => resolve(response), (reason) => reject(reason));
+          }
+
 
         }
         break;

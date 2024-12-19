@@ -15,6 +15,8 @@ import * as React from "react";
 import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import ConfettiExplosion from "react-confetti-explosion";
 
+
+//TODO: clean up and seperate stepData information between step related data and device related data
 const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: any}) => {
 
     enum Steps {
@@ -32,7 +34,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     }
 
     const StepsData = [
-        {name: Steps.VORBEREITUNG, note: "Treiber installieren"},
+        {name: Steps.VORBEREITUNG, note: "u. U. Treiber installieren"},
         {name: Steps.ANSCHLIESSEN, note: "Verbindung mit PC herstellen"},
         {name: Steps.VERBINDEN, note: "Verbindung herstellen mit ESP"},
         {name: Steps.FLASHEN, note: "Firmware auf ESP laden"},
@@ -224,11 +226,15 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     }, [esploader]);
 
     useEffect(() => {
+        try {
             // @ts-ignore
             navigator.serial.addEventListener("connect", deviceConnect);
 
             // @ts-ignore
             navigator.serial.addEventListener("disconnect", deviceDisconnect);
+        }catch (e) {
+            console.error(e);
+        }
     }, []);
 
     useEffect(() => {
@@ -376,9 +382,8 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                         <div className={" flex flex-col place-content-center h-full"}>
                             {
                             // @ts-ignore
-                            window.navigator.serial && (<span className={"text-center text-red-500 font-bold mb-2"}> Nutzen Sie einen unterstützen Browser für diese Funktion! <span className={"block"}>Chrome oder Edge ab Version 89 </span><span className={"block"}>Opera ab Version 75</span></span>)
+                            !(window.navigator.serial) && (<span className={"text-center text-red-500 font-bold mb-2"}> Nutzen Sie einen unterstützen Browser für diese Funktion! <span className={"block"}>Chrome oder Edge ab Version 89 </span><span className={"block"}>Opera ab Version 75</span></span>)
                             }
-                            <ArrowDownTrayIcon className={"h-16 mb-8"} />
                             <div>
                                 {
                                     !!stepData.data.flashConfig && ( <BlocksRenderer content={stepData.data.flashConfig.preRequirementText|| []} className={"text-center"} /> )
@@ -590,11 +595,11 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
     const closeFunction = () => {
         hardReset();
-        onClose && onClose(step === Steps.FERTIG);
+        !!onClose && onClose(step === Steps.FERTIG);
     }
 
 
-    return  <ModalUI name={"ESP Flashen"} onClose={() => closeFunction()}>
+    return  <ModalUI name={"ESP Flashen"} onClose={() => closeFunction()} canClose={!flashingInProgress || step === Steps.FERTIG}>
 
 
         <div className={"flex flex-row h-auto min-h-32 block items-strech"}>
