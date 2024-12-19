@@ -15,6 +15,8 @@ import * as React from "react";
 import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
 import ConfettiExplosion from "react-confetti-explosion";
 
+
+//TODO: clean up and seperate stepData information between step related data and device related data
 const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: any}) => {
 
     enum Steps {
@@ -590,11 +592,11 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
     const closeFunction = () => {
         hardReset();
-        onClose && onClose(step === Steps.FERTIG);
+        !!onClose && onClose(step === Steps.FERTIG);
     }
 
 
-    return  <ModalUI name={"ESP Flashen"} onClose={() => closeFunction()}>
+    return  <ModalUI name={"ESP Flashen"} onClose={() => closeFunction()} canClose={!flashingInProgress || step === Steps.FERTIG}>
 
 
         <div className={"flex flex-row h-auto min-h-32 block items-strech"}>
