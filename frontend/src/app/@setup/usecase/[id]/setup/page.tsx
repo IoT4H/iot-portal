@@ -47,7 +47,7 @@ export default function Start({params}: { params: { id: number } }) {
     const [toDeployedSetupLink, SettoDeployedSetupLink] = useState("");
     const toDeployedSetup = useRef<HTMLAnchorElement>();
     // @ts-ignore
-    const hiddenLink = <Link href={toDeployedSetupLink} className={"hidden"} ref={toDeployedSetup}></Link>;
+    const hiddenLink = <Link href={toDeployedSetupLink} replace={true} className={"hidden"} ref={toDeployedSetup}></Link>;
 
 
     const setupStart = () => {
