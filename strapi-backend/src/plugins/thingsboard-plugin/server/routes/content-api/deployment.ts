@@ -85,6 +85,22 @@ export default [
   },
   {
     method: 'GET',
+    path: '/deployment/:setupId/:type/exist',
+    handler: `plugin::${pluginId}.deployment.nameAlreadyExist`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    },
+  },
+  {
+    method: 'GET',
     path: '/deployment/:setupId/dashboards',
     handler: `plugin::${pluginId}.deployment.getDashboards`,
     config: {

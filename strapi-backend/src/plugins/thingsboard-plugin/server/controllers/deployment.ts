@@ -154,5 +154,13 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
     const tenentUID = te.firm.TenentUID;
     return strapi.plugin(pluginId).service('thingsboardService').deleteThingsboardComponentForTenant(tenentUID, ctx.params.type.toLowerCase(), ctx.params.did)
+  },
+  async nameAlreadyExist(ctx) {
+    console.warn(ctx.query)
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", ctx.params.setupId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    const f = strapi.plugin(pluginId).service('thingsboardService').getThingsboardDeviceOrAssetByName(tenentUID, ctx.params.type.toUpperCase(), ctx.query.search);
+    console.warn(f);
+    return f;
   }
 });
