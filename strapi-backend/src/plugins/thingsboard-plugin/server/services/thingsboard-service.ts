@@ -644,6 +644,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
 
   },
+  async getThingsboardDeviceOrAssetByName(tenantId: string, componentType: "ASSET" | "DEVICE", name: string) {
+    switch (componentType) {
+      case "ASSET":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/assets?assetName=${encodeURI(name)}`,  headers: {
+            'Content-Type': 'application/json'
+          }})
+          .then((response: any) => {
+            return response.data
+          }).catch(reason => {
+            console.error(reason)
+          })
+      case "DEVICE":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/devices?deviceName=${encodeURI(name)}`, headers: {
+            'Content-Type': 'application/json'
+          }})
+          .then((response: any) => {
+            return response.data
+          }).catch(reason => {
+            return reason
+          })
+    }
+
+  },
   async getDeviceCredentialsForDeploymentByUUID(tenantId: string, componentId: string){
     return  this.axiosAsTenant(tenantId,{ method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${componentId}/credentials` })
       .then((response: any) => {
