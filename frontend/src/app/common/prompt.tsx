@@ -5,14 +5,17 @@ import {
     QuestionMarkCircleIcon,
     InformationCircleIcon
 } from "@heroicons/react/24/solid";
+import React from "react";
 import { createPortal } from "react-dom";
 
 export enum PromptType { Default, Request , Warning , Error }
 
-export type PromptAction = { text: string, actionFunction: Function };
+type HeroIcon = React.ForwardRefExoticComponent<Omit<React.SVGProps<SVGSVGElement>, "ref"> & { title?: string | undefined; titleId?: string | undefined; } & React.RefAttributes<SVGSVGElement>>;
+
+export type PromptAction = { Icon?: HeroIcon, className?: string, text: string, actionFunction: Function };
 
 export type PromptContext = {
-    type: PromptType, text: string, actions : PromptAction[], onClose: Function, title?: string
+    type: PromptType, text: string | React.ReactNode, actions : PromptAction[], onClose: Function, title?: string
 }
 
 export const Prompt = (context: PromptContext) => {
@@ -87,7 +90,7 @@ export const Prompt = (context: PromptContext) => {
             </div>
             <div className={"px-6 py-3 flex flex-row gap-8 justify-around"}>
                 { context.actions.map((action) => {
-                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={"bg-orange-500/50 hover:bg-orange-500 cursor-pointer p-3 px-8 w-full text-center rounded"}>{action.text}</div>
+                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={`bg-orange-500/50 hover:bg-orange-500 cursor-pointer p-3 px-8 w-full justify-center rounded flex flex-row items-center gap-1 ${action.className}`}>{ action.Icon && (<action.Icon className={"h-6 inline"}/>)}{action.text}</div>
                 })}
             </div>
         </div>, document.getElementById("promptArea")!)

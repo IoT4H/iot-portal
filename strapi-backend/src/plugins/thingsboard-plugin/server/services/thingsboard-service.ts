@@ -644,6 +644,29 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
 
   },
+  async getThingsboardDeviceOrAssetByName(tenantId: string, componentType: "ASSET" | "DEVICE", name: string) {
+    switch (componentType) {
+      case "ASSET":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/assets?assetName=${encodeURI(name)}`,  headers: {
+            'Content-Type': 'application/json'
+          }})
+          .then((response: any) => {
+            return response.data
+          }).catch(reason => {
+            console.error(reason)
+          })
+      case "DEVICE":
+        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/tenant/devices?deviceName=${encodeURI(name)}`, headers: {
+            'Content-Type': 'application/json'
+          }})
+          .then((response: any) => {
+            return response.data
+          }).catch(reason => {
+            return reason
+          })
+    }
+
+  },
   async getDeviceCredentialsForDeploymentByUUID(tenantId: string, componentId: string){
     return  this.axiosAsTenant(tenantId,{ method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${componentId}/credentials` })
       .then((response: any) => {
@@ -651,53 +674,91 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       })
   },
   async deleteThingsboardComponentForTenant(tenantId: string, componentType: string, uuid: string) {
-    switch (componentType) {
-      case "dashboard":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${uuid}`})
-          .then((response: any) => response?.data);
+    return new Promise((resolve, reject) => {
+      console.log("delete ",tenantId, componentType, uuid)
+      switch (componentType) {
+        case "dashboard":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+                if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
+            );
 
-      case "asset":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset/${uuid}`})
-          .then(
-            (response: any) => {
-             return response?.data
-            }
-          ).catch(reason =>
-          console.error(reason)
+        case "asset":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+              if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
           );
 
-      case "assetprofile":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${uuid}`})
-          .then((response: any) => response?.data);
+        case "assetprofile":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+              if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
+          );
 
-      case "device":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${uuid}`})
-          .then((response: any) => response?.data);
+        case "device":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+              if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
+          );
 
-      case "deviceprofile":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${uuid}`})
-          .then((response: any) => response?.data);
+        case "deviceprofile":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+              if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
+          );
 
-      case "rulechain":
-        return this.axiosAsTenant(tenantId, {
-          method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${uuid}`})
-          .then((response: any) => response?.data);
+        case "rulechain":
+          this.axiosAsTenant(tenantId, {
+            method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${uuid}`})
+            .then((response: any) => resolve(response?.data)).catch(reason => {
+              if(reason.response.status === 404) {
+                  resolve("already doesn't exist")
+                }
+                reject(reason);
+              }
+          );
 
-      /*case "rulechainmetadata":
-        data.nodes = data.nodes.map((n) => {
-          delete n.id;
-          delete n.ruleChainId;
-          return n;
-        })
-        return this.axiosAsTenant(tenantId, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata/${uuid}`, params: { updateRelated: true }, headers: {
-            'Content-Type': 'application/json'
-          }, data: JSON.stringify(data)})
-          .then((response: any) => response?.data);*/
-    }
-  }
-});
+        /*case "rulechainmetadata":
+          data.nodes = data.nodes.map((n) => {
+            delete n.id;
+
+            delete n.ruleChainId;
+            return n;
+          })
+          return this.axiosAsTenant(tenantId, {method: 'DELETE', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/metadata/${uuid}`, params: { updateRelated: true }, headers: {
+              'Content-Type': 'application/json'
+            }, data: JSON.stringify(data)})
+            .then((response: any) => response?.data);*/
+      }
+    })
+  },
+  async deleteThingsboardComponentsForTenant(tenantId: string, componentType: string, uuids: string[]) {
+    return Promise.all(uuids.map(uuid => this.deleteThingsboardComponentForTenant(tenantId, componentType, uuid)));
+  },
+}
+);

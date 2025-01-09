@@ -6,10 +6,13 @@ import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
+import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
 import { useEffect, useReducer, useState } from "react";
+
+enum overlaps { undefined, OVERLAP , LOADING , NO_OVERLAP};
 
 const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Function, config: any, step: any, triggerStateRefresh?: Function}) => {
 
@@ -96,8 +99,10 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         })
     }
 
+    const [overlapStatus, SetOverlapStatus] = useState<overlaps>(overlaps.undefined)
+
     const actionable = () => {
-        return (label.length > 0) && (!config.form_alternative_label_required || name.length > 0);
+        return (label.length > 0) && (!config.form_alternative_label_required || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP) );
     }
 
     useEffect(() => {
@@ -113,6 +118,26 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
             switchFlashProcess(true);
         }
     }, [step]);
+
+    useEffect(() => {
+        if(name) {
+            SetOverlapStatus(overlaps.LOADING);
+            fetchAPI(`/api/thingsboard-plugin/deployment/${config.deployment}/ASSET/exist`, { search: name }, {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                },
+            }).then((response) => {
+                if(response.id?.id) {
+                    SetOverlapStatus(overlaps.OVERLAP);
+                }
+                console.log(response)
+                if(response.error?.status == 404) {
+                    SetOverlapStatus(overlaps.NO_OVERLAP);
+                }
+            })
+        }
+
+    }, [name]);
 
     return <>
     { (!flashProcess) ?
@@ -139,7 +164,13 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                         required
                                         name="name"
                                         onChange={(event: any) => SetName(event.currentTarget.value)}
-                                    ></FieldSetInput>
+                                    >
+                                        {
+                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{config.form_alternative_label} bereits in Verwendung!</span> ||
+                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{config.form_alternative_label} noch nicht verwendet!</span> ||
+                                            overlapStatus === overlaps.LOADING && <><span>Prüft...</span></>
+                                        }
+                                    </FieldSetInput>
                                 </div>
                             )
                         }
