@@ -1,18 +1,16 @@
 "use client"
-import { CursorArrowRaysIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon } from "@heroicons/react/20/solid";
+import { CursorArrowRaysIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
+import Status from "@iot-portal/frontend/app/(portal)/deployment-status";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
-import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
+import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
-import { usePathname } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
-import {
-    PhotoIcon, WrenchScrewdriverIcon
-} from "@heroicons/react/20/solid";
-import Status from "@iot-portal/frontend/app/(portal)/deployment-status";
+import { usePathname, useRouter } from "next/navigation";
+import React, { Suspense, useCallback, useEffect, useReducer, useState } from "react";
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +18,8 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
 
 
     const [setup, SetSetup] = useState<any>();
+
+    const router = useRouter();
 
     const pathname = usePathname()
 
@@ -68,6 +68,23 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
     const [setupDevice, SetSetupDevice] = useState<boolean | undefined>(undefined);
 
 
+    const [deletePrompt, toggleDeletePrompt] = useReducer(prevState => !prevState, false);
+
+    const deleteUseCase = useCallback(() => {
+            LoadingState.startLoading();
+            fetchAPI(`/api/deployments/${props.params.id}`, { }, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            }).then((respond) => {
+                router.push("/mine/");
+            }).finally(() => {
+                LoadingState.endLoading();
+            })
+    }, []);
+
+
     return (
         <>
         <Suspense> {
@@ -113,6 +130,8 @@ export default function Layout(props: { children: React.ReactNode, params: {  id
                                 <Suspense>
                                     { setupDevice == false && <Tab name={"Geräte & Sensoren"} link={`/mine/${props.params.id}/devices/`}/> }
                                 </Suspense>
+                                <Tab name={""} Icon={TrashIcon} className={"ml-auto bg-red-500/40 hover:border-b-transparent"} onClick={() => toggleDeletePrompt()}/>
+                                { deletePrompt && <Prompt type={PromptType.Warning} text={<>Diese Aktion ist unwiderruflich. Dabei werden alle Verknüpften Daten aus Ihrem Anwendungsfall <b>&quot; {setup.name} &quot;</b> gelöscht. Sind Sie sich sicher, dass Sie <b>&quot; {setup.name} &quot;</b> löschen wollen? </>} actions={[{text: "Löschen", actionFunction: () => deleteUseCase(), className: "bg-red-500 text-white", Icon: TrashIcon}, { text: "Abbruch", className: "bg-gray-400 ", actionFunction: () => {}}]} onClose={() => toggleDeletePrompt()} />}
                             </div>
                             <div className={"w-full"}>
                                 {
