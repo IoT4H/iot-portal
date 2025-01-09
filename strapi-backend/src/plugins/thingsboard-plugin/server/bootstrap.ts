@@ -63,6 +63,14 @@ export default ({ strapi }: { strapi: Strapi }) => {
     async afterUpdateMany(event: any) {
       const deployments = await strapi.query('api::deployment.deployment').findMany(event.params);
 
+    },
+    async beforeDelete(event: any) {
+      await strapi.plugin('thingsboard-plugin').service('strapiService').deleteAllThingsboardComponentOfDeployment(Number(event.params.where.id));
+    },
+    async beforeDeleteMany(event: any) {
+      await Promise.all(event.params.where.$and[0].id.$in.map(async id => {
+        return await strapi.plugin('thingsboard-plugin').service('strapiService').deleteAllThingsboardComponentOfDeployment(Number(id));
+      }));
     }
   });
 

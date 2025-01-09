@@ -466,5 +466,25 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return JSON.parse(JSON.stringify(objectToReplaceWithin).replace(new RegExp(Object.keys(replacementDictionary).join("|"), "gim"), (matched) => {
       return replacementDictionary[matched]
     }))
+  },
+  async deleteAllThingsboardComponentOfDeployment(deploymentId: number) {
+    const profiles = (await this.getComponentsFromDeployment(deploymentId)).sort((a, b) => {
+      const ref = ["dashboard","assetprofile", "deviceprofile","rulechain"];
+      return ref.indexOf(a.entityType.replace("_","").toLowerCase()) - ref.indexOf(b.entityType.replace("_","").toLowerCase());
+    });
+    console.log("profiles:", profiles)
+    const DeviceAndAssetProfiles = profiles.filter(p => ["assetprofile", "deviceprofile"].includes(p.entityType.replace("_","").toLowerCase()));
+
+    const te: any = await strapi.entityService.findOne("api::deployment.deployment", deploymentId, {populate: { firm: { fields: ["TenentUID"]}}})
+    const tenentUID = te.firm.TenentUID;
+    await Promise.all(DeviceAndAssetProfiles.flatMap(async (p: any) => {
+      const infos = await strapi.plugin('thingsboard-plugin').service('thingsboardService').getThingsboardDevicesInfosOrAssetInfosByProfile(tenentUID, p.entityType.split("_")[0], p.id, { page: 0, pageSize: 100 });
+      return Promise.all(infos.data.map( async (ae: any) => {
+        return await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteThingsboardComponentForTenant(tenentUID, ae.id.entityType.replace("_","").toLowerCase(), ae.id.id)
+      }));
+    }));
+    await Promise.allSettled(profiles.map(async (p: any) => {
+      return await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteThingsboardComponentForTenant(tenentUID, p.entityType.replace("_","").toLowerCase(), p.id)
+    }));
   }
 });
