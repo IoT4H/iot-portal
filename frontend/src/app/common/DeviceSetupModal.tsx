@@ -146,7 +146,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
             <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
                 <div className={""}>
-                    <p className={"w-full text-center mt-4"}>Geben Sie nun die Informationen an.</p>
+                    <p className={"w-full text-center mt-4 text-pretty"}>Folgende Informationen werden benötigt,<br/> um die richtigen Konfigurationen in der Datenplattform zu hinterlegen.</p>
                     <div className={"flex flex-col gap-6 pt-4"}>
                         <div>
                             <FieldSetInput
