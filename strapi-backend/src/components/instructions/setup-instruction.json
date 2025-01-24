@@ -56,6 +56,10 @@
       "type": "component",
       "repeatable": false,
       "component": "firmware.flash-config"
+    },
+    "form_alternative_label_pattern": {
+      "type": "string",
+      "regex": "(\\[(\\d|\\w|-)*\\](?:\\{\\d*?,\\d*?\\})|.)*"
     }
   }
 }

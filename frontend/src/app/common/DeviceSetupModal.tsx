@@ -1,6 +1,6 @@
 "use client"
 
-import { FieldSetInput } from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetInput, FieldSetPatternInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -23,6 +23,8 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [gateway, SetGateway] = useState<boolean>(false);
 
     const [flashProcess, switchFlashProcess] = useState<boolean>(false);
+
+    console.log(config)
 
 
     const [relations, SetRelations] = useState([]);
@@ -156,7 +158,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                             ></FieldSetInput>
                         </div>
                         {
-                            (config.form_alternative_label_required) && (
+                            (config.form_alternative_label_required) && ( !!!step.data.form_alternative_label_pattern ? (
                                 <div>
                                     <FieldSetInput
                                         label={config.form_alternative_label}
@@ -172,7 +174,23 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                         }
                                     </FieldSetInput>
                                 </div>
-                            )
+                            ) : (
+                                <div>
+                                    <FieldSetPatternInput
+                                        label={step.data.form_alternative_label}
+                                        required
+                                        name="name"
+                                        pattern={step.data.form_alternative_label_pattern}
+                                        onChange={(value: string) => { SetName(value)}}
+                                    >
+                                        {
+                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{config.form_alternative_label} bereits in Verwendung!</span> ||
+                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{config.form_alternative_label} noch nicht verwendet!</span> ||
+                                            overlapStatus === overlaps.LOADING && <><span>Prüft...</span></>
+                                        }
+                                    </FieldSetPatternInput>
+                                </div>
+                            ))
                         }
                         <div>
                             <FieldSetInput

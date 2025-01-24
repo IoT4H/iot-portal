@@ -2,6 +2,7 @@
 
 
 import { CheckIcon } from "@heroicons/react/24/solid";
+import { createRef, useEffect, useReducer, useRef, useState } from "react";
 import * as React from "react";
 
 export function RequiredStar (p: any) {
@@ -74,5 +75,114 @@ export function FieldSetCheckbox(p: any) {
                 </label>
             </div>
         </>
+    );
+}
+
+
+export function FieldSetPatternInput(p: any) {
+
+    let {children, pattern, onChange,  ...props }  = p;
+
+    const [inputMaskParts, SetInputMaskParts] = useState<RegExpMatchArray | null>(pattern.match(/(?:\[[a-zA-Z0-9\-\^]+\](?:\{[0-9,]+\})?|.)/gm));
+
+    const [output, SetOutput] = useState<string>("");
+
+    const outputRef = useRef<HTMLInputElement>(null);
+
+    const [indexs, SetIndexs] = useState<number[]>([]);
+
+    const [inputArray, SetInputArray] = useReducer((state: string[], action: {  type: "init" | "update"; index?: number, value: any }) => {
+
+        if(action.type === "init") {
+            console.log(state, action);
+            return action.value;
+        } else if(action.type === "update" && action.index !== undefined) {
+            let c = state;
+            c[action.index] = action.value;
+            console.log("refreshed", c, action);
+            SetOutput((c || []).join(""))
+            return c
+        } else {
+            console.log("???: ",state, action)
+        }
+    }, []);
+
+    const [elRefs, setElRefs] = React.useState<any[]>([]);
+
+    useEffect(() => {
+
+
+        if(inputArray?.length === 0 ) {
+            let initArray = new Array((inputMaskParts || []).length)
+                .fill(null);
+            // add or remove refs
+            setElRefs((elRefs) =>
+                initArray.map((_, i) => elRefs[i] || createRef<HTMLInputElement>()),
+            );
+
+            SetInputArray({ type: "init", value: initArray});
+        }
+        let setOfIndicies: number[] = [];
+        (inputMaskParts || []).forEach((p, i ,a) => {
+            if(p.startsWith("[")) {
+                setOfIndicies.push(i);
+                SetInputArray({ type: "update", index: i, value: ""});
+            } else if (p === "/") {
+                SetInputArray({ type: "update", index: i, value: ""});
+            } else {
+                SetInputArray({ type: "update", index: i, value: p});
+            }
+        })
+        SetIndexs(setOfIndicies);
+    }, [inputMaskParts]);
+
+    useEffect(() => {
+        p.onChange(output);
+    }, [output]);
+
+    return (
+        <div className={`relative flex flex-col h-auto ${props.className || ""}`}>
+            <label htmlFor={props.id} className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50">
+                {props.label}{props.required && (<RequiredStar />)}
+            </label>
+            <div className="mt-2">
+                <div className={" font-mono text-black bg-white rounded-md focus-within:ring-2 ring-amber-500 w-max overflow-hidden px-1 has-[:invalid]:ring-red-500 has-[:invalid]:ring-2"}>
+                    <input type={"text"} ref={outputRef} className={"hidden"} value={output} required={props.required} pattern={pattern}/>
+                    {
+                        (inputMaskParts || []).map((p, i ,a) => {
+                            if(p.startsWith("[")) {
+                                let amount = 1;
+                                const checkAmount = p.match(/(?<=\{)\d+(?=\})/);
+                                if(checkAmount) {
+                                    amount = Number(checkAmount);
+                                }
+                                return <>
+                                    <input key={i} ref={elRefs[i]} onChange={(event) => {
+                                        SetInputArray({ type: "update", index: i, value: event.currentTarget.value});
+
+                                        // if(event.currentTarget.validity) {
+                                        //     let fi = indexs.findIndex((v, vi, va) => v === i);
+                                        //     console.log(fi, i, "find index");
+                                        //     if(fi !== -1) {
+                                        //         let refI = indexs[fi + 1];
+                                        //         console.log(refI, fi, "ref index");
+                                        //         console.log(elRefs[refI]);
+                                        //     }
+                                        // }
+                                    }} className={"font-mono text-black border-0 outline-0 ring-0 border-b-2 border-grey-500/80 focus:outline-0 focus:ring-0 invalid:bg-red-300 box-content px-1"} type={"text"} style={{width: `${amount}ch`}} maxLength={amount} minLength={amount} pattern={p} />
+                                </>;
+                            } else if (p === "/") {
+                                return <></>
+                            } else {
+                                return <span key={i} className={" font-mono text-gray-400"}>{p}</span>;
+                            }
+                        })
+                    }
+                </div>
+            </div>
+            { children && ( Array.isArray(children ) &&  children.map((child: any) => {
+                return child;
+            }) || children ) }
+        </div>
     );
 }
