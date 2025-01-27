@@ -1,6 +1,6 @@
 "use client"
 
-import { FieldSetInput } from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetInput, FieldSetPatternInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -23,6 +23,8 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [gateway, SetGateway] = useState<boolean>(false);
 
     const [flashProcess, switchFlashProcess] = useState<boolean>(false);
+
+    console.log(config)
 
 
     const [relations, SetRelations] = useState([]);
@@ -144,7 +146,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
         <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
             <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
                 <div className={""}>
-                    <p className={"w-full text-center mt-4"}>Geben Sie nun die Informationen an.</p>
+                    <p className={"w-full text-center mt-4 text-pretty"}>Folgende Informationen werden benötigt,<br/> um die richtigen Konfigurationen in der Datenplattform zu hinterlegen.</p>
                     <div className={"flex flex-col gap-6 pt-4"}>
                         <div>
                             <FieldSetInput
@@ -156,7 +158,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                             ></FieldSetInput>
                         </div>
                         {
-                            (config.form_alternative_label_required) && (
+                            (config.form_alternative_label_required) && ( !!!step.data.form_alternative_label_pattern ? (
                                 <div>
                                     <FieldSetInput
                                         label={config.form_alternative_label}
@@ -172,7 +174,23 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                         }
                                     </FieldSetInput>
                                 </div>
-                            )
+                            ) : (
+                                <div>
+                                    <FieldSetPatternInput
+                                        label={step.data.form_alternative_label}
+                                        required
+                                        name="name"
+                                        pattern={step.data.form_alternative_label_pattern}
+                                        onChange={(value: string) => { SetName(value)}}
+                                    >
+                                        {
+                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{config.form_alternative_label} bereits in Verwendung!</span> ||
+                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{config.form_alternative_label} noch nicht verwendet!</span> ||
+                                            overlapStatus === overlaps.LOADING && <><span>Prüft...</span></>
+                                        }
+                                    </FieldSetPatternInput>
+                                </div>
+                            ))
                         }
                         <div>
                             <FieldSetInput

@@ -60,7 +60,7 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                             }
                             <button
                                 className={"absolute bottom-2 right-2 text-right mt-auto ml-auto font-bold bg-orange-500/90 text-white pl-4 pr-2 py-2 w-max flex flex-row gap-2 items-center invisible group-hover/card:visible"}>
-                                <span>Erfahre mehr</span><ChevronRightIcon className={"h-6"}/></button>
+                                <span>Mehr erfahren</span><ChevronRightIcon className={"h-6"}/></button>
 
                         </div>
                         <div
