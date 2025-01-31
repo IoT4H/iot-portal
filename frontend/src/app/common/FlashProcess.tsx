@@ -432,7 +432,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             const deviceToken = deviceFetch.credentialsId;
 
                             const response = await fetch(
-                                `${getLittleFSURL()}?${qs.stringify({ 
+                                `${getLittleFSURL()}?${qs.stringify({
                                 littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
                                 {
                                     method: "post",

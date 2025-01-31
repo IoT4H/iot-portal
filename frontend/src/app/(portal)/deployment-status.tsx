@@ -86,7 +86,7 @@ export default function Status ({ id } : { id: number}) {
 
     return state !== State.none ? (
         <span ref={ref}  className={`inline-flex flex-shrink-0 items-center justify-center rounded-md px-2.5 py-1 text-md h-10 gap-0.5 font-medium w-max ${
-            state === State.created && orangeColor || 
+            state === State.created && orangeColor ||
             state === State.deploying && yellowColor ||
             state === State.updating && yellowColor ||
             state === State.deployed && greenColor||

@@ -26,7 +26,7 @@ services:
         - STRAPI_URL=https://portal.iot4h.de/api
     env_file:
       - .prod.env
-    environment:    
+    environment:
       STRAPI_URL: "https://portal.iot4h.de"
       DATABASE_HOST: 'portaldb'
       NODE_ENV: 'production'

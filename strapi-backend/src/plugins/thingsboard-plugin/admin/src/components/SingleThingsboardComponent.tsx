@@ -390,5 +390,3 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
 });
 
 export default singleTBIDInput;
-
-

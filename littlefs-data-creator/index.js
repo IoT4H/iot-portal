@@ -68,7 +68,7 @@ fastify.post('/littlefs.bin', async function handler (request, reply) {
         return reply.type('application/octet-stream').send(stream)
     } catch (err) {
         console.log(err);
-        
+
     }
 })
 
