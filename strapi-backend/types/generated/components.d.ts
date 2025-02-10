@@ -111,6 +111,18 @@ export interface GeneralAddress extends Schema.Component {
   };
 }
 
+export interface InstructionsAlternativeLabel extends Schema.Component {
+  collectionName: 'components_instructions_alternative_labels';
+  info: {
+    displayName: 'Alternativer Label';
+    icon: 'feather';
+  };
+  attributes: {
+    form_alternative_label: Attribute.String & Attribute.Required;
+    form_alternative_label_pattern: Attribute.String;
+  };
+}
+
 export interface InstructionsBaseInstruction extends Schema.Component {
   collectionName: 'components_instructions_base_instructions';
   info: {
@@ -211,6 +223,7 @@ export interface InstructionsSetupInstruction extends Schema.Component {
     flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
     flashConfig: Attribute.Component<'firmware.flash-config'>;
     form_alternative_label_pattern: Attribute.String;
+    alternativeLabel: Attribute.Component<'instructions.alternative-label'>;
   };
 }
 
@@ -335,6 +348,7 @@ declare module '@strapi/types' {
       'firmware.flash-instruction': FirmwareFlashInstruction;
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
+      'instructions.alternative-label': InstructionsAlternativeLabel;
       'instructions.base-instruction': InstructionsBaseInstruction;
       'instructions.instructions': InstructionsInstructions;
       'instructions.list-instruction': InstructionsListInstruction;

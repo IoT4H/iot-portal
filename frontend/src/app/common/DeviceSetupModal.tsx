@@ -104,7 +104,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [overlapStatus, SetOverlapStatus] = useState<overlaps>(overlaps.undefined)
 
     const actionable = () => {
-        return (label.length > 0) && (!config.form_alternative_label_required || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP) );
+        return (label.length > 0) && (!step.data.alternativeLabel || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP) );
     }
 
     useEffect(() => {
@@ -158,18 +158,18 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                             ></FieldSetInput>
                         </div>
                         {
-                            (config.form_alternative_label_required) && ( !!!step.data.form_alternative_label_pattern ? (
+                            (!!step.data.alternativeLabel) && ( !!!step.data.alternativeLabel.form_alternative_label_pattern ? (
                                 <div>
                                     <FieldSetInput
-                                        label={config.form_alternative_label}
+                                        label={step.data.alternativeLabel.form_alternative_label}
                                         type="text"
                                         required
                                         name="name"
                                         onChange={(event: any) => SetName(event.currentTarget.value)}
                                     >
                                         {
-                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{config.form_alternative_label} bereits in Verwendung!</span> ||
-                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{config.form_alternative_label} noch nicht verwendet!</span> ||
+                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{step.data.alternativeLabel.form_alternative_label} bereits in Verwendung!</span> ||
+                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{step.data.alternativeLabel.form_alternative_label} noch nicht verwendet!</span> ||
                                             overlapStatus === overlaps.LOADING && <><span>Prüft...</span></>
                                         }
                                     </FieldSetInput>
@@ -177,15 +177,15 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                             ) : (
                                 <div>
                                     <FieldSetPatternInput
-                                        label={step.data.form_alternative_label}
+                                        label={step.data.alternativeLabel.form_alternative_label}
                                         required
                                         name="name"
-                                        pattern={step.data.form_alternative_label_pattern}
+                                        pattern={step.data.alternativeLabel.form_alternative_label_pattern}
                                         onChange={(value: string) => { SetName(value)}}
                                     >
                                         {
-                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{config.form_alternative_label} bereits in Verwendung!</span> ||
-                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{config.form_alternative_label} noch nicht verwendet!</span> ||
+                                            overlapStatus === overlaps.OVERLAP && <span className={"text-red-600"}>{step.data.alternativeLabel.form_alternative_label} bereits in Verwendung!</span> ||
+                                            overlapStatus === overlaps.NO_OVERLAP && <span className={"text-green-600"}>{step.data.alternativeLabel.form_alternative_label} noch nicht verwendet!</span> ||
                                             overlapStatus === overlaps.LOADING && <><span>Prüft...</span></>
                                         }
                                     </FieldSetPatternInput>
