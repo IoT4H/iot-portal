@@ -62,11 +62,11 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                 SetError(response.error.message)
             }
 
-            if(step.data.flashProcess === true) {
+            if(Array.of(...step.data.flashInstruction).length > 0) {
                 switchFlashProcess(true);
             }
 
-            if(!response.error && step.data.flashProcess !== true) {
+            if(!response.error && Array.of(...step.data.flashInstruction).length === 0) {
                 console.log("TEST_")
                 if(!!onClose) onClose();
             }

@@ -114,7 +114,7 @@ export interface GeneralAddress extends Schema.Component {
 export interface InstructionsAlternativeLabel extends Schema.Component {
   collectionName: 'components_instructions_alternative_labels';
   info: {
-    displayName: 'Alternativer Label';
+    displayName: 'Alternative Label';
     icon: 'feather';
   };
   attributes: {
@@ -210,20 +210,20 @@ export interface InstructionsSetupInstruction extends Schema.Component {
           };
         }
       >;
+    alternativeLabel: Attribute.Component<'instructions.alternative-label'>;
     form_alternative_label: Attribute.String &
       Attribute.Required &
       Attribute.DefaultTo<'Name'>;
-    flashProcess: Attribute.Boolean &
-      Attribute.Required &
-      Attribute.DefaultTo<false>;
     form_alternative_label_required: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
     relations: Attribute.Component<'instructions.relation-to-setup', true>;
+    flashProcess: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
     flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
     flashConfig: Attribute.Component<'firmware.flash-config'>;
     form_alternative_label_pattern: Attribute.String;
-    alternativeLabel: Attribute.Component<'instructions.alternative-label'>;
   };
 }
 

@@ -299,10 +299,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
   },
   async updateInstructionStepsProgressFromDeployment(deploymentId: number, step: { "__component": string,
-    "id": number, flashProcess: boolean, tasks?: any[], device: any, index: number, meta: any}, progress: number, subprogress?: any) {
+    "id": number, flashInstruction: any[], tasks?: any[], device: any, index: number, meta: any}, progress: number, subprogress?: any) {
+
     //console.warn(deploymentId, step, progress, subprogress);
     for (let attribute in step) {
-      if(!["__component","id", "flashProcess", "tasks", "device"].includes(attribute)){
+      if(!["__component","id", "flashProcess", "flashInstruction", "tasks", "device"].includes(attribute)){
         delete step[attribute];
       }
     }
@@ -319,16 +320,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     switch (step.__component) {
       case "instructions.setup-instruction":
+        const hasflashProcess : boolean = Array.of(...step.flashInstruction).length > 0;
         if(Object.keys(subprogress).length === 0) {
           progress = 100;
         } else {
           if(posIndex !== -1) {
-            if(step.flashProcess){
+            if(hasflashProcess){
               subprogress.flash = { progress: (subprogress.flash && subprogress.flash.progress) || (currenStatus[posIndex].flash && currenStatus[posIndex].flash.progress) || 0};
             }
             subprogress.setup = { progress: (subprogress.setup && subprogress.setup.progress) || (currenStatus[posIndex].setup && currenStatus[posIndex].setup.progress) || 0};
           }
-          progress = (((subprogress.flash && Number(subprogress.flash.progress) || 0) + (subprogress.setup && Number(subprogress.setup.progress) || 0)) / (step.flashProcess ? 2 : 1));
+          progress = (((subprogress.flash && Number(subprogress.flash.progress) || 0) + (subprogress.setup && Number(subprogress.setup.progress) || 0)) / (hasflashProcess ? 2 : 1));
         }
         break;
       case "instructions.text-instruction":
