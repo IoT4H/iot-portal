@@ -262,6 +262,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
                     }
                   },
                 },
+                alternativeLabel: {
+                  populate: "*"
+                }
               },
             }}}}
     });

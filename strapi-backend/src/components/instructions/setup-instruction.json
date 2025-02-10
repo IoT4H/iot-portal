@@ -26,15 +26,15 @@
       "customField": "plugin::thingsboard-plugin.singleThingsboardComponent",
       "required": true
     },
+    "alternativeLabel": {
+      "type": "component",
+      "repeatable": false,
+      "component": "instructions.alternative-label"
+    },
     "form_alternative_label": {
       "type": "string",
       "default": "Name",
       "required": true
-    },
-    "flashProcess": {
-      "type": "boolean",
-      "required": true,
-      "default": false
     },
     "form_alternative_label_required": {
       "type": "boolean",
@@ -45,6 +45,11 @@
       "type": "component",
       "repeatable": true,
       "component": "instructions.relation-to-setup"
+    },
+    "flashProcess": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     },
     "flashInstruction": {
       "displayName": "Flash Instruction",
