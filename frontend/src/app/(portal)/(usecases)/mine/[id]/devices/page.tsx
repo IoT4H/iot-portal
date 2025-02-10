@@ -38,7 +38,7 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
             <div className={`bg-gray-500/25 pl-4 pr-2 py-2 flex flex-row items-center ${device.active !==undefined && "border-l-4" } ${device.active ? "border-green-500" : "border-red-500"}`}>
                 <span>{device.label.replace(setup.name + " | ", "")}</span>
                 <div className={"flex-shrink-0 ml-auto flex flex-row gap-2"}>
-                    {stepData.data.flashProcess && <div title={"Flashen"} onClick={toggleFlashModalOpen}
+                    {Array.of(...stepData.data.flashInstruction).length > 0 && <div title={"Flashen"} onClick={toggleFlashModalOpen}
                          className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}>
                         <CpuChipIcon className={"w-4 aspect-square"}/>
                     </div> }
