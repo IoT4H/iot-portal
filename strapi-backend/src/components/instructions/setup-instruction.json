@@ -31,25 +31,10 @@
       "repeatable": false,
       "component": "instructions.alternative-label"
     },
-    "form_alternative_label": {
-      "type": "string",
-      "default": "Name",
-      "required": true
-    },
-    "form_alternative_label_required": {
-      "type": "boolean",
-      "default": false,
-      "required": true
-    },
     "relations": {
       "type": "component",
       "repeatable": true,
       "component": "instructions.relation-to-setup"
-    },
-    "flashProcess": {
-      "type": "boolean",
-      "required": true,
-      "default": false
     },
     "flashInstruction": {
       "displayName": "Flash Instruction",
@@ -61,10 +46,6 @@
       "type": "component",
       "repeatable": false,
       "component": "firmware.flash-config"
-    },
-    "form_alternative_label_pattern": {
-      "type": "string",
-      "regex": "(\\[(\\d|\\w|-)*\\](?:\\{\\d*?,\\d*?\\})|.)*"
     }
   }
 }
