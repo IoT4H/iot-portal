@@ -62,13 +62,6 @@
       "min": 1,
       "max": 5
     },
-    "instructions": {
-      "displayName": "instructions",
-      "type": "component",
-      "repeatable": true,
-      "component": "instructions.instructions",
-      "required": false
-    },
     "costs": {
       "type": "decimal",
       "min": 0

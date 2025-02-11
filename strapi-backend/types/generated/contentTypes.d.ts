@@ -1219,7 +1219,6 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         min: 1;
         max: 5;
       }>;
-    instructions: Attribute.Component<'instructions.instructions', true>;
     costs: Attribute.Decimal &
       Attribute.SetMinMax<{
         min: 0;
