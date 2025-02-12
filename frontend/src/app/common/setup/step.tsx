@@ -91,7 +91,7 @@ export default function Step(stepData: StepData) {
     const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
     const subtaskComplete = (id: number) => {
-        return stepData.data.tasks.find((f: any) => f.id === id).progress === 100;
+        return stepData.data.tasks.find((f: any) => f.id === id).progress === 100 || stepData.data.__component === "instructions.text-instruction";
     }
 
     useEffect(() => {
@@ -238,8 +238,8 @@ export default function Step(stepData: StepData) {
                                             }} config={{
                                                 deployment: stepData.deployment,
                                                 "thingsboard_profile":  stepData.data.thingsboard_profile,
-                                                "form_alternative_label": stepData.data.form_alternative_label,
-                                                "form_alternative_label_required" : stepData.data.form_alternative_label_required
+                                                "form_alternative_label": stepData.data.alternativeLabel?.form_alternative_label,
+                                                "form_alternative_label_required" : !!stepData.data.alternativeLabel
                                             }} step={stepData} triggerStateRefresh={stepData.updateState}></DeviceSetupModal> }
                                         </>
                                     )
@@ -253,7 +253,7 @@ export default function Step(stepData: StepData) {
                                                     case  "instructions.list-instruction":
                                                         return Array.isArray(stepData.data.tasks) && Array.from(stepData.data.tasks).every((t: any) => subtaskComplete(t.id));
                                                     default:
-                                                        return false;
+                                                        return true;
                                                 }
                                             }) } onClick={() => performStepAction({})}
                                             >{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Erledigt </button>}

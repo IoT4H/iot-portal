@@ -26,20 +26,10 @@
       "customField": "plugin::thingsboard-plugin.singleThingsboardComponent",
       "required": true
     },
-    "form_alternative_label": {
-      "type": "string",
-      "default": "Name",
-      "required": true
-    },
-    "flashProcess": {
-      "type": "boolean",
-      "required": true,
-      "default": false
-    },
-    "form_alternative_label_required": {
-      "type": "boolean",
-      "default": false,
-      "required": true
+    "alternativeLabel": {
+      "type": "component",
+      "repeatable": false,
+      "component": "instructions.alternative-label"
     },
     "relations": {
       "type": "component",
@@ -56,10 +46,6 @@
       "type": "component",
       "repeatable": false,
       "component": "firmware.flash-config"
-    },
-    "form_alternative_label_pattern": {
-      "type": "string",
-      "regex": "(\\[(\\d|\\w|-)*\\](?:\\{\\d*?,\\d*?\\})|.)*"
     }
   }
 }

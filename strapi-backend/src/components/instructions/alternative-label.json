@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_instructions_alternative_labels",
+  "info": {
+    "displayName": "Alternative Label",
+    "icon": "feather"
+  },
+  "options": {},
+  "attributes": {
+    "form_alternative_label": {
+      "type": "string",
+      "required": true
+    },
+    "form_alternative_label_pattern": {
+      "type": "string",
+      "regex": "(\\[(\\d|\\w|-)*\\](?:\\{\\d*?,\\d*?\\})|.)*"
+    }
+  }
+}

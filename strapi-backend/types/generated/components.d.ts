@@ -111,6 +111,18 @@ export interface GeneralAddress extends Schema.Component {
   };
 }
 
+export interface InstructionsAlternativeLabel extends Schema.Component {
+  collectionName: 'components_instructions_alternative_labels';
+  info: {
+    displayName: 'Alternative Label';
+    icon: 'feather';
+  };
+  attributes: {
+    form_alternative_label: Attribute.String & Attribute.Required;
+    form_alternative_label_pattern: Attribute.String;
+  };
+}
+
 export interface InstructionsBaseInstruction extends Schema.Component {
   collectionName: 'components_instructions_base_instructions';
   info: {
@@ -198,19 +210,10 @@ export interface InstructionsSetupInstruction extends Schema.Component {
           };
         }
       >;
-    form_alternative_label: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'Name'>;
-    flashProcess: Attribute.Boolean &
-      Attribute.Required &
-      Attribute.DefaultTo<false>;
-    form_alternative_label_required: Attribute.Boolean &
-      Attribute.Required &
-      Attribute.DefaultTo<false>;
+    alternativeLabel: Attribute.Component<'instructions.alternative-label'>;
     relations: Attribute.Component<'instructions.relation-to-setup', true>;
     flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
     flashConfig: Attribute.Component<'firmware.flash-config'>;
-    form_alternative_label_pattern: Attribute.String;
   };
 }
 
@@ -335,6 +338,7 @@ declare module '@strapi/types' {
       'firmware.flash-instruction': FirmwareFlashInstruction;
       'firmware.test': FirmwareTest;
       'general.address': GeneralAddress;
+      'instructions.alternative-label': InstructionsAlternativeLabel;
       'instructions.base-instruction': InstructionsBaseInstruction;
       'instructions.instructions': InstructionsInstructions;
       'instructions.list-instruction': InstructionsListInstruction;
