@@ -19,7 +19,7 @@ const LoggedIn = ({user} : {user: any}) => {
         if(user?.firm?.name?.toLowerCase().startsWith((`${user?.firstname} ${user?.lastname}`).toLowerCase()) || user?.firm?.name?.toLowerCase() === user?.email?.toLowerCase()) {
             SetDisplayFirm("Persönlicher Account");
         } else {
-            SetDisplayFirm(user?.firm);
+            SetDisplayFirm(user?.firm.name);
         }
 
     }, [user]);
