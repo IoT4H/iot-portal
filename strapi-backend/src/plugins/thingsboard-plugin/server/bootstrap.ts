@@ -37,8 +37,12 @@ export default ({ strapi }: { strapi: Strapi }) => {
 
     async afterCreate(event: any) {
      const { result } = event;
-     await strapi.plugin('thingsboard-plugin').service('strapiService').createTenantForBetrieb(Number(result.id));
-      await strapi.plugin('thingsboard-plugin').service('strapiService').createCustomerForBetrieb(Number(result.id));
+     if(!result.TenantUID) {
+      await strapi.plugin('thingsboard-plugin').service('strapiService').createTenantForBetrieb(Number(result.id));
+      }
+     if(!result.CustomerUID || !result.CustomerUserUID) {
+       await strapi.plugin('thingsboard-plugin').service('strapiService').createCustomerForBetrieb(Number(result.id));
+     }
     },
     async beforeDelete(event: any) {
       const firm = await strapi.query('api::firm.firm').findOne(event.params);
