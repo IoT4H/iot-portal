@@ -44,7 +44,7 @@ services:
       - ./littlefs-data-creator/mklittlefs/debug:/tmp
   mytb:
     restart: unless-stopped
-    image: "ghcr.io/iot4h/iot4h-platform:3.6.2-iot4h.1"
+    image: "ghcr.io/iot4h/iot4h-platform:3.6.2-IOT4H.2"
     ports:
       - "8080:9090"
       - "9090:9090"
