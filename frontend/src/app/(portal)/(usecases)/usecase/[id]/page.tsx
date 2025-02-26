@@ -14,7 +14,7 @@ function PictureGallery({ pictures } : {pictures?: any[]}) {
         <div className={"grid md:grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] grid-cols-2 gap-2"}>
             { pictures && pictures.map((pic, index, allPics) => {
                 return (
-                    <GalleryImage key={pic.hash} thumbnailSrc={getStrapiURLForFrontend(pic.formats.thumbnail.url)} caption={pic.caption} alt={pic.caption} src={getStrapiURLForFrontend(pic.url)} init={index} imageList={pictures} className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square object-cover absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+                    <GalleryImage key={pic.hash} thumbnailSrc={getStrapiURLForFrontend(pic.formats.thumbnail.url)} caption={pic.caption} alt={pic.alternativeText}  src={getStrapiURLForFrontend(pic.url)} init={index} imageList={pictures} className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square object-cover absolute max-w-fit max-h-fit min-w-full min-h-full "} />
                 );
             })}
         </div>
@@ -60,7 +60,7 @@ export default async function UseCasePage({params}: { params: { id: number } }) 
                         {
                             useCase.partnerLogos.map((pL) => (
                                 /* eslint-disable-next-line @next/next/no-img-element */
-                                <img className={"w-40 object-center object-contain py-2 px-4 bg-white rounded "} key={pL.hash}
+                                <GalleryImage className={"w-40 object-center object-contain py-2 px-4 bg-white rounded "} key={pL.hash}
                                      src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)}
                                      alt={pL.alternativeText}/>
                             ))

@@ -28,8 +28,7 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
     list: ({format, children, plainText}) => {
         switch (format) {
             case "ordered":
-                return <ol
-                    className={"w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ol>
+                return <ol className={"w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ol>
             case "unordered":
             default:
                 return <ul className={"w-full  list-outside list-disc  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</ul>
@@ -45,7 +44,7 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
             return null;
         }
 
-        return  <GalleryImage className={" w-max h-max max-h-64 mx-auto object-contain mb-[1.5rem] last:mb-0"} alt={image.alternativeText || ""} thumbnailSrc={image.previewUrl || image.url} caption={image.caption || ""} src={image.url} />;
+        return  <GalleryImage className={" w-max h-max max-h-64 mx-auto object-contain mb-[1.5rem] last:mb-0"} alt={image.alternativeText || "test"} thumbnailSrc={image.previewUrl || image.url} caption={image.caption || ""} src={image.url} />;
     },
     quote : ({ children, plainText }) => {
         return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</blockquote>;
