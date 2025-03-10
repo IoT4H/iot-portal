@@ -1,5 +1,6 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { ChevronRightIcon } from "@heroicons/react/16/solid";
+import { Copyright } from "@iot-portal/frontend/app/common/galleryImage";
 import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import * as React from "react";
@@ -48,9 +49,11 @@ export function ListItemUseCase({useCase}: {useCase: UseCase}) {
                         <div className={"flex flex-grow-0 flex-shrink-0 items-center flex-row w-full h-64 relative "}>
                             {
                                 useCase.thumbnail && useCase.thumbnail.url && (
-                                    /* eslint-disable-next-line @next/next/no-img-element */
-                                    <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium?.url || useCase.thumbnail.url)}
-                                        className={" w-full h-full object-cover gallery-image"}/>
+                                    <>
+                                        <img src={getStrapiURLForFrontend() + (useCase.thumbnail.formats.medium?.url || useCase.thumbnail.url)}
+                                            className={" w-full h-full object-cover gallery-image"}/>
+                                        <Copyright alt={useCase.thumbnail.alternativeText} />
+                                    </>
                                 ) || (
                                     <div
                                         className={" w-full h-full flex items-center justify-center bg-black/20  gallery-image"}>
