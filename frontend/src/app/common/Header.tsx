@@ -4,6 +4,7 @@ import AuthHeader from "@iot-portal/frontend/app/common/AuthHeader";
 import { fetchAPI, getStrapiURL } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import { Suspense, useCallback } from "react";
+import PlatformButton from "./PlatformButton";
 
 function Logo() {
     return (
@@ -59,6 +60,7 @@ const Header = async () => {
                     </Suspense>
                 </div>
                 <div className="flex flex-1 justify-end">
+                    <PlatformButton></PlatformButton>
                     <AuthHeader/>
                 </div>
             </nav>
