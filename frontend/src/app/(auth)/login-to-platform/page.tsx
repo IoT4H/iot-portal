@@ -1,6 +1,8 @@
 "use client"
 import Loading from "@iot-portal/frontend/app/common/loading";
-import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import { ModalUI } from "@iot-portal/frontend/app/common/modal";
+import PageBlockingSpinner, { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
@@ -65,8 +67,9 @@ export function Connect() {
 
     return (
         <>
+            <div className={"text-2xl"}> Sie werden gleich weitergeleitet.</div>
             <iframe src={getStrapiURLForFrontend(
-            `/api/thingsboard-plugin/url?url=/login-portal?redirectUri=/home`)} onLoadedData={(event) => { transmitToken(event.currentTarget);}} onLoad={(event) => { transmitToken(event.currentTarget);}} className={"w-[80vw]"} height={"800px"}></iframe>
+            `/api/thingsboard-plugin/url?url=/login-portal?redirectUri=/home`)} onLoadedData={(event) => { transmitToken(event.currentTarget);}} onLoad={(event) => { transmitToken(event.currentTarget);}} className={"w-[80vw] hidden"} height={"800px"}></iframe>
         </>
     );
 }
