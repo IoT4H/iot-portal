@@ -10,10 +10,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       fields: ["thingsboardUserId"],
       populate: { firm: { fields: ["TenentUID","CustomerUID", "CustomerUserUID"]}}
     });
-    const tokens = await strapi
-      .plugin(pluginId)
-      .service('thingsboardService')
-      .getCustomerUserToken(userId.firm.TenentUID, userId.firm.CustomerUserUID);
+    let tokens = "";
+    if(!!ctx.query.myself) {
+      tokens = await strapi
+        .plugin(pluginId)
+        .service('thingsboardService')
+        .getUserToken(userId.thingsboardUserId);
+    } else {
+      tokens = await strapi
+        .plugin(pluginId)
+        .service('thingsboardService')
+        .getCustomerUserToken(userId.firm.TenentUID, userId.firm.CustomerUserUID);
+    }
     ctx.body = tokens;
   },
   url(ctx) {
