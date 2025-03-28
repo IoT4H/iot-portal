@@ -14,7 +14,7 @@ export type Dashboard = {
     id: string;
 }
 
-export function Connect() {
+function Connect() {
 
     const iFrame = useRef();
 
