@@ -465,7 +465,9 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 return ({
                     data: await new Promise( async (resolve, reject) => {
                         try {
-                            const response = await fetch(getStrapiURLForFrontend(fI.binary.url));
+                            const response = await fetch(getStrapiURLForFrontend(fI.binary.url), {
+                                cache: "force-cache"
+                            });
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
                             }
