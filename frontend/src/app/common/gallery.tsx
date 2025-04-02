@@ -40,7 +40,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
         <>
             {
                 pics.length >= 1 && (
-                    <div className={"fixed w-[100vw] h-[100vh] z-50 top-0 left-0 right-0 bottom-0 flex content-center items-center justify-center bg-gray-50/20 backdrop-blur-[1px]"}>
+                    <div className={"fixed w-[100vw] h-[100vh] z-50 top-0 left-0 right-0 bottom-0 flex content-center items-center justify-center bg-gray-50/20 backdrop-blur-[3px]"}>
                         <div className={"transition-all ease-out duration-500"}>
                             <div className={'flex flex-row justify-center items-end md:items-stretch relative max-md:flex-wrap flex-nowrap w-[90vw] h-[90vh]'}>
 
