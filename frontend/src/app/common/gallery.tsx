@@ -55,7 +55,7 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                 </div>
                                 <div className={"max-md:order-1 order-2 flex-shrink transition-all transition-[width] ease-out duration-500 relative flex flex-col gap-2 items-center justify-center md:max-h-full max-h-[80%] max-w-full min-h-0"}>
                                     { /* eslint-disable-next-line @next/next/no-img-element */ }
-                                    <img src={picUrls[currentIndex] && (getStrapiURLForFrontend() + picUrls[currentIndex])} alt={pics[currentIndex]?.alternativeText || ""} onLoad={() => SetCanPlay(true)} className={(canPlay ? "visible " :  "invisible ") + "min-h-0 min-w-0 w-min h-min transition-all ease-out bg-white duration-500 object-contain max-height-100"}/>
+                                    <img src={picUrls[currentIndex] && (getStrapiURLForFrontend() + picUrls[currentIndex])} alt={pics[currentIndex]?.alternativeText || ""} onClick={ () => gallery(0, [])} onLoad={() => SetCanPlay(true)} className={(canPlay ? "visible " :  "invisible ") + "min-h-0 min-w-0 w-min h-min transition-all ease-out bg-white duration-500 object-contain max-height-100"}/>
 
                                     <Spinner className={`${canPlay ? "hidden" : "w-full"} aspect-square h-24`}/>
                                     { pics[currentIndex].alternativeText && <div className={"relative h-8 text-center align-middle dark:bg-zinc-900/50 float pt-1 px-8 empty:hidden rounded"}> { pics[currentIndex].alternativeText }</div> }
@@ -71,12 +71,12 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                     }
                                 }>
                                     <ChevronRightIcon className={"w-24 h-24"}/>
+                                    <div className={"w-16 text-white/80 bg-orange-500/50 hover:bg-orange-500/80 hover:text-white absolute top-0 right-0 cursor-pointer"}
+                                         onClick={ () => gallery(0, [])}>
+                                        <XMarkIcon />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className={"w-12 text-white/80 bg-orange-500/50 hover:bg-orange-500/80 hover:text-white absolute top-4 right-8 cursor-pointer"}
-                             onClick={ () => gallery(0, [])}>
-                            <XMarkIcon />
                         </div>
                     </div>
                 )
