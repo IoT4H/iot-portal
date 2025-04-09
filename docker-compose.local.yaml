@@ -51,7 +51,14 @@ services:
       - ./uploads:/opt/app/public/uploads
       - ./strapi-backend:/opt/app
       - /opt/app/node_modules
-    command: npx strapi develop
+    command: >
+      sh -c "
+        cd /opt/app/src/plugins/thingsboard-plugin &&
+        npx tsc -p tsconfig.server.json &&
+        npx tsc -p tsconfig.server.json -w &
+        cd /opt/app &&
+        npx strapi develop
+      "
 
   flashdata:
     image: ghcr.io/iot4h/portal-littlefs-creator
