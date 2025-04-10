@@ -27,6 +27,7 @@ Default addresses for local development:
 - Portal: http://localhost:3000
 - Strapi: http://localhost:1337
 - Platform (Thingsboard): http://localhost:9090
+  - Swagger UI: http://localhost:9090/swagger-ui/
 
 Strapi includes the Strapi CMS UI, plugins (`strapi-backend/src/plugins/thingsboard-plugin`), and, in our case, comes with a dedicated Postgres. The platform comes with default users user:password `sysadmin@thingsboard.org:sysadmin` for the default admin with admin UI access and `tenant@thingsboard.org:tenant` for the default tenant.
 
