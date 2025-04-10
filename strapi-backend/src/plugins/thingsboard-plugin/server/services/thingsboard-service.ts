@@ -84,8 +84,48 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/info/${componentId}`
     })
       .then((response: any) => response.data));
-  }
-  ,
+  },
+
+  async getTelemetryKeysForDevice(tenantId, entityType, id) {  
+    return (await this.axiosAsTenant(tenantId, {
+      method: 'get',
+      url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/plugins/telemetry/${entityType}/${id}/keys/timeseries`
+    })
+      .then((response: any) => response.data));
+  },
+
+  async getTelemetryForDevice(tenantId: string, entityType: string, id: string, keys: string[]) {
+    const endTs = Date.now();
+    const startTs = endTs - 86400000;
+  
+    const url = `${strapi.plugin(pluginId).config('thingsboardUrl')}/api/plugins/telemetry/${entityType}/${id}/values/timeseries`;
+  
+    strapi.log.info(`📡 Fetching telemetry from TB for ${entityType}/${id} with keys: ${keys.join(', ')}`);
+  
+    try {
+      const response = await this.axiosAsTenant(tenantId, {
+        method: 'get',
+        url,
+        params: {
+          keys: keys.join(','),
+          startTs,
+          endTs,
+          limit: 1000
+        }
+      }) as AxiosResponse<Record<string, { ts: number; value: string }[]>>;
+  
+      strapi.log.info(`✅ Telemetry response keys: ${Object.keys(response.data).join(', ')}`);
+      return response.data;
+    } catch (err: any) {
+      strapi.log.error("❌ Failed to fetch telemetry:", {
+        status: err?.response?.status,
+        data: err?.response?.data,
+        message: err.message
+      });
+      return null;
+    }
+  },
+
   async createDummytThingsboardComponentForTenant(tenantId: string, componentType: string) {
     let data: any = {
       name: "temp dummy name " + randomUUID()

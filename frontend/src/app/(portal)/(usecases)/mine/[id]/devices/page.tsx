@@ -1,6 +1,6 @@
 "use client"
 import { CpuChipIcon } from "@heroicons/react/20/solid";
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, PlusIcon, TrashIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -15,7 +15,6 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
 
 
     const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
-
 
     const deleteDevice = useCallback( () => {
 
@@ -32,6 +31,71 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
         })
     } , [device, setup])
 
+    const exportDeviceData = useCallback(async () => {
+        const deviceId = device.id.id;
+        const entityType = device.id.entityType;
+    
+        LoadingState.startLoading();
+    
+        try {
+            const keysUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/keys/timeseries`;
+            const keys: string[] = await fetchAPI(keysUrl, {}, {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            });
+    
+            if (!Array.isArray(keys) || keys.length === 0) {
+                console.log("📭 Keine Telemetrie-Daten verfügbar.");
+                return;
+            }
+    
+            const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${keys.join(",")}`;
+            const data = await fetchAPI(exportUrl, {}, {
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                }
+            });
+    
+            const rows: Record<string, any>[] = [];
+    
+            keys.forEach(key => {
+                const series = data[key];
+                if (Array.isArray(series)) {
+                    series.forEach((entry: any, index: number) => {
+                        if (!rows[index]) rows[index] = { timestamp: entry.ts };
+                        rows[index][key] = entry.value;
+                    });
+                }
+            });
+    
+            if (rows.length === 0) {
+                console.log("📭 Keine Telemetrie-Werte zum Exportieren.");
+                return;
+            }
+    
+            const headers = ["timestamp", ...keys];
+            const csv = [
+                headers.join(","),
+                ...rows.map(row => headers.map(h => row[h] ?? "").join(","))
+            ].join("\n");
+    
+            const blob = new Blob([csv], { type: "text/csv" });
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `${device.label.replaceAll(" ", "_")}_telemetry.csv`;
+            link.click();
+            URL.revokeObjectURL(blobUrl);
+    
+            console.log("📄 Telemetrie-Daten exportiert.");
+        } catch (err) {
+            console.error("❌ Fehler beim Exportieren der Telemetrie-Daten.", err);
+        } finally {
+            LoadingState.endLoading();
+        }
+    }, [device]);
+    
 
     return (
         <>
@@ -49,6 +113,10 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
                     <div title={"Löschen"} onClick={() => deleteDevice()}
                          className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"}>
                         <TrashIcon className={"w-4 aspect-square"}/>
+                    </div>
+                    <div title={"Export"} onClick={exportDeviceData}
+                        className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-yellow-500/50 text-white cursor-pointer"}>
+                        <ArrowDownTrayIcon className={"w-4 aspect-square"} />
                     </div>
                 </div>
             </div>
@@ -180,3 +248,5 @@ const Page = ({params}: { params: { id: number } }) => {
     </>;
 }
 export default Page;
+
+
