@@ -34,6 +34,7 @@ Strapi includes the Strapi CMS UI, plugins (`strapi-backend/src/plugins/thingsbo
 ### Strapi
 
 - Make sure to set all roles and permissions for `Authenticated` and `Public` users under http://localhost:1337/admin/settings/users-permissions/roles. This can include all `find` and `findOne` permissions across all routes and all permissions for the `Thingsboard-plugin` route.
+- When adding plugin routes, as for the `Thingsboard-plugin`, ensure that each custom controller action (e.g., `exportTelemetry`, etc.) is explicitly allowed for the relevant user roles — otherwise, Strapi will return a **403 Forbidden** silently even if the route and token are valid.
 
 ### Portal Users
 
