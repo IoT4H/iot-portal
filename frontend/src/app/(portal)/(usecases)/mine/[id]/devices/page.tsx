@@ -8,6 +8,7 @@ import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
 import { useCallback, useEffect, useReducer, useState } from "react";
+import toast from 'react-hot-toast';
 
 const dynamic = 'force-dynamic';
 
@@ -34,9 +35,9 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
     const exportDeviceData = useCallback(async () => {
         const deviceId = device.id.id;
         const entityType = device.id.entityType;
-    
+
         LoadingState.startLoading();
-    
+
         try {
             const keysUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/keys/timeseries`;
             const keys: string[] = await fetchAPI(keysUrl, {}, {
@@ -44,21 +45,21 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
                     Authorization: `Bearer ${Auth.getToken()}`
                 }
             });
-    
+
             if (!Array.isArray(keys) || keys.length === 0) {
-                console.log("📭 Keine Telemetrie-Daten verfügbar.");
+                toast.error("Keine Telemetrie-Daten verfügbar.");
                 return;
             }
-    
+
             const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${keys.join(",")}`;
             const data = await fetchAPI(exportUrl, {}, {
                 headers: {
                     Authorization: `Bearer ${Auth.getToken()}`
                 }
             });
-    
+
             const rows: Record<string, any>[] = [];
-    
+
             keys.forEach(key => {
                 const series = data[key];
                 if (Array.isArray(series)) {
@@ -68,18 +69,18 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
                     });
                 }
             });
-    
+
             if (rows.length === 0) {
-                console.log("📭 Keine Telemetrie-Werte zum Exportieren.");
+                toast.error("Keine Telemetrie-Werte zum Exportieren.");
                 return;
             }
-    
+
             const headers = ["timestamp", ...keys];
             const csv = [
                 headers.join(","),
                 ...rows.map(row => headers.map(h => row[h] ?? "").join(","))
             ].join("\n");
-    
+
             const blob = new Blob([csv], { type: "text/csv" });
             const blobUrl = URL.createObjectURL(blob);
             const link = document.createElement("a");
@@ -87,10 +88,10 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
             link.download = `${device.label.replaceAll(" ", "_")}_telemetry.csv`;
             link.click();
             URL.revokeObjectURL(blobUrl);
-    
-            console.log("📄 Telemetrie-Daten exportiert.");
+
+            toast.success("Telemetrie-Daten exportiert.");
         } catch (err) {
-            console.error("❌ Fehler beim Exportieren der Telemetrie-Daten.", err);
+            toast.error("Fehler beim Exportieren der Telemetrie-Daten.");
         } finally {
             LoadingState.endLoading();
         }
