@@ -94,10 +94,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response: any) => response.data));
   },
 
-  async getTelemetryForDevice(tenantId: string, entityType: string, id: string, keys: string[]) {
-    const endTs = Date.now();
-    const startTs = endTs - 86400000;
-  
+  async getTelemetryForDevice(
+    tenantId: string,
+    entityType: string,
+    id: string,
+    keys: string[],
+    startTs: number,
+    endTs: number
+  ) {  
     const url = `${strapi.plugin(pluginId).config('thingsboardUrl')}/api/plugins/telemetry/${entityType}/${id}/values/timeseries`;
   
     strapi.log.info(`📡 Fetching telemetry from TB for ${entityType}/${id} with keys: ${keys.join(', ')}`);
@@ -108,8 +112,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         url,
         params: {
           keys: keys.join(','),
-          startTs,
-          endTs,
+          startTs: startTs,
+          endTs: endTs,
           limit: 1000
         }
       }) as AxiosResponse<Record<string, { ts: number; value: string }[]>>;
