@@ -73,37 +73,51 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         return;
       }
 
-      const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${keys.join(",")}&startTs=${startDate.getTime()}&endTs=${endDate.getTime()}`;
+      const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${keys.join(",")}&startTs=${startDate.getTime()}&endTs=${endDate.getTime()}&useStrictDataTypes=true`;
       const data = await fetchAPI(exportUrl, {}, {
         headers: {
           Authorization: `Bearer ${Auth.getToken()}`
         }
       });
 
-      const rows: Record<string, any>[] = [];
+      // Align by timestamp
+      const rowMap: Record<number, Record<string, any>> = {};
 
       keys.forEach(key => {
         const series = data[key];
         if (Array.isArray(series)) {
-          series.forEach((entry: any, index: number) => {
-            if (!rows[index]) rows[index] = { timestamp: entry.ts };
-            rows[index][key] = entry.value;
+          series.forEach(entry => {
+            const ts = entry.ts;
+            if (!rowMap[ts]) rowMap[ts] = { timestamp: ts };
+            rowMap[ts][key] = entry.value;
           });
         }
       });
+
+      const rows = Object.values(rowMap).sort((a, b) => a.timestamp - b.timestamp);
 
       if (rows.length === 0) {
         toast.error("Keine Telemetrie-Werte zum Exportieren.");
         return;
       }
 
+      const escapeCSV = (value: any) => {
+        if (value === null || value === undefined) return '';
+        const str = String(value);
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+
       const headers = ["timestamp", ...keys];
       const csv = [
         headers.join(","),
-        ...rows.map(row => headers.map(h => row[h] ?? "").join(","))
+        ...rows.map(row => headers.map(h => escapeCSV(row[h])).join(","))
       ].join("\n");
 
-      const blob = new Blob([csv], { type: "text/csv" });
+      const bom = "\uFEFF"; // UTF-8 BOM
+      const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
