@@ -47,7 +47,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         })
     } , [device, setup])
 
-  const exportDeviceData = useCallback(async () => {
+  const exportDeviceData = useCallback(async (format: "csv" | "json") => {
     const deviceId = device.id.id;
     const entityType = device.id.entityType;
     const startDate = dateRange[0].startDate;
@@ -80,9 +80,28 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         }
       });
 
-      // Align by timestamp
-      const rowMap: Record<number, Record<string, any>> = {};
+      if (!data || Object.values(data).every(arr => !Array.isArray(arr) || arr.length === 0)) {
+        toast.error("Zeitraum enthält keine Telemetriewerte zum Exportieren.");
+        return;
+      }
 
+      // Export raw JSON
+      if (format === "json") {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `${device.label.replaceAll(" ", "_")}_telemetry.json`;
+        link.click();
+        URL.revokeObjectURL(blobUrl);
+
+        toast.success("Telemetrie-Daten exportiert.");
+        return;
+      }
+
+      // Export as .csv
+      const rowMap: Record<number, Record<string, any>> = {};
+      // Align by timestamp
       keys.forEach(key => {
         const series = data[key];
         if (Array.isArray(series)) {
@@ -95,11 +114,6 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
       });
 
       const rows = Object.values(rowMap).sort((a, b) => a.timestamp - b.timestamp);
-
-      if (rows.length === 0) {
-        toast.error("Keine Telemetrie-Werte zum Exportieren.");
-        return;
-      }
 
       const escapeCSV = (value: any) => {
         if (value === null || value === undefined) return '';
@@ -162,15 +176,15 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
             {exportModalOpen &&
               typeof window !== "undefined" &&
               <ExportTelemetryModal
-                isOpen={exportModalOpen}
-                dateRange={dateRange}
-                setDateRange={setDateRange}
-                onCancel={handleCloseExportModal}
-                onConfirm={() => {
-                  setExportModalOpen(false);
-                  exportDeviceData();
-                }}
-        />}
+              isOpen={exportModalOpen}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+              onCancel={handleCloseExportModal}
+              onConfirm={(format) => {
+                setExportModalOpen(false);
+                exportDeviceData(format);
+              }}
+            />}
     </>
   );
 };
