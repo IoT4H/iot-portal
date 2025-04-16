@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { DefinedRange, createStaticRanges } from "react-date-range";
 import type { Range, RangeKeyDict } from "react-date-range";
@@ -11,7 +12,8 @@ type Props = {
     dateRange: Range[];
     setDateRange: (range: Range[]) => void;
     onCancel: () => void;
-    onConfirm: (format: "csv" | "json") => void;
+    onConfirm: (format: "csv" | "json", selectedKeys: string[]) => void;
+    availableKeys: string[];
 };
 
 const customStaticRanges = createStaticRanges([
@@ -95,8 +97,15 @@ const ExportTelemetryModal = ({
     dateRange,
     setDateRange,
     onCancel,
-    onConfirm
+    onConfirm,
+    availableKeys,
 }: Props) => {
+    const [selectedKeys, setSelectedKeys] = useState<string[]>(availableKeys);
+
+    useEffect(() => {
+        setSelectedKeys(availableKeys);
+    }, [availableKeys]);
+
     if (!isOpen || typeof window === "undefined") return null;
 
     return createPortal(
@@ -109,6 +118,7 @@ const ExportTelemetryModal = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-lg font-semibold mb-4">Telemetrie-Daten Exportieren</h2>
+
                 <label className="text-sm block mb-2">Zeitraum auswählen:</label>
                 <DefinedRange
                     onChange={(item: RangeKeyDict) => setDateRange([item.selection])}
@@ -116,6 +126,50 @@ const ExportTelemetryModal = ({
                     staticRanges={customStaticRanges}
                     inputRanges={customInputRanges}
                 />
+
+                <div className="mb-8 mt-4">
+                    <label className="text-sm block mb-2">Telemetrie-Schlüssel auswählen:</label>
+                    <div className="flex flex-wrap gap-2">
+                        <button
+                            onClick={() => {
+                                if (selectedKeys.length === availableKeys.length) {
+                                    setSelectedKeys([]);
+                                } else {
+                                    setSelectedKeys(availableKeys);
+                                }
+                            }}
+                            className={`px-2 py-0.5 text-xs rounded-full border font-medium ${selectedKeys.length === availableKeys.length
+                                ? "bg-red-500 text-white border-red-500"
+                                : "bg-blue-500 text-white border-blue-500"
+                                }`}
+                        >
+                            {selectedKeys.length === availableKeys.length ? "Alle abwählen" : "Alle auswählen"}
+                        </button>
+
+                        {availableKeys.map((key) => {
+                            const isSelected = selectedKeys.includes(key);
+                            return (
+                                <button
+                                    key={key}
+                                    onClick={() => {
+                                        setSelectedKeys((prev) =>
+                                            prev.includes(key)
+                                                ? prev.filter((k) => k !== key)
+                                                : [...prev, key]
+                                        );
+                                    }}
+                                    className={`px-2 py-0.5 text-xs rounded-full border ${isSelected
+                                        ? "bg-primary text-white border-primary"
+                                        : "bg-gray-200 text-gray-800 border-gray-300"
+                                        }`}
+                                >
+                                    {key}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <div className="mt-4 flex justify-end gap-2 flex-wrap">
                     <button
                         className="bg-gray-300 hover:bg-gray-400 text-black py-1 px-4 rounded"
@@ -126,21 +180,20 @@ const ExportTelemetryModal = ({
 
                     <div className="inline-flex rounded-md shadow overflow-hidden border border-primary">
                         <button
-                            onClick={() => onConfirm("csv")}
+                            onClick={() => onConfirm("csv", selectedKeys)}
                             className="bg-primary text-white px-4 py-1 flex items-center gap-1 brightness-90 hover:brightness-100 rounded-l-md transition-colors"
                         >
                             <ArrowDownTrayIcon className="w-5 h-5" />
                             CSV
                         </button>
                         <button
-                            onClick={() => onConfirm("json")}
+                            onClick={() => onConfirm("json", selectedKeys)}
                             className="bg-white text-primary border-l border-primary px-4 py-1 brightness-90 hover:brightness-100 rounded-r-md transition-colors"
                         >
                             JSON
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>,
         document.body
