@@ -19,6 +19,7 @@ const dynamic = 'force-dynamic';
 const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, setup: any, stepData: any, devicesRefresh: Function }) => {
   const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [availableKeys, setAvailableKeys] = useState<string[]>([]);
   const defaultDateRange: Range[] = [
     {
       startDate: addDays(new Date(), -1),
@@ -47,7 +48,22 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         })
     } , [device, setup])
 
-  const exportDeviceData = useCallback(async (format: "csv" | "json") => {
+    useEffect(() => {
+      if (exportModalOpen) {
+        const fetchKeys = async () => {
+          const deviceId = device.id.id;
+          const entityType = device.id.entityType;
+          const keysUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/keys/timeseries`;
+          const keys: string[] = await fetchAPI(keysUrl, {}, {
+            headers: { Authorization: `Bearer ${Auth.getToken()}` }
+          });
+          setAvailableKeys(keys);
+        };
+        fetchKeys();
+      }
+    }, [exportModalOpen, device.id.id, device.id.entityType]);
+
+  const exportDeviceData = useCallback(async (format: "csv" | "json", selectedKeys: string[]) => {
     const deviceId = device.id.id;
     const entityType = device.id.entityType;
     const startDate = dateRange[0].startDate;
@@ -58,22 +74,15 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
       return;
     }
 
+    if (!selectedKeys || selectedKeys.length === 0) {
+      toast.error("Bitte wähle mindestens einen Telemetrie-Schlüssel aus.");
+      return;
+    }
+
     LoadingState.startLoading();
 
     try {
-      const keysUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/keys/timeseries`;
-      const keys: string[] = await fetchAPI(keysUrl, {}, {
-        headers: {
-          Authorization: `Bearer ${Auth.getToken()}`
-        }
-      });
-
-      if (!Array.isArray(keys) || keys.length === 0) {
-        toast.error("Keine Telemetrie-Daten verfügbar.");
-        return;
-      }
-
-      const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${keys.join(",")}&startTs=${startDate.getTime()}&endTs=${endDate.getTime()}&useStrictDataTypes=true`;
+      const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${selectedKeys.join(",")}&startTs=${startDate.getTime()}&endTs=${endDate.getTime()}&useStrictDataTypes=true`;
       const data = await fetchAPI(exportUrl, {}, {
         headers: {
           Authorization: `Bearer ${Auth.getToken()}`
@@ -102,7 +111,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
       // Export as .csv
       const rowMap: Record<number, Record<string, any>> = {};
       // Align by timestamp
-      keys.forEach(key => {
+      selectedKeys.forEach(key => {
         const series = data[key];
         if (Array.isArray(series)) {
           series.forEach(entry => {
@@ -124,7 +133,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         return str;
       };
 
-      const headers = ["timestamp", ...keys];
+      const headers = ["timestamp", ...selectedKeys];
       const csv = [
         headers.join(","),
         ...rows.map(row => headers.map(h => escapeCSV(row[h])).join(","))
@@ -180,10 +189,11 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
               dateRange={dateRange}
               setDateRange={setDateRange}
               onCancel={handleCloseExportModal}
-              onConfirm={(format) => {
+              onConfirm={(format, selectedKeys) => {
                 setExportModalOpen(false);
-                exportDeviceData(format);
+                exportDeviceData(format, selectedKeys);
               }}
+              availableKeys={availableKeys}
             />}
     </>
   );
