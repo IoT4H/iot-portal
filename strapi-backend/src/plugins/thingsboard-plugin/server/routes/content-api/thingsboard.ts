@@ -88,6 +88,38 @@ export default [
           return false;
         }
       ]
-    },
+    }
+  },
+  {
+    method: 'GET',
+    path: '/deployment/telemetry/:entityType/:id/keys/timeseries',
+    handler: `plugin::${pluginId}.telemetry.getTelemetryKeys`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    }
+  },
+  {
+    method: 'GET',
+    path: '/deployment/telemetry/:entityType/:id/export',
+    handler: `plugin::${pluginId}.telemetry.exportTelemetry`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    }
   },
 ]

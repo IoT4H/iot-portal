@@ -7,6 +7,7 @@ import PromptAreaComponent from "@iot-portal/frontend/app/common/promptArea";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Inter } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -60,6 +61,12 @@ export default async function RootLayout(props: any) {
                     </div>
                 </LoadingWrapper>
             </AuthWrapper>
+                <Toaster
+                    position="top-right"
+                    toastOptions={{
+                        duration: 5000,
+                    }}
+                />
         </body>
         </html>
     )
