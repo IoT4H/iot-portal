@@ -75,7 +75,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
     }
 
     if (!selectedKeys || selectedKeys.length === 0) {
-      toast.error("Bitte wähle mindestens einen Telemetrie-Schlüssel aus.");
+      toast.error("Bitte wähle mindestens einen Sensorwert aus.");
       return;
     }
 
@@ -90,7 +90,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
       });
 
       if (!data || Object.values(data).every(arr => !Array.isArray(arr) || arr.length === 0)) {
-        toast.error("Zeitraum enthält keine Telemetriewerte zum Exportieren.");
+        toast.error("Zeitraum enthält keine Sensordaten zum Exportieren.");
         return;
       }
 
@@ -104,7 +104,7 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
         link.click();
         URL.revokeObjectURL(blobUrl);
 
-        toast.success("Telemetrie-Daten exportiert.");
+        toast.success("Sensordaten exportiert.");
         return;
       }
 
@@ -148,9 +148,9 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
       link.click();
       URL.revokeObjectURL(blobUrl);
 
-      toast.success("Telemetrie-Daten exportiert.");
+      toast.success("Sensordaten exportiert.");
     } catch (err) {
-      toast.error("Fehler beim Exportieren der Telemetrie-Daten.");
+      toast.error("Fehler beim Exportieren der Sensordaten.");
     } finally {
       LoadingState.endLoading();
     }

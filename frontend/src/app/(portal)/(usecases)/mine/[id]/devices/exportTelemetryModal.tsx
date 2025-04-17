@@ -117,7 +117,7 @@ const ExportTelemetryModal = ({
                 className="bg-base-300 p-6 rounded-md shadow-lg max-w-sm w-full"
                 onClick={(e) => e.stopPropagation()}
             >
-                <h2 className="text-lg font-semibold mb-4">Telemetrie-Daten Exportieren</h2>
+                <h2 className="text-lg font-semibold mb-4">Sendordaten Exportieren</h2>
 
                 <label className="text-sm block mb-2">Zeitraum auswählen:</label>
                 <DefinedRange
@@ -128,7 +128,7 @@ const ExportTelemetryModal = ({
                 />
 
                 <div className="mb-8 mt-4">
-                    <label className="text-sm block mb-2">Telemetrie-Schlüssel auswählen:</label>
+                    <label className="text-sm block mb-2">Sensorwerte auswählen:</label>
                     <div className="flex flex-wrap gap-2">
                         <button
                             onClick={() => {
