@@ -21,7 +21,7 @@ export default function PlatformButton() {
 
 
     if(isAuth) {
-        return <Link href={"/login-to-platform"} className={"p-2 mr-4 rounded border-2 border-white"}> Zur Platform </Link>;
+        return <Link href={"/login-to-platform"} className={"p-2 mr-4 rounded border-2 border-white"}> Zur Plattform </Link>;
     } else {
         return <></>;
     }

@@ -1,6 +1,6 @@
 "use client"
 import { CpuChipIcon } from "@heroicons/react/20/solid";
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, PlusIcon, TrashIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -8,14 +8,30 @@ import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
 import { useCallback, useEffect, useReducer, useState } from "react";
+import toast from 'react-hot-toast';
+import type { Range } from 'react-date-range';
+import { addDays } from 'date-fns';
+import ExportTelemetryModal from "./exportTelemetryModal";
 
 const dynamic = 'force-dynamic';
 
-const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, setup: any, stepData: any, devicesRefresh: Function}) => {
 
-
-    const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
-
+const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, setup: any, stepData: any, devicesRefresh: Function }) => {
+  const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [availableKeys, setAvailableKeys] = useState<string[]>([]);
+  const defaultDateRange: Range[] = [
+    {
+      startDate: addDays(new Date(), -1),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ];
+  const [dateRange, setDateRange] = useState<Range[]>(defaultDateRange);
+  const handleCloseExportModal = () => {
+    setExportModalOpen(false);
+    setDateRange(defaultDateRange);
+  };
 
     const deleteDevice = useCallback( () => {
 
@@ -32,6 +48,114 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
         })
     } , [device, setup])
 
+    useEffect(() => {
+      if (exportModalOpen) {
+        const fetchKeys = async () => {
+          const deviceId = device.id.id;
+          const entityType = device.id.entityType;
+          const keysUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/keys/timeseries`;
+          const keys: string[] = await fetchAPI(keysUrl, {}, {
+            headers: { Authorization: `Bearer ${Auth.getToken()}` }
+          });
+          setAvailableKeys(keys);
+        };
+        fetchKeys();
+      }
+    }, [exportModalOpen, device.id.id, device.id.entityType]);
+
+  const exportDeviceData = useCallback(async (format: "csv" | "json", selectedKeys: string[]) => {
+    const deviceId = device.id.id;
+    const entityType = device.id.entityType;
+    const startDate = dateRange[0].startDate;
+    const endDate = dateRange[0].endDate;
+
+    if (!startDate || !endDate) {
+      toast.error("Bitte wähle einen gültigen Zeitraum aus.");
+      return;
+    }
+
+    if (!selectedKeys || selectedKeys.length === 0) {
+      toast.error("Bitte wähle mindestens einen Sensorwert aus.");
+      return;
+    }
+
+    LoadingState.startLoading();
+
+    try {
+      const exportUrl = `/api/thingsboard-plugin/deployment/telemetry/${entityType}/${deviceId}/export?key=${selectedKeys.join(",")}&startTs=${startDate.getTime()}&endTs=${endDate.getTime()}&useStrictDataTypes=true`;
+      const data = await fetchAPI(exportUrl, {}, {
+        headers: {
+          Authorization: `Bearer ${Auth.getToken()}`
+        }
+      });
+
+      if (!data || Object.values(data).every(arr => !Array.isArray(arr) || arr.length === 0)) {
+        toast.error("Zeitraum enthält keine Sensordaten zum Exportieren.");
+        return;
+      }
+
+      // Export raw JSON
+      if (format === "json") {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `${device.label.replaceAll(" ", "_")}_telemetry.json`;
+        link.click();
+        URL.revokeObjectURL(blobUrl);
+
+        toast.success("Sensordaten exportiert.");
+        return;
+      }
+
+      // Export as .csv
+      const rowMap: Record<number, Record<string, any>> = {};
+      // Align by timestamp
+      selectedKeys.forEach(key => {
+        const series = data[key];
+        if (Array.isArray(series)) {
+          series.forEach(entry => {
+            const ts = entry.ts;
+            if (!rowMap[ts]) rowMap[ts] = { timestamp: ts };
+            rowMap[ts][key] = entry.value;
+          });
+        }
+      });
+
+      const rows = Object.values(rowMap).sort((a, b) => a.timestamp - b.timestamp);
+
+      const escapeCSV = (value: any) => {
+        if (value === null || value === undefined) return '';
+        const str = String(value);
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+
+      const headers = ["timestamp", ...selectedKeys];
+      const csv = [
+        headers.join(","),
+        ...rows.map(row => headers.map(h => escapeCSV(row[h])).join(","))
+      ].join("\n");
+
+      const bom = "\uFEFF"; // UTF-8 BOM
+      const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${device.label.replaceAll(" ", "_")}_telemetry.csv`;
+      link.click();
+      URL.revokeObjectURL(blobUrl);
+
+      toast.success("Sensordaten exportiert.");
+    } catch (err) {
+      toast.error("Fehler beim Exportieren der Sensordaten.");
+    } finally {
+      LoadingState.endLoading();
+    }
+  }, [device, dateRange]);
+
 
     return (
         <>
@@ -46,6 +170,10 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
                          className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer hidden"}>
                         <PencilIcon className={"w-4 aspect-square"}/>
                     </div>
+                    <div title={"Export"} onClick={() => setExportModalOpen(true)}
+                        className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-base-300 text-white cursor-pointer"}>
+                        <ArrowDownTrayIcon className={"w-4 aspect-square"} />
+                    </div>
                     <div title={"Löschen"} onClick={() => deleteDevice()}
                          className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"}>
                         <TrashIcon className={"w-4 aspect-square"}/>
@@ -53,9 +181,23 @@ const DeviceBox = ({device, setup, stepData, devicesRefresh } : {device: any, se
                 </div>
             </div>
             { flashModalOpen && <FlashProgress stepData={{...stepData, deployment: setup.id, state: { device: { id: device.id.id }}}} onClose={() => toggleFlashModalOpen()}/> /*TODO: correct StepDAta information to properly flash device*/ }
-        </>
-    );
-}
+
+            {exportModalOpen &&
+              typeof window !== "undefined" &&
+              <ExportTelemetryModal
+              isOpen={exportModalOpen}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+              onCancel={handleCloseExportModal}
+              onConfirm={(format, selectedKeys) => {
+                setExportModalOpen(false);
+                exportDeviceData(format, selectedKeys);
+              }}
+              availableKeys={availableKeys}
+            />}
+    </>
+  );
+};
 
 
 const ProfileBox = ({profile, setup, stepData}: { profile: any, setup: any, stepData?: any }) => {
@@ -180,3 +322,5 @@ const Page = ({params}: { params: { id: number } }) => {
     </>;
 }
 export default Page;
+
+
