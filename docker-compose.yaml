@@ -3,7 +3,11 @@ services:
   frontend:
     image: ghcr.io/iot4h/portal-ui
     environment:
-       NEXT_PUBLIC_STRAPI_API_URL: "http://localhost:1337"
+      FRONTEND_STRAPI_API_URL: "http://localhost:1337"
+      SERVER_STRAPI_API_URL: "http://localhost:1337"
+      FRONTEND_URL=: "http://localhost:3000"
+      LITTLEFS_API_URL: "http://localhost:3001/littlefs.bin"
+
     build:
       context: ./frontend
     restart: unless-stopped
