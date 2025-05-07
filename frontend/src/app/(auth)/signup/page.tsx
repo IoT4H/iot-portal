@@ -11,7 +11,7 @@ import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
 export default function Page() {
