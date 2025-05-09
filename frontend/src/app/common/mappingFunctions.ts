@@ -20,3 +20,16 @@ export function mapUseCase(useCase: any): UseCase {
         setupSteps: useCase.attributes.setupSteps || []
     }
 }
+
+export function generateSlugToLinkMap(slugData: any): Map<string, string> {
+
+  let slugToLink = new Map<string, string>();
+
+  for (var entry of slugData.data) {
+    slugToLink.set(entry.attributes.slug, `/api/wissen/${entry.attributes.slug}`)
+
+  }
+
+
+  return slugToLink
+} 
