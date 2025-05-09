@@ -1,5 +1,4 @@
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import { fetchAPI } from '@iot-portal/frontend/lib/api'
 
 export function mapUseCase(useCase: any, keyWordMap: Map<string, string>): UseCase {
 
