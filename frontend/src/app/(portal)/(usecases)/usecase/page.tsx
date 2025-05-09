@@ -41,8 +41,9 @@ export default async function Home() {
         cache: "no-cache"
       }
     });
+    var slugLinker = new Map<string, string>()
 
-    const slugData = await fetchAPI('/api/glossars', {
+    await fetchAPI('/api/glossars', {
       fields: '*',
       populate: {
         thumbnail: {
@@ -52,13 +53,12 @@ export default async function Home() {
       sort: [
         "word"
       ]
-    })
-    console.log("##############")
-    console.log(generateSlugToLinkMap(slugData))
-
+    }).then((slugData) => {
+      slugLinker = generateSlugToLinkMap(slugData)
+    });
 
     return useCasesData ? useCasesData.data.map(
-      (useCase: any): UseCase => { let uc = mapUseCase(useCase); return uc }) : [];
+      (useCase: any): UseCase => { let uc = mapUseCase(useCase, slugLinker); console.log(uc); return uc }) : [];
   })();
 
 
