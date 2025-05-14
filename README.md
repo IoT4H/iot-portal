@@ -24,21 +24,21 @@ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
 
 Default addresses for local development:
 
-- Portal: http://localhost:3000
-- Strapi: http://localhost:1337
-- Platform (Thingsboard): http://localhost:9090
-  - Swagger UI: http://localhost:9090/swagger-ui/
+- Portal: <http://localhost:3000>
+- Strapi: <http://localhost:1337>
+- Platform (Thingsboard): <http://localhost:9090>
+  - Swagger UI: <http://localhost:9090/swagger-ui/>
 
 Strapi includes the Strapi CMS UI, plugins (`strapi-backend/src/plugins/thingsboard-plugin`), and, in our case, comes with a dedicated Postgres. The platform comes with default users user:password `sysadmin@thingsboard.org:sysadmin` for the default admin with admin UI access and `tenant@thingsboard.org:tenant` for the default tenant.
 
 ### Strapi
 
-- Make sure to set all roles and permissions for `Authenticated` and `Public` users under http://localhost:1337/admin/settings/users-permissions/roles. This can include all `find` and `findOne` permissions across all routes and all permissions for the `Thingsboard-plugin` route.
+- Make sure to set all roles and permissions for `Authenticated` and `Public` users under <http://localhost:1337/admin/settings/users-permissions/roles>. This can include all `find` and `findOne` permissions across all routes and all permissions for the `Thingsboard-plugin` route.
 - When adding plugin routes, as for the `Thingsboard-plugin`, ensure that each custom controller action (e.g., `exportTelemetry`, etc.) is explicitly allowed for the relevant user roles — otherwise, Strapi will return a **403 Forbidden** silently even if the route and token are valid.
 
 ### Portal Users
 
-- New users can register by clicking `Jetzt registrieren` on the login page. Or directly navigate to http://localhost:3000/signup/.
+- New users can register by clicking `Jetzt registrieren` on the login page. Or directly navigate to <http://localhost:3000/signup/>.
 - Each newly registered user receives a `Tenant` account in the Thingsboard platform.
 - Portal users are able to test, i.e. deploy, `Anwendungsfälle`. Deployed Anwendungsfälle (use cases) then list, i.e. display, all connected Thingsboard dashboards and devices in the user's portal.
 
@@ -65,3 +65,7 @@ docker exec mytb psql -U thingsboard -c "ALTER USER thingsboard WITH PASSWORD 'p
 ```
 
 Where `thingsboard:postgres` is the default `user:password` (for some reason, it has to be re-applied manually).
+
+## Automated Links to Knowledgebase
+
+> TODO
