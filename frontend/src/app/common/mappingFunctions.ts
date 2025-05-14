@@ -5,12 +5,13 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string>): UseCa
   let title = useCase.attributes.Titel
   let description = useCase.attributes.description
   let summary = useCase.attributes.summary
-
-  keyWordMap.forEach((link, key) => {
-    title = title.replace(key, link)
-    description = description.replace(key, link)
-    summary = summary.replace(key, link)
-  })
+  if (keyWordMap) {
+    keyWordMap.forEach((link, key) => {
+      title = title.replace(key, link)
+      description = description.replace(key, link)
+      summary = summary.replace(key, link)
+    })
+  }
 
   return {
     id: useCase.id,
