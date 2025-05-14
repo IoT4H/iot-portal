@@ -36,17 +36,16 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string>): UseCa
 export function generateSlugToLinkMap(slugData: any): Map<string, string> {
 
   let slugToLink = new Map<string, string>();
-
-  for (var entry of slugData.data) {
-    let keyWords = entry.attributes.keyWords
-    if (keyWords) {
+  if (slugData.data) {
+    for (var entry of slugData.data) {
+      let keyWords = entry.attributes.keyWords
       for (var key of keyWords) {
         let slugLink = `[${key}](/api/wissen/${entry.attributes.slug})`
         slugToLink.set(key, slugLink)
       }
     }
+  } else if (slugData.error) {
+    console.log(slugData.error)
   }
-
-
   return slugToLink
-} 
+}
