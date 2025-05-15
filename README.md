@@ -66,6 +66,18 @@ docker exec mytb psql -U thingsboard -c "ALTER USER thingsboard WITH PASSWORD 'p
 
 Where `thingsboard:postgres` is the default `user:password` (for some reason, it has to be re-applied manually).
 
-## Automated Links to Knowledgebase
+## Automated link creation to knowledge base
 
-> TODO
+- Each knowledge base entry has an additional field "Key Words"
+
+  - use a JSON list to provide a list of keywords!
+  - See the example below!
+
+  ```json
+  ["sed", "amet"]
+  ```
+
+  - The keywords are used to inject links to the related knowledge base entry.
+  - Each occurence of a key word within the text will be replaced
+    with a link to the related knowledge entry
+  - **The injection is case-sensitive!**
