@@ -46,7 +46,7 @@ export function ListItemUseCase({ useCase }: { useCase: UseCase }) {
     <>
       <div className="flex justify-between gap-x-6 snap-center">
         <Link href={"/usecase/" + useCase.slug} className={"w-full group/card"} prefetch={true}>
-          <div className="flex flex-col-reverse cursor-pointer w-full min-h-64 dark:bg-zinc-900 overflow-hidden h-full border border-gray-500/25 group-hover/card:border-orange-500/25">
+          <div className="flex flex-col-reverse cursor-pointer w-full min-h-64 dark:bg-zinc-900  h-full border border-gray-500/25 group-hover/card:border-orange-500/25">
             <div className={"flex flex-grow-0 flex-shrink-0 items-center flex-row w-full h-64 relative "}>
               {
                 useCase.thumbnail && useCase.thumbnail.url && (
