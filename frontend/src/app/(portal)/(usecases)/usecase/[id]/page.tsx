@@ -4,21 +4,21 @@ import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/comm
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import * as React from "react";
 
-function Info({ description } : { description: string; }) {
-    return (<CustomMarkdown className={"markdown mx-8 text-justify"}>{description}</CustomMarkdown>);
+function Info({ description }: { description: string; }) {
+  return (<CustomMarkdown className={"markdown mx-8 text-justify"}>{description}</CustomMarkdown>);
 }
 
-function PictureGallery({ pictures } : {pictures?: any[]}) {
+function PictureGallery({ pictures }: { pictures?: any[] }) {
 
-    return (
-        <div className={"grid md:grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] grid-cols-2 gap-2"}>
-            { pictures && pictures.map((pic, index, allPics) => {
-                return (
-                    <GalleryImage key={pic.hash} thumbnailSrc={getStrapiURLForFrontend(pic.formats.thumbnail.url)} caption={pic.caption} alt={pic.alternativeText}  src={getStrapiURLForFrontend(pic.url)} init={index} imageList={pictures} className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square object-cover absolute max-w-fit max-h-fit min-w-full min-h-full "} />
-                );
-            })}
-        </div>
-    );
+  return (
+    <div className={"grid md:grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] grid-cols-2 gap-2"}>
+      {pictures && pictures.map((pic, index, allPics) => {
+        return (
+          <GalleryImage key={pic.hash} thumbnailSrc={getStrapiURLForFrontend(pic.formats.thumbnail.url)} caption={pic.caption} alt={pic.alternativeText} src={getStrapiURLForFrontend(pic.url)} init={index} imageList={pictures} className={"flex cursor-pointer relative flex-col items-center flex-wrap content-center align-center justify-center truncate w-full aspect-square object-cover absolute max-w-fit max-h-fit min-w-full min-h-full "} />
+        );
+      })}
+    </div>
+  );
 }
 
 export const dynamic = 'force-dynamic';
@@ -41,12 +41,25 @@ export default async function UseCasePage({ params }: { params: { id: number } }
         $eq: params.id,
       },
     },
-  }
-    ;
+  };
+  var slugLinker = new Map<string, string>()
 
-    const useCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0]);
-    });
+  await fetchAPI('/api/glossars', {
+    fields: '*',
+    populate: {
+      thumbnail: {
+        populate: true
+      }
+    },
+    sort: [
+      "word"
+    ]
+  }).then((slugData) => {
+    slugLinker = generateSlugToLinkMap(slugData)
+  });
+  const useCase = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+    return mapUseCase(data.data[0], slugLinker);
+  });
 
 
 
