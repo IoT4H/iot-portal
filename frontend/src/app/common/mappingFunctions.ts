@@ -7,9 +7,9 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string>): UseCa
   let summary = useCase.attributes.summary
   if (keyWordMap) {
     keyWordMap.forEach((link, key) => {
-      title = title.replace(key, link)
+      title = title?.replace(key, link)
       description = description.replace(key, link)
-      summary = summary.replace(key, link)
+      summary = summary?.replace(key, link)
     })
   }
 
