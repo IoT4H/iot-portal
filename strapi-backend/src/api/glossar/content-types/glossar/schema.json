@@ -21,7 +21,8 @@
     },
     "slug": {
       "type": "uid",
-      "targetField": "word"
+      "targetField": "word",
+      "required": true
     },
     "shortdescription": {
       "type": "text",
@@ -34,6 +35,9 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "keyWords": {
+      "type": "json"
     }
   }
 }
