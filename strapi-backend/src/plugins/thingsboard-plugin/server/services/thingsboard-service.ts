@@ -86,7 +86,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response: any) => response.data));
   },
 
-  async getTelemetryKeysForDevice(tenantId, entityType, id) {  
+  async getTelemetryKeysForDevice(tenantId, entityType, id) {
     return (await this.axiosAsTenant(tenantId, {
       method: 'get',
       url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/plugins/telemetry/${entityType}/${id}/keys/timeseries`
@@ -101,11 +101,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     keys: string[],
     startTs: number,
     endTs: number
-  ) {  
+  ) {
     const url = `${strapi.plugin(pluginId).config('thingsboardUrl')}/api/plugins/telemetry/${entityType}/${id}/values/timeseries`;
-  
+
     strapi.log.info(`📡 Fetching telemetry from TB for ${entityType}/${id} with keys: ${keys.join(', ')}`);
-  
+
     try {
       const response = await this.axiosAsTenant(tenantId, {
         method: 'get',
@@ -117,7 +117,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           limit: 1000
         }
       }) as AxiosResponse<Record<string, { ts: number; value: string }[]>>;
-  
+
       strapi.log.info(`✅ Telemetry response keys: ${Object.keys(response.data).join(', ')}`);
       return response.data;
     } catch (err: any) {
@@ -597,25 +597,26 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async createThingsboardComponentsRelationForTenant(tenantId: string, componentType: string, componentId: string, toComponentType: string,  toComponentId: string, type: string , typeGroup: string = "COMMON", direction: "from" | "to" = "to") {
     return new Promise<any>((resolve, reject) => {
 
+
+      const bodyData = JSON.stringify({
+
+        from: {
+          id: direction === "from" ? componentId : toComponentId,
+          entityType: (direction === "from" ? componentType : toComponentType).toUpperCase()
+        },
+        to: {
+          id: direction === "from" ? toComponentId : componentId ,
+          entityType: (direction === "from" ? toComponentType : componentType).toUpperCase()
+        },
+        type: type,
+        typeGroup: typeGroup,
+        additionalInfo: {}
+      });
+
       this.axiosAsTenant(tenantId, {
         method: 'post', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/relation`, headers: {
           'Content-Type': 'application/json'
-        }, data: JSON.stringify({
-
-            from: {
-              id: direction === "from" ? componentId : toComponentId,
-              entityType: direction === "from" ? componentType : toComponentType
-          },
-            to: {
-              id: direction === "from" ? toComponentId : componentId ,
-              entityType: direction === "from" ? toComponentType : componentType
-            },
-            type: type,
-            typeGroup: typeGroup,
-            additionalInfo: {}
-          }
-
-        )
+        }, data: bodyData
       })
         .then(
           (response: any) => {

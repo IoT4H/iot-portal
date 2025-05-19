@@ -11,6 +11,7 @@ import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
 import { useEffect, useReducer, useState } from "react";
+import { dispatch } from "react-hot-toast/src/core/store";
 
 enum overlaps { undefined, OVERLAP , LOADING , NO_OVERLAP};
 
@@ -28,6 +29,12 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
 
 
     const [relations, SetRelations] = useState([]);
+    const [relationValues, SetRelationValues] = useReducer((state: Map<number, any>, action: { index: any, relation: any }) => {
+        const b = state;
+        b.set(action.index, action.relation);
+        return b;
+    }, new Map<number, any>([]));
+
     const [error, SetError] = useState<string | undefined>();
 
     const [component, SetComponent] = useState<any>(undefined);
@@ -47,7 +54,8 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                     name: name,
                     label: label,
                     description: description,
-                    gateway: gateway
+                    gateway: gateway,
+                    relations: Array.from(relationValues.values())
                 }
             })
         }).then((response) => {
@@ -104,7 +112,7 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
     const [overlapStatus, SetOverlapStatus] = useState<overlaps>(overlaps.undefined)
 
     const actionable = () => {
-        return (label.length > 0) && (!step.data.alternativeLabel || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP) );
+        return (label.length > 0) && (relations.length === Array.from(relationValues.values()).length) && (!step.data.alternativeLabel || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP) );
     }
 
     useEffect(() => {
@@ -204,7 +212,15 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                 onChange={(event: any) => SetDescription(event.currentTarget.value)}
                             ></FieldSetInput>
                         </div>
-                        <RelationMappings relations={relations} linkingComponent={component} deploymentId={config.deployment} />
+                        <RelationMappings relations={relations} linkingComponent={component} deploymentId={config.deployment} onChanges={relations.map((r: any, i ,a) => {
+                            return (value: any) => {
+                                return value ? SetRelationValues({index: i, relation: {
+                                        toId: value.id,
+                                        direction: r.direction,
+                                        name: r.name
+                                    } }) : () => {};
+                            }
+                        })}/>
                     </div>
                     <div className={"mt-8 flex flex-row justify-center"}>
                         <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"} disabled={!actionable()}
