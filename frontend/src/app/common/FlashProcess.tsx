@@ -351,7 +351,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     </div>
                 }
                 action={<div className={"flex flex-col items-center gap-2"}>
-                    <div className={`btn-primary w-max ${ flashProgress ? "invisible" : "visible"}`} onClick={() => flash()}>Flashen starten
+                    <div className={`btn-primary w-max ${ flashProgress !== undefined ? "invisible" : "visible"}`} onClick={() => flash()}>Flashen starten
                     </div>
                     <span className={"text-[0.6rem]"}>* All Espressif&apos;s logos are trademarks of Espressif Systems (Shanghai) Co., Ltd.</span>
                 </div>}/>
@@ -414,6 +414,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
 
     const flash = () => {
+        SetFlashProgress(0.0);
         new Promise<void>(async (resolve) => {
 
             const fileArray: any[] = [
