@@ -206,7 +206,6 @@ const Modal = ({onClose, config, step, triggerStateRefresh } : {onClose?: Functi
                                 multiline
                                 type="text"
                                 placeholder={"Dieses Feld kann optional eine Erklärung zum Gerät enthalten."}
-                                value={""}
                                 name="description"
                                 className={"h-12"}
                                 onChange={(event: any) => SetDescription(event.currentTarget.value)}
