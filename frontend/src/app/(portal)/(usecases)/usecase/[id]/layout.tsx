@@ -1,5 +1,5 @@
 import ShareButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/[id]/share-button";
-import SetupButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
+import SetupButton, { SetupButtonReplacement } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
 import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
@@ -191,7 +191,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                 </div> }
                             </div>
                             <Suspense fallback={<Loading />}>
-                                <SetupButton slug={useCase.slug}></SetupButton>
+                                { useCase.setupSteps.length > 0 ? <SetupButton slug={useCase.slug}></SetupButton> : <SetupButtonReplacement/> }
                             </Suspense>
                         </div>
                     </div>
