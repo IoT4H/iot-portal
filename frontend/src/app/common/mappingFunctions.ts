@@ -1,6 +1,6 @@
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 
-export function mapUseCase(useCase: any, keyWordMap: Map<string, string>): UseCase {
+export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new Map<string, string>()): UseCase {
 
   let title = useCase.attributes.Titel
   let description = useCase.attributes.description
@@ -39,10 +39,12 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
   let slugToLink = new Map<string, string>();
   if (slugData.data) {
     for (var entry of slugData.data) {
-      let keyWords = entry.attributes.keyWords
-      for (var key of keyWords) {
-        let slugLink = `[${key}](/api/wissen/${entry.attributes.slug})`
-        slugToLink.set(key, slugLink)
+      let keyWords = entry.attributes.keyWords;
+      if(Array.isArray(keyWords)) {
+        for (var key of keyWords) {
+          let slugLink = `[${key}](/api/wissen/${entry.attributes.slug})`
+          slugToLink.set(key, slugLink)
+        }
       }
     }
   } else if (slugData.error) {
