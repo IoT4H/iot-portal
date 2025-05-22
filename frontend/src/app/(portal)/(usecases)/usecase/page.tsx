@@ -41,7 +41,7 @@ export default async function Home() {
         cache: "no-cache"
       }
     });
-    var slugLinker = new Map<string, string>()
+    let slugLinker = new Map<string, string>()
 
     await fetchAPI('/api/glossars', {
       fields: '*',

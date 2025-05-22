@@ -42,7 +42,7 @@ export default async function UseCasePage({ params }: { params: { id: number } }
       },
     },
   };
-  var slugLinker = new Map<string, string>()
+  let slugLinker = new Map<string, string>()
 
   await fetchAPI('/api/glossars', {
     fields: '*',

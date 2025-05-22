@@ -6,6 +6,9 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
   let summary = useCase.attributes.summary
   if (keyWordMap) {
     keyWordMap.forEach((link, key) => {
+      let regexString = '[a-zA-Z]*__KEY__[a-zA-Z]{0,2}'.replace("__KEY__", key)
+      let keyRegex = new RegExp(regexString, "g")
+      let match_list = description.match(keyRegex)
       description = description.replace(key, link)
       summary = summary?.replace(key, link)
     })
@@ -36,10 +39,10 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
 
   let slugToLink = new Map<string, string>();
   if (slugData.data) {
-    for (var entry of slugData.data) {
+    for (let entry of slugData.data) {
       let keyWords = entry.attributes.keyWords;
       if (Array.isArray(keyWords)) {
-        for (var key of keyWords) {
+        for (let key of keyWords) {
           let slugLink = `[${key}](/api/wissen/${entry.attributes.slug})`
           slugToLink.set(key, slugLink)
         }
