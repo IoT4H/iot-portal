@@ -2,15 +2,34 @@ import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 
 export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new Map<string, string>()): UseCase {
 
-  let description = useCase.attributes.description
-  let summary = useCase.attributes.summary
+  let description: string = useCase.attributes.description
+  let summary: string = useCase.attributes.summary
   if (keyWordMap) {
     keyWordMap.forEach((link, key) => {
-      let regexString = '[a-zA-Z]*__KEY__[a-zA-Z]{0,2}'.replace("__KEY__", key)
-      let keyRegex = new RegExp(regexString, "g")
-      let match_list = description.match(keyRegex)
-      description = description.replace(key, link)
-      summary = summary?.replace(key, link)
+      // escape "\" otherwise regex creation fails 
+      const regexString: string = "(?<!\\[)__KEY__[a-zA-Z]{0,2}(?!\\])".replace("__KEY__", key)
+
+      let keyRegex: RegExp = new RegExp(regexString, "g")
+
+      if (description != undefined) {
+        let uniqueDescriptionMatch: Set<string> = new Set<string>(description.match(keyRegex))
+
+        for (let uniqueKey of Array.from(uniqueDescriptionMatch)) {
+          // "\" must be escaped otherwise the regex matches everything
+          let replaceRegex: RegExp = new RegExp(`(?<!\\[)${uniqueKey}(?!\\])`, "g")
+          let linkUpdate: string = link.replace(key, uniqueKey)
+          description = description.replace(replaceRegex, linkUpdate)
+        }
+      }
+      if (summary != undefined) {
+        let uniqueSummaryMatch: Set<string> = new Set<string>(summary.match(keyRegex))
+        for (let uniqueKey of Array.from(uniqueSummaryMatch)) {
+          // "\" must be escaped otherwise the regex matches everything
+          let replaceRegex: RegExp = new RegExp(`(?<!\\[)${uniqueKey}(?!\\])`, "g")
+          let linkUpdate: string = link.replace(key, uniqueKey)
+          summary = summary.replace(replaceRegex, linkUpdate)
+        }
+      }
     })
   }
 
