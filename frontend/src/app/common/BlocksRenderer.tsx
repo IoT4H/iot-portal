@@ -6,7 +6,7 @@ import Link from "next/link";
 import * as React from "react";
 
 const BlocksRenderer = ({content, className}: {content: BlocksContent, className?: string}) => <div className={`markdown group/markdown  ${className ? className : ""}`}><StrapiBlocksRenderer content={content || []} blocks={{
-    paragraph: ({ children, plainText }) => <p className="w-full text-neutral  my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
+    paragraph: ({ children, plainText }) => <p className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
     heading: ({ children, plainText, level }) => {
         switch (level) {
             case 1:
@@ -22,7 +22,7 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
             case 6:
                 return <div className={"mb-1 mt-0.5"}><h6 className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">{children || plainText}</h6></div>
             default:
-                return <div className={" mb-[1.5rem] last:mb-0"}><h4 className={"text-xl font-bold"}>{children || plainText}</h4></div>
+                return <div className={" mb-[1.5rem] last:mb-0"}><h4 className={"text-xl font-bold dark:text-white"}>{children || plainText}</h4></div>
         }
     },
     list: ({format, children, plainText}) => {

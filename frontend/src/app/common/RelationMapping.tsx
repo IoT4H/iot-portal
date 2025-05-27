@@ -10,7 +10,7 @@ import * as React from "react";
 export const createRelation = (deploymentId: string, linkingComponent: any, relatedComponent: any, relation: any) => {
 
 
-    fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${linkingComponent.entityType.split("_")[0].toLowerCase()}/${linkingComponent.id}/relation`, {
+    fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${linkingComponent.entityType.split("_")[0].toUpperCase()}/${linkingComponent.id}/relation`, {
         direction: relation.direction
     }, {
         method: "POST",
@@ -34,7 +34,7 @@ export const RelationMapField = (p: any) => {
     const [value, SetValue] = useState<any>();
 
     useEffect( () => {
-        fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${relation.component.entityType.split("_")[0].toLowerCase()}/${relation.component.id}/components`, {}, {
+        fetchAPI(`/api/thingsboard-plugin/deployment/${deploymentId}/${relation.component.entityType.split("_")[0].toUpperCase()}/${relation.component.id}/components`, {}, {
             method: "get",
             headers: {
                 Authorization: `Bearer ${Auth.getToken()}`
@@ -50,6 +50,7 @@ export const RelationMapField = (p: any) => {
             console.log(options[0])
             SetValue(options[0]);
         }
+
     }, [options]);
 
     useEffect(() => {
@@ -60,23 +61,22 @@ export const RelationMapField = (p: any) => {
         }
     }, [value, linkingComponent]);
 
-    return <FieldSetSelect label={relation.displayName} required onChange={(event: any) => SetValue(event.currentTarget.value)} value={value}>
+    return <FieldSetSelect label={relation.displayName} required onChange={(event: any) => SetValue(options[event.currentTarget.value])} value={props.value}>
             {
-                Array.isArray(options) && options.map((option: any) => {
-                    return <option key={option.id.id}
-                                   value={option}>{option.label}</option>
+                Array.isArray(options) && options.map((option: any, i , a) => {
+                    return <option key={option.id.id} value={i}>{option.label}</option>
                 })
             }
     </FieldSetSelect>;
 }
 
-export const RelationMappings = ({deploymentId, linkingComponent, relations} : {deploymentId:number,linkingComponent: any, relations: Array<any>}) => {
+export const RelationMappings = ({deploymentId, linkingComponent, relations, onChanges} : {deploymentId:number,linkingComponent: any, relations: Array<any>, onChanges: Function[]}) => {
     return <>
         {
             Array.isArray(relations) && relations.map((relation: any, i, rArray) => {
 
                 return (<>
-                    <RelationMapField key={relation.id} deploymentId={deploymentId} linkingComponent={linkingComponent} relation={relation}></RelationMapField>
+                    <RelationMapField key={relation.id} deploymentId={deploymentId} linkingComponent={linkingComponent} relation={relation} onChange={onChanges[i]}></RelationMapField>
                 </>);
             })
         }

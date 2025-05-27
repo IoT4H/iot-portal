@@ -45,10 +45,10 @@ export default function CustomMarkdown({children, className, ...rest}: { childre
             },
             p: (props) => {
                 return <p
-                    className={"w-full text-neutral my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</p>;
+                    className={"dark:text-white w-full text-neutral my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</p>;
             },
             blockquote(props) {
-                return <blockquote className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</blockquote>;
+                return <blockquote className={"dark:text-white p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</blockquote>;
             },
             a: (props) => {
 
