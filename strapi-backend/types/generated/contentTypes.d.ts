@@ -1001,7 +1001,7 @@ export interface ApiFirmFirm extends Schema.CollectionType {
     CustomerUserUID: Attribute.String &
       Attribute.Unique &
       Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
-    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    name: Attribute.String & Attribute.Required;
     Logo: Attribute.Media;
     verified: Attribute.Boolean &
       Attribute.Required &

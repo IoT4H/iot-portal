@@ -374,6 +374,25 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       populate: { firm: {fields: ['id', 'TenentUID', 'CustomerUID', 'CustomerUserUID']}, use_case: { populate: '*' }}
     });
 
+
+      const createRelations = async (newComponent: any, relations: any[]) => {
+        await Promise.allSettled(
+          Array.of<{ toId: any, name: string, typeGroup?: string, direction: "to" | "from" }>(...relations).map(relation => {
+            console.log(deployment, newComponent, relation)
+            return strapi.plugin('thingsboard-plugin').service('thingsboardService').createThingsboardComponentsRelationForTenant(
+              deployment.firm.TenentUID,
+              newComponent.entityType,
+              newComponent.id,
+              relation.toId.entityType,
+              relation.toId.id,
+              relation.name,
+              relation.typeGroup || undefined,
+              relation.direction || "to"
+            );
+          })
+        );
+      }
+
     let returnPromise;
 
     if((await this.getInstructionStepsProgressCompleteFromDeployment(deploymentId)).complete) {
@@ -405,6 +424,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
                 label: data.parameter.label
               }
             );
+          returnPromise = new Promise((resolve, reject) => {
+            returnPromise.then(async (component) => {
+              console.log(component, data.parameter)
+              createRelations(component.id, data.parameter?.relations || []).finally(() => {
+                resolve(component);
+              });
+              }
+            ).catch(e => reject(e));
+          })
           if(!_ignoreStepsProgressUpdate) {
             returnPromise = returnPromise.then((response) => {
                 strapi.plugin('thingsboard-plugin').service('strapiService').updateInstructionStepsProgressFromDeployment(deploymentId, {

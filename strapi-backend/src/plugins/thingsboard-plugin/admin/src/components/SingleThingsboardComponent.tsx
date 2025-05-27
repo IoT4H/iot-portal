@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
 
+import { useIntl } from 'react-intl';
 import { Grid, GridItem } from '@strapi/design-system';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/helper-plugin';
@@ -112,8 +113,11 @@ export const ComponentItem  = (e: { id?: string, type?: string}) => {
 
 const singleTBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
-  const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
+  const { attribute, intlLabel, description, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
     props; // these are just some of the props passed by the content-manager
+
+
+  const { formatMessage } = useIntl();
 
 
   const getOrgValue = (): any => {
@@ -157,6 +161,10 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
     onChange({
       target: { name, type: attribute.type, value: JSON.stringify(currentValue) },
     });
+  }
+
+  const setNewValue = (value: any) => {
+    SetCurrentValue(value);
     setIsVisible(false);
   }
 
@@ -260,13 +268,16 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
   <>
     <ErrorBoundary>
       <Field >
-        <FieldLabel> { (label || name).split(".")[(label || name).split(".").length - 1] }</FieldLabel>
+        <FieldLabel style={{paddingBottom: "4px"}}> { formatMessage(intlLabel) }</FieldLabel>
         {
           getOrgValue() !== undefined ?  <div onClick={() => setIsVisible(true)}><ComponentItem id={getOrgValue().id} type={getOrgValue().entityType} /></div> :
             <EmptyStateLayout content="Es wurde bisher keine Auswahl getroffen." action={!disabled && <Button variant="secondary" startIcon={<Pencil />} onClick={() => setIsVisible(true)}>
               Auswahl treffen
             </Button>}/>
         }
+        { description &&
+          <Typography  style={{paddingTop: "4px"}} as="h5"><Typography style={{fontSize: "0.75rem", color: "#666687"}}>{ formatMessage(description) }</Typography>
+          </Typography> }
       </Field>
 
 
@@ -325,7 +336,7 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
               <GridItem col={6}>
                 <KeyboardNavigable>
                 <Card key={`box-${index}`} background="neutral100" cursor={"pointer"} onClick={() => {
-                  SetCurrentValue(Object.assign(c.id, {"tenantId": { "id" : openTenant}}));
+                  setNewValue(Object.assign(c.id, {"tenantId": { "id" : openTenant}}));
                 }}>
                   <CardBody marginLeft={6}>
                     <CardContent paddingRight={2}>
@@ -390,5 +401,3 @@ const singleTBIDInput = React.forwardRef((props, ref) => {
 });
 
 export default singleTBIDInput;
-
-
