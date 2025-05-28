@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: eslint
         files: "frontend/src/app/\\(auth\\)/.*\\.(js|jsx|ts|tsx)$|frontend/src/app/\\(portal\\)/.*\\.(js|jsx|ts|tsx)$"
-        exclude: "frontend/src/app/\\(auth\\)/login-to-platform/page.tsx"
         types: [ file ]
         args: [ --fix ]
 
@@ -13,5 +12,4 @@ repos:
     hooks:
       - id: prettier
         files: "frontend/src/app/\\(auth\\)/.*\\.(js|jsx|ts|tsx|css|scss|json|md|html)$|frontend/src/app/\\(portal\\)/.*\\.(js|jsx|ts|tsx|css|scss|json|md|html)$"
-        exclude: "frontend/src/app/(auth)/login-to-platform/page.tsx"
         args: [--write]
