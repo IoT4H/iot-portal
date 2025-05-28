@@ -78,7 +78,7 @@ function Connect() {
     );
 }
 
-export default function MyDeploymentPage({ params }: { params: { id: number } }) {
+export default function MyDeploymentPage() {
     return (
         <>
             <Connect />

@@ -50,7 +50,6 @@ export default function Infopage() {
                                                     " w-full flex-shrink-0 aspect-video cursor-pointer rounded-t overflow-hidden not-sr-only"
                                                 }
                                             >
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
                                                     src={getStrapiURLForFrontend(
                                                         word.attributes.thumbnail?.data?.attributes
