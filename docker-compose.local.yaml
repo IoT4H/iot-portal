@@ -73,7 +73,7 @@ services:
 
   mytb:
     restart: unless-stopped
-    image: 'ghcr.io/iot4h/iot4h-platform:3.6.2-IOT4H.2'
+    image: 'ghcr.io/iot4h/iot4h-platform:3.6.2-IOT4H.4'
     container_name: mytb
     env_file:
       - .local.env
