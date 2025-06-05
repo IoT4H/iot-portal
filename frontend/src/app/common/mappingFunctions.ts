@@ -35,7 +35,7 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
 
   return {
     id: useCase.id,
-    title: useCase.attributes.title,
+    title: useCase.attributes.Titel,
     slug: useCase.attributes.slug,
     thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes && useCase.attributes.thumbnail.data.attributes.url && useCase.attributes.thumbnail.data.attributes || undefined,
     summary: summary,

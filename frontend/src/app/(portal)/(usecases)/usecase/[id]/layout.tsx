@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: {params: Params}) {
     ;
 
   const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-    return mapUseCase(data.data[0] || undefined, new Map<string, string>());
+    return mapUseCase(data.data[0] || undefined);
   });
 
 
