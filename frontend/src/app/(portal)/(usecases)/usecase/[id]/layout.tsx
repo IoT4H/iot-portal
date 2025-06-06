@@ -10,7 +10,7 @@ import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/fro
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Suspense} from "react";
 import { Badge, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import { mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
+import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import {
     AcademicCapIcon,
     ClockIcon,
@@ -19,6 +19,7 @@ import {
     SignalIcon, PhotoIcon
 } from "@heroicons/react/20/solid";
 
+import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {
 
@@ -47,9 +48,9 @@ export async function generateMetadata({ params }: {params: Params}) {
         }
     ;
 
-    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0] || undefined);
-    });
+  const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+    return mapUseCase(data.data[0] || undefined);
+  });
 
 
     const pageQsPara =
@@ -108,10 +109,23 @@ export default async function UseCase(props: { children: React.ReactNode, params
             },
         }
     ;
+  const slugData = await fetchAPI('/api/glossars', {
+    fields: '*',
+    populate: {
+      thumbnail: {
+        populate: true
+      }
+    },
+    sort: [
+      "word"
+    ]
+  })
+  const slugMap = generateSlugToLinkMap(slugData)
 
-    const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
-        return mapUseCase(data.data[0] || undefined);
-    });
+
+  const useCase: UseCase | undefined = await fetchAPI('/api/use-cases', qsPara).then((data) => {
+    return mapUseCase(data.data[0] || undefined, slugMap);
+  });
 
     return (
         <Suspense> {
@@ -148,7 +162,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <p className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}> {useCase.summary || "Eine Zusammenfassung wird kurz um ergänzt."}</p>
+                            <CustomMarkdown className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}>{useCase.summary}</CustomMarkdown>
                             <div className={"flex flex-row justify-evenly gap-8 mt-auto"}>
                                 { useCase.devices.length > 0 && <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>

@@ -576,6 +576,7 @@ export interface PluginContentReleasesReleaseAction
 export interface PluginMenusMenu extends Schema.CollectionType {
   collectionName: 'menus';
   info: {
+    name: 'Menu';
     displayName: 'Menu';
     singularName: 'menu';
     pluralName: 'menus';
@@ -620,6 +621,7 @@ export interface PluginMenusMenu extends Schema.CollectionType {
 export interface PluginMenusMenuItem extends Schema.CollectionType {
   collectionName: 'menu_items';
   info: {
+    name: 'MenuItem';
     displayName: 'Menu Item';
     singularName: 'menu-item';
     pluralName: 'menu-items';
@@ -1031,9 +1033,10 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
   attributes: {
     word: Attribute.String;
     text: Attribute.Blocks & Attribute.Required;
-    slug: Attribute.UID<'api::glossar.glossar', 'word'>;
+    slug: Attribute.UID<'api::glossar.glossar', 'word'> & Attribute.Required;
     shortdescription: Attribute.Text & Attribute.Required;
     thumbnail: Attribute.Media;
+    keyWords: Attribute.JSON & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
