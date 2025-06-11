@@ -6,6 +6,7 @@ import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/F
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { APITool } from "@iot-portal/frontend/lib/APITool";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
 import qs from "qs";
@@ -78,6 +79,21 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
 
     const [deviceConfig, SetDeviceConfig] = useState({});
+
+    useEffect(() => {
+
+        const platformUrl = new URL(APITool.PlatformURL);
+
+        SetDeviceConfig(Object.assign(deviceConfig, {
+            platformServer: {
+                url: platformUrl.href,
+                path: platformUrl.pathname,
+                port: platformUrl.port || 443
+            }
+        }))
+
+
+    }, []);
 
 
     const scanForSerialDevices = () => {

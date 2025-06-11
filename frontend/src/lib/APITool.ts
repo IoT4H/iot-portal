@@ -1,4 +1,4 @@
-import { getUrls } from "@iot-portal/frontend/lib/urls";
+import { getUrls, URLS } from "@iot-portal/frontend/lib/urls";
 
 export class APITool {
 
@@ -6,22 +6,27 @@ export class APITool {
     static FrontendStrapiURL: string = "";
     static ServerStrapiURL: string = "";
     static LittlefsURL: string = "";
+    static PlatformURL: string = "";
+    static DashboardURL: string = "";
     static initComplete = false;
 
     static isServer() {
         return typeof window === 'undefined';
     }
 
-    static init(): {StrapiURL: string, serverStrapiUrl: string, littlefsUrl: string} {
+    static init(): URLS {
 
             if (APITool.isServer()) {
-                const {StrapiURL, serverStrapiUrl, littlefsUrl} = getUrls();
+                const currentUrls = getUrls();
 
-                APITool.FrontendStrapiURL = StrapiURL;
-                APITool.ServerStrapiURL = serverStrapiUrl;
-                APITool.LittlefsURL = littlefsUrl;
+                APITool.FrontendStrapiURL = currentUrls.StrapiURL;
+                APITool.ServerStrapiURL = currentUrls.serverStrapiUrl;
+                APITool.LittlefsURL = currentUrls.littlefsUrl;
+                APITool.PlatformURL = currentUrls.platformUrl;
+                APITool.DashboardURL = currentUrls.dashboardUrl;
                 APITool.initComplete = true;
-                return { StrapiURL, serverStrapiUrl, littlefsUrl };
+
+                return currentUrls;
             } else if(!APITool.initComplete) {
 
                 const request = new XMLHttpRequest();
@@ -34,15 +39,19 @@ export class APITool {
                     APITool.StrapiURL = data.StrapiURL;
                     APITool.FrontendStrapiURL = data.StrapiURL;
                     APITool.ServerStrapiURL = data.serverStrapiUrl;
+                    APITool.PlatformURL = data.platformUrl;
+                    APITool.DashboardURL = data.dashboardUrl;
                     APITool.LittlefsURL = data.littlefsUrl;
                     console.info(`Frontend STRAPI API URL is: ${APITool.FrontendStrapiURL}`);
                     console.info(`Server STRAPI API URL is: ${APITool.ServerStrapiURL}`);
                     console.info(`Littlefs URL is: ${APITool.LittlefsURL}`);
+                    console.info(`Platform URL is: ${APITool.PlatformURL}`);
+                    console.info(`Dashboard URL is: ${APITool.DashboardURL}`);
                     APITool.initComplete = true;
 
                 }
             }
 
-        return {StrapiURL: APITool.FrontendStrapiURL, serverStrapiUrl: APITool.ServerStrapiURL, littlefsUrl: APITool.LittlefsURL};
+        return {StrapiURL: APITool.FrontendStrapiURL, serverStrapiUrl: APITool.ServerStrapiURL, littlefsUrl: APITool.LittlefsURL, platformUrl: APITool.PlatformURL, dashboardUrl: APITool.DashboardURL };
     }
 }
