@@ -142,6 +142,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 SetTransport(undefined);
                 SetEsploader(undefined);
                 SetState(undefined);
+                device.close();
                 // @ts-ignore
                 SetDevice(await navigator.serial.requestPort({}));
             }
