@@ -86,9 +86,9 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
         SetDeviceConfig(Object.assign(deviceConfig, {
             platformServer: {
-                url: platformUrl.href,
+                url: platformUrl.protocol + "//" + platformUrl.hostname,
                 path: platformUrl.pathname,
-                port: platformUrl.port || 443
+                port: platformUrl.port
             }
         }))
 
