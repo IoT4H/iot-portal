@@ -37,8 +37,8 @@
       ]
     },
     "keyWords": {
-      "type": "json",
-      "required": true
+      "type": "customField",
+      "customField": "plugin::thingsboard-plugin.componentListInput"
     }
   }
 }

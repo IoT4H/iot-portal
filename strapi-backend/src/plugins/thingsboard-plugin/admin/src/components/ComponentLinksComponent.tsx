@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import * as React from "react";
-
-import { Grid, GridItem, Field, FieldLabel, Box, Flex, EmptyStateLayout } from '@strapi/design-system';
+import { Box, EmptyStateLayout, Field, FieldLabel, Flex, Grid, GridItem } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/helper-plugin';
-import { ComponentItem } from "./SingleThingsboardComponent";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { ComponentStructure } from "./ComponentStructure"
+import { ComponentItem } from "./SingleThingsboardComponent";
 
 
 const SplittingRegEx = /([A-Z]?[a-z]+|\d+|[A-Z]+)/gm;
@@ -65,7 +64,7 @@ const ComponantLinkItem  = ({link} : {link: ComponentStructure}) => {
 
 const TBIDInput = React.forwardRef((props, ref) => {
   // @ts-ignore
-  const { attribute, label, children,value,  name, onChange, contentTypeUID, type, required, disabled } =
+  const {attribute, label, children, value, name, onChange, contentTypeUID, type, required, disabled} =
     props; // these are just some of the props passed by the content-manager
 
   const getOrgValue = (): any[] => {
@@ -96,7 +95,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
   <>
     <ErrorBoundary>
       <Field>
-        <FieldLabel>{ label || name }</FieldLabel>
+        <FieldLabel>{label || name}</FieldLabel>
         <Box>
         <Grid gap={"2rem"} col={12}>
         {
@@ -118,5 +117,3 @@ const TBIDInput = React.forwardRef((props, ref) => {
 });
 
 export default TBIDInput;
-
-

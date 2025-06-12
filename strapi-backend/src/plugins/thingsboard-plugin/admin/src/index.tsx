@@ -1,37 +1,16 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
-import { Information } from "@strapi/icons";
-import { Button } from '@strapi/design-system';
+import { Text } from "@strapi/icons";
 import pluginPkg from '../../package.json';
 import createCustomerButton from "./components/createCustomerButton";
 import createTenantButton from "./components/createTenantButton";
-import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
+import pluginId from './pluginId';
 
 const name = pluginPkg.strapi.name;
 
 export default {
   register(app: any) {
-    /* app.addMenuLink({
-      to: `/plugins/${pluginId}`,
-      icon: PluginIcon,
-      intlLabel: {
-        id: `${pluginId}.plugin.name`,
-        defaultMessage: name,
-      },
-      Component: async () => {
-        const component = await import('./pages/HomePage');
-
-        return component;
-      },
-      permissions: [
-        // Uncomment to set the permissions of the plugin here
-        // {
-        //   action: '', // the action name should be plugin::plugin-name.actionType
-        //   subject: null,
-        // },
-      ],
-    }); */
 
     app.customFields.register({
       name: "thingsboardUserId",
@@ -317,6 +296,26 @@ export default {
       }
     );
 
+    app.customFields.register({
+        name: "componentListInput",
+        pluginId: pluginId,
+        type: "json",
+        intlLabel: {
+          id: "thingsboard-plugin.componentListInput.label",
+          defaultMessage: "Custom List Input",
+        },
+        intlDescription: {
+          id: "thingsboard-plugin.componentListInput.description",
+          defaultMessage: "Gives User an UI to write a list of strings as JSON Array",
+        },
+        icon: Text, // don't forget to create/import your icon component
+        components: {
+          Input: async () =>
+            import(/* webpackChunkName: "input-component" */ "./components/componentListInput"),
+        },
+      },
+    );
+
     app.createSettingSection(
       { id: "thingsboard", intlLabel: { id: "thingsboard", defaultMessage: "Thingsboard" } }, // Section to create
       [
@@ -374,5 +373,3 @@ export default {
     return Promise.resolve(importedTrads);
   },
 };
-
-
