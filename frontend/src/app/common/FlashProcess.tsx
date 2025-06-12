@@ -1,6 +1,5 @@
 "use client"
-import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { WifiIcon } from "@heroicons/react/24/solid";
+import { CheckBadgeIcon, CheckIcon, WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
@@ -9,11 +8,11 @@ import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/f
 import { APITool } from "@iot-portal/frontend/lib/APITool";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
-import qs from "qs";
-import { useEffect, useState } from "react";
-import * as React from "react";
 
 import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
+import qs from "qs";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 
 
@@ -334,7 +333,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                                     }
                                 </> :
                                 <>
-                                    <span className={"text-xl font-bold text-center"}>Verbindung wird auf gebaut</span>
+                                    <span className={"text-xl font-bold text-center"}>Verbindung wird aufgebaut</span>
                                     <div className={"relative flex flex-row justify-center mt-4"}><Spinner className={"h-24"}></Spinner></div>
                                 </>
                         }
