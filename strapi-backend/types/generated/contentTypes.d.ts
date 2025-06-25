@@ -1,4 +1,4 @@
-import type { Attribute, Schema } from '@strapi/strapi';
+import type { Attribute, Schema } from "@strapi/strapi";
 
 export interface AdminPermission extends Schema.CollectionType {
   collectionName: 'admin_permissions';
@@ -1203,7 +1203,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
   };
   attributes: {
     Titel: Attribute.String & Attribute.Required;
-    description: Attribute.RichText & Attribute.Required;
+    description: Attribute.Blocks & Attribute.Required;
     thumbnail: Attribute.Media;
     pictures: Attribute.Media;
     slug: Attribute.UID<'api::use-case.use-case', 'Titel'> & Attribute.Required;

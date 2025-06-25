@@ -1,11 +1,11 @@
-import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
+import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import * as React from "react";
 
-function Info({ description }: { description: string; }) {
-  return (<CustomMarkdown className={"markdown mx-8 text-justify"}>{description}</CustomMarkdown>);
+function Info({ description }: { description: any; }) {
+  return (<BlocksRenderer content={description} className={"markdown mx-8 text-justify"}></BlocksRenderer>);
 }
 
 function PictureGallery({ pictures }: { pictures?: any[] }) {

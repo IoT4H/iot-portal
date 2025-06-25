@@ -13,9 +13,9 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
   };
 
   if (keyWordMap) {
-    if (description != undefined) {
+    /*if (description != undefined) {
       description = description.replaceAll(masterRegex, replacer)
-    }
+    }*/
 
     if (summary != undefined) {
       summary = summary.replaceAll(masterRegex, replacer)
