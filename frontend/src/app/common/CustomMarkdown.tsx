@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 export default function CustomMarkdown({ children, className, ...rest }: { children: string, className: string }) {
 
 
-  return <ReactMarkdown className={`${className} *:mb-[1.5rem] *:last:mb-0`} components={
+  return <ReactMarkdown className={` *:mb-[1.5rem] *:last:mb-0 ${className}`} components={
     {
       h1: (props) => {
         return <h1

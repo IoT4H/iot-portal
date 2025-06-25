@@ -1,7 +1,7 @@
-import { PhotoIcon } from "@heroicons/react/20/solid";
 import { ChevronRightIcon } from "@heroicons/react/16/solid";
+import { PhotoIcon } from "@heroicons/react/20/solid";
 import { Copyright } from "@iot-portal/frontend/app/common/galleryImage";
-import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import * as React from "react";
 import CustomMarkdown from "../common/CustomMarkdown";
@@ -15,7 +15,7 @@ export type UseCase = {
   slug: string;
   thumbnail?: any;
   summary: string;
-  description: string;
+  description: any;
   pictures?: any[];
   tags: string[];
   devices: any[];
