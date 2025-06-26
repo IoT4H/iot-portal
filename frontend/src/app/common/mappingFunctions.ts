@@ -2,7 +2,7 @@ import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 
 export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new Map<string, string>()): UseCase {
 
-  let description: string = useCase.attributes.description
+  let description: any = useCase.attributes.description;
   let summary: string = useCase.attributes.summary
 
   let masterRegexString = "\\b(?<!\\[)(" + Array.from(keyWordMap.keys()).sort((a,b) => b.length - a.length).map((key) => key).join("|") + ")(\\w{0,2})(?!\\]|-)\\b";
@@ -28,7 +28,7 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
     slug: useCase.attributes.slug,
     thumbnail: useCase.attributes.thumbnail && useCase.attributes.thumbnail.data && useCase.attributes.thumbnail.data.attributes && useCase.attributes.thumbnail.data.attributes.url && useCase.attributes.thumbnail.data.attributes || undefined,
     summary: summary,
-    description: description,
+    description: description || [],
     pictures: useCase.attributes.pictures && useCase.attributes.pictures.data && useCase.attributes.pictures.data.map((b: any) => b.attributes) || [],
     tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t: any) => t.attributes.name)) || [],
     devices: (useCase.attributes.Images && useCase.attributes.Images.filter((i: any) => i.device.data !== null)) || [],

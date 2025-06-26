@@ -1,5 +1,4 @@
 "use client";
-import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import LinkPreviewCard from "@iot-portal/frontend/app/common/LinkPreviewCard";
 import { BlocksContent, BlocksRenderer as StrapiBlocksRenderer } from "@strapi/blocks-react-renderer";
@@ -8,23 +7,18 @@ import * as React from "react";
 
 const BlocksRenderer = ({ content, className = "" }: { content: BlocksContent, className?: string }) => {
 
-    if (typeof content === "string") {
-        return (<div className={`markdown group/markdown  ${className ? className : ""}`}>
-            <CustomMarkdown className={className || ""}>{content}</CustomMarkdown>
-        </div>);
-    } else {
+    return (<div className={`markdown group/markdown  ${className ? className : ""}`}>
+          <StrapiBlocksRenderer content={content} blocks={{
 
-        return (<div className={`markdown group/markdown  ${className ? className : ""}`}>
-            <StrapiBlocksRenderer content={content || []} blocks={{
-                paragraph: ({ children, plainText }: { children?: React.ReactNode, plainText?: string }) => {
-                    if (!children && plainText) {
-                        return (<CustomMarkdown
-                          className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{plainText}</CustomMarkdown>);
-                    } else {
-                        return (<p
-                          className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>);
-                    }
-                },
+              paragraph: ({ children, plainText }: { children?: React.ReactNode, plainText?: string }) => {
+                  if (children) {
+                      return (<p
+                        className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children}</p>);
+                  } else {
+                      return (<p
+                        className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{plainText}</p>);
+                  }
+              },
     heading: ({ children, plainText, level }) => {
         switch (level) {
             case 1:
@@ -80,8 +74,8 @@ const BlocksRenderer = ({ content, className = "" }: { content: BlocksContent, c
               underline: ({children}) => <span className={"underline"}>{children}</span>,
               strikethrough: ({children}) => <span className={"line-through"}>{children}</span>
           }}
-            ></StrapiBlocksRenderer></div>);
-    }
+          ></StrapiBlocksRenderer></div>
+    );
 };
 
 

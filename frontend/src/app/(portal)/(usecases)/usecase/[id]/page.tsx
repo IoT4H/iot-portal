@@ -4,7 +4,7 @@ import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/comm
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import * as React from "react";
 
-function Info({ description }: { description: any; }) {
+function Info({ description }: { description: any[]; }) {
   return (<BlocksRenderer content={description} className={"markdown mx-8 text-justify"}></BlocksRenderer>);
 }
 

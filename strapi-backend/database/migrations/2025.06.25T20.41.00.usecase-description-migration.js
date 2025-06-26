@@ -9,7 +9,7 @@ module.exports = {
     if (exists) {
       const hasColumn = await knex.schema.hasColumn("use_cases", "description");
       if (hasColumn) {
-        const rows = await knex("use_cases").select("id", "description");
+        const rows = await knex("use_cases").select("id", "description").whereNot("description", "[%%]");
 
         for (const row of rows) {
           try {
@@ -19,7 +19,10 @@ module.exports = {
               {
                 type: "paragraph",
                 children: [
-                  { text: row.description || "" }
+                  {
+                    type: "text",
+                    text: row.description || ""
+                  }
                 ]
               }
             ];
