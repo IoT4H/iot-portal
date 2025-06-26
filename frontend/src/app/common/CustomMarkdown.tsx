@@ -10,7 +10,7 @@ export default function CustomMarkdown({ children, className = "", ...rest }: {
 }) {
 
 
-  return <ReactMarkdown className={` *:mb-[1.5rem] *:last:mb-0 ${className}`} components={
+  return <ReactMarkdown className={` ${className}`} components={
     {
       h1: (props) => {
         return <h1
@@ -48,8 +48,8 @@ export default function CustomMarkdown({ children, className = "", ...rest }: {
                                      src={rest.src} thumbnailSrc={rest.src}/>;
             },
             p: (props) => {
-                return <p
-                    className={"dark:text-white w-full text-neutral my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</p>;
+              return <span
+                className={"dark:text-white inline text-neutral my-2 selection:bg-orange-100/10 selection:text-orange-500"}>{props.children}</span>;
             },
             blockquote(props) {
                 return <blockquote className={"dark:text-white p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}>{props.children}</blockquote>;

@@ -3,7 +3,8 @@ import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new Map<string, string>()): UseCase {
 
   let description: any = useCase.attributes.description;
-  let summary: string = useCase.attributes.summary
+  let summary: any = [{ type: "paragraph", children: [{ type: "text", text: useCase.attributes.summary || "" }] }];
+
 
   let masterRegexString = "\\b(?<!\\[)(" + Array.from(keyWordMap.keys()).sort((a,b) => b.length - a.length).map((key) => key).join("|") + ")(\\w{0,2})(?!\\]|-)\\b";
   let masterRegex: RegExp = new RegExp(masterRegexString, "gm")
@@ -13,12 +14,15 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
   };
 
   if (keyWordMap) {
-    /*if (description != undefined) {
-      description = description.replaceAll(masterRegex, replacer)
-    }*/
+    if (description != undefined) {
+      description = JSON.parse(JSON.stringify(description).replaceAll(masterRegex, replacer));
+      console.log(JSON.stringify(description, null, 2));
+    }
 
-    if (summary != undefined) {
-      summary = summary.replaceAll(masterRegex, replacer)
+
+    if (useCase.attributes.summary != undefined) {
+      summary = JSON.parse(JSON.stringify(summary).replaceAll(masterRegex, replacer));
+      console.log(JSON.stringify(summary, null, 2));
     }
   }
 
@@ -51,7 +55,7 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
       let keyWords = entry.attributes.keyWords;
       if (Array.isArray(keyWords)) {
         for (let key of keyWords) {
-          let slugLink = `[${key}](/api/wissen/${entry.attributes.slug})`
+          let slugLink = `" }, { "type": "link", "url": "/api/wissen/${entry.attributes.slug}", "children": [ { "type": "text", "text": "${key}" } ] }, { "type": "text", "text": "`;
           slugToLink.set(key, slugLink)
         }
       }
