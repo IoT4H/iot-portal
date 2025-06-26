@@ -1,4 +1,5 @@
 "use client";
+import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import LinkPreviewCard from "@iot-portal/frontend/app/common/LinkPreviewCard";
 import { BlocksContent, BlocksRenderer as StrapiBlocksRenderer } from "@strapi/blocks-react-renderer";
@@ -11,13 +12,16 @@ const BlocksRenderer = ({ content, className = "" }: { content: BlocksContent, c
           <StrapiBlocksRenderer content={content} blocks={{
 
               paragraph: ({ children, plainText }: { children?: React.ReactNode, plainText?: string }) => {
-                  if (children) {
-                      return (<p
-                        className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children}</p>);
-                  } else {
-                      return (<p
-                        className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{plainText}</p>);
-                  }
+                  return (<p
+                    className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{
+                      Array.isArray(children) ?
+                        children.map((child: any, i: number) => {
+                            return (<CustomMarkdown className={"*:mb-[0rem]"} key={i}
+                            >{child.props.text || ""}</CustomMarkdown>);
+                        }) : (
+                          <CustomMarkdown className={"*:mb-[0rem]"}>{plainText || ""}</CustomMarkdown>)
+
+                  }</p>);
               },
     heading: ({ children, plainText, level }) => {
         switch (level) {

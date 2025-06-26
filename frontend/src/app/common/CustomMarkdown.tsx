@@ -4,7 +4,10 @@ import Link from "next/link";
 import * as React from "react";
 import ReactMarkdown from "react-markdown";
 
-export default function CustomMarkdown({ children, className, ...rest }: { children: string, className: string }) {
+export default function CustomMarkdown({ children, className = "", ...rest }: {
+  children: string,
+  className?: string
+}) {
 
 
   return <ReactMarkdown className={` *:mb-[1.5rem] *:last:mb-0 ${className}`} components={
