@@ -14,7 +14,7 @@ export type UseCase = {
   title: string;
   slug: string;
   thumbnail?: any;
-  summary: string;
+  summary: any;
   description: any;
   pictures?: any[];
   tags: string[];
