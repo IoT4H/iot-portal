@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { InformationCircleIcon } from "@heroicons/react/16/solid";
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
@@ -39,7 +39,7 @@ export default function Start({params}: { params: { id: number } }) {
             const u = mapUseCase(data.data[0]);
             SetUseCase(u);
             setTitle(u.title);
-            setDescription(u.summary);
+            setDescription(u.summary[0].children[0].text);
         });
     }, [params.id])
 
