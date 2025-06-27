@@ -13,7 +13,7 @@ export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new M
     return keyWordMap.get(group1)?.replace(group1 , match) || match;
   };
 
-  if (keyWordMap) {
+  if (keyWordMap.size > 0) {
     if (description != undefined) {
       description = JSON.parse(JSON.stringify(description).replaceAll(masterRegex, replacer));
       console.log(JSON.stringify(description, null, 2));
