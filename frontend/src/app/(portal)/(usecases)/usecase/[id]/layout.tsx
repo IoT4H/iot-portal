@@ -1,25 +1,25 @@
+import {
+  AcademicCapIcon,
+  ClockIcon,
+  CpuChipIcon,
+  CurrencyEuroIcon,
+  PhotoIcon,
+  SignalIcon
+} from "@heroicons/react/20/solid";
 import ShareButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/[id]/share-button";
 import SetupButton, { SetupButtonReplacement } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
 import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
+import { Badge, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
-import BaseLayout from "@iot-portal/frontend/app/common/baseLayout";
+import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
+import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { Suspense} from "react";
-import { Badge, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
-import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
-import {
-    AcademicCapIcon,
-    ClockIcon,
-    CurrencyEuroIcon,
-    CpuChipIcon,
-    SignalIcon, PhotoIcon
-} from "@heroicons/react/20/solid";
+import { Suspense } from "react";
 
-import CustomMarkdown from "@iot-portal/frontend/app/common/CustomMarkdown";
 export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: {params: Params}) {
 
@@ -162,7 +162,7 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b}/>))
                                 }
                             </div>
-                            <CustomMarkdown className={"text-sm text-gray-600 dark:text-gray-200 text-justify"}>{useCase.summary}</CustomMarkdown>
+                          <BlocksRenderer className={"markdown text-justify"} content={useCase.summary} />
                             <div className={"flex flex-row justify-evenly gap-8 mt-auto"}>
                                 { useCase.devices.length > 0 && <div className={"text-xs flex flex-col items-center gap-2 text-center"}
                                      title={"Sensoren"}>

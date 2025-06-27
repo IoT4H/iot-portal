@@ -1,12 +1,21 @@
-"use client"
+"use client";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import LinkPreviewCard from "@iot-portal/frontend/app/common/LinkPreviewCard";
-import { BlocksRenderer as StrapiBlocksRenderer, BlocksContent } from "@strapi/blocks-react-renderer";
+import { BlocksContent, BlocksRenderer as StrapiBlocksRenderer } from "@strapi/blocks-react-renderer";
 import Link from "next/link";
 import * as React from "react";
 
-const BlocksRenderer = ({content, className}: {content: BlocksContent, className?: string}) => <div className={`markdown group/markdown  ${className ? className : ""}`}><StrapiBlocksRenderer content={content || []} blocks={{
-    paragraph: ({ children, plainText }) => <p className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">{children || plainText}</p>,
+const BlocksRenderer = ({ content, className = "" }: { content: BlocksContent, className?: string }) => {
+
+    return (<div className={`markdown group/markdown  ${className ? className : ""}`}>
+          <StrapiBlocksRenderer content={content} blocks={{
+
+              paragraph: ({ children, plainText }: { children?: React.ReactNode, plainText?: string }) => {
+                  return (<p
+                    className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">
+                      {plainText || children || ""}
+                  </p>);
+              },
     heading: ({ children, plainText, level }) => {
         switch (level) {
             case 1:
@@ -37,7 +46,11 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
     "list-item": ({children,plainText}) => {
         return <li className={"list-outside  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"}>{children || plainText}</li>
     },
-    link: ({ children, plainText, url }) => <Link className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 relative "} href={url}><LinkPreviewCard href={url} />{children || plainText}</Link>,
+              link: ({ children, plainText, url }) => {
+                  return (<Link
+                    className={"text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 relative "}
+                    href={url}><LinkPreviewCard href={url} />{plainText || children}</Link>);
+              },
     image: ({ image }) => {
 
         if(!image.url) {
@@ -55,8 +68,6 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
     }
 }
 
-
-
     modifiers={{
               bold: ({ children }) => <span className={"font-bold"}>{children}</span>,
               italic: ({ children }) => <span className={"italic"}>{children}</span>,
@@ -64,7 +75,9 @@ const BlocksRenderer = ({content, className}: {content: BlocksContent, className
               underline: ({children}) => <span className={"underline"}>{children}</span>,
               strikethrough: ({children}) => <span className={"line-through"}>{children}</span>
           }}
-></StrapiBlocksRenderer></div>;
+          ></StrapiBlocksRenderer></div>
+    );
+};
 
 
 export default BlocksRenderer;

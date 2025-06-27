@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { CursorArrowRaysIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";

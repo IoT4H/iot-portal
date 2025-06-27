@@ -1,10 +1,10 @@
-import { PhotoIcon } from "@heroicons/react/20/solid";
 import { ChevronRightIcon } from "@heroicons/react/16/solid";
+import { PhotoIcon } from "@heroicons/react/20/solid";
+import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { Copyright } from "@iot-portal/frontend/app/common/galleryImage";
-import { getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import Link from "next/link";
 import * as React from "react";
-import CustomMarkdown from "../common/CustomMarkdown";
 
 
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,8 @@ export type UseCase = {
   title: string;
   slug: string;
   thumbnail?: any;
-  summary: string;
-  description: string;
+  summary: any;
+  description: any;
   pictures?: any[];
   tags: string[];
   devices: any[];
@@ -70,7 +70,8 @@ export function ListItemUseCase({ useCase }: { useCase: UseCase }) {
             <div
               className={"w-full h-full flex flex-col gap-4 p-8 min-h-[auto]"}>
               <div className="">
-                <CustomMarkdown className="text-inherit font-bold text-2xl border-solid border-b-[0.2em] inline-block max-w-full pr-[0.5em] py-1 border-orange-500 pb-[1px]">{useCase.title}</CustomMarkdown>
+                <h2
+                  className="text-inherit font-bold text-2xl border-solid border-b-[0.2em] inline-block max-w-full pr-[0.5em] py-1 border-orange-500 pb-[1px]">{useCase.title}</h2>
               </div>
               <div className="flex flex-row gap-2 flex-wrap flex-grow-0 flex-shrink empty:hidden">
                 {
@@ -79,7 +80,9 @@ export function ListItemUseCase({ useCase }: { useCase: UseCase }) {
                   }), ...useCase.tags].sort().map(b => (<Badge key={b} name={b} />))
                 }
               </div>
-              <CustomMarkdown className={"dark:text-gray-300 text-sm text-justify min-w-0 min-h-0  text-ellipsis hyphens-auto break-words  flex-grow-0 flex-shrink text-wrap"}>{useCase.summary}</CustomMarkdown>
+              <BlocksRenderer
+                className={"dark:text-gray-300 text-sm text-justify min-w-0 min-h-0  text-ellipsis hyphens-auto break-words  flex-grow-0 flex-shrink text-wrap"}
+                content={useCase.summary}></BlocksRenderer>
             </div>
           </div>
         </Link>

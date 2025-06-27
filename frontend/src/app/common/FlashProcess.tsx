@@ -1,18 +1,18 @@
 "use client"
-import { CheckIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { ArrowDownTrayIcon, ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import { WifiIcon } from "@heroicons/react/24/solid";
+import { CheckBadgeIcon, CheckIcon, WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
+import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { APITool } from "@iot-portal/frontend/lib/APITool";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import CryptoJS from "crypto-js";
-import qs from "qs";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import * as React from "react";
 
 import { ESPLoader, FlashOptions, LoaderOptions, Transport } from "esptool-js";
+import qs from "qs";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 
 
@@ -23,9 +23,14 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
         VORBEREITUNG = "Vorbereitung",
         ANSCHLIESSEN = "Anschließen",
         VERBINDEN = "Verbinden",
+        CONFIGURE = "Konfigurieren",
         FLASHEN = "Flashen",
         UEBERPRUEFEN = "Überprüfung",
         FERTIG = "Abgeschlossen"
+    }
+
+    enum FlashState {
+        COMPLETE = "Complete"
     }
 
     enum ConnectionState {
@@ -33,10 +38,12 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
         CONNECTED = "Connected"
     }
 
+
     const StepsData = [
         {name: Steps.VORBEREITUNG, note: "u. U. Treiber installieren"},
         {name: Steps.ANSCHLIESSEN, note: "Verbindung mit PC herstellen"},
         {name: Steps.VERBINDEN, note: "Verbindung herstellen mit ESP"},
+        {name: Steps.CONFIGURE, note: "Konfigurieren"},
         {name: Steps.FLASHEN, note: "Firmware auf ESP laden"},
         {name: Steps.UEBERPRUEFEN, note: "Firmware ist aufgespielt"},
         {name: Steps.FERTIG, note: "Vorgang vollständig"}
@@ -48,7 +55,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     const [open, SetOpen] = useState<boolean>(true);
 
     const [device, SetDevice] = useState<any>(null);
-    const [state, SetState] = useState<string | undefined>();
+    const [state, SetState] = useState<ConnectionState | FlashState | undefined>();
     const [vendorID, SetVendorID] = useState<string | undefined>();
     const [productID, SetProductID] = useState<string | undefined>();
     const [chip, SetChip] = useState<string | undefined>();
@@ -68,6 +75,24 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
 
     const [devices, SetDevices] = useState<any[]>();
+
+
+    const [deviceConfig, SetDeviceConfig] = useState({});
+
+    useEffect(() => {
+
+        const platformUrl = new URL(APITool.PlatformURL);
+
+        SetDeviceConfig(Object.assign(deviceConfig, {
+            platformServer: {
+                url: platformUrl.protocol + "//" + platformUrl.hostname,
+                path: platformUrl.pathname,
+                port: platformUrl.port
+            }
+        }))
+
+
+    }, []);
 
 
     const scanForSerialDevices = () => {
@@ -112,6 +137,13 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 // @ts-ignore
                 SetDevice(await navigator.serial.requestPort({}));
 
+            } else if(state === ConnectionState.CONNECTING) {
+                SetTransport(undefined);
+                SetEsploader(undefined);
+                SetState(undefined);
+                device.close();
+                // @ts-ignore
+                SetDevice(await navigator.serial.requestPort({}));
             }
             resolve()
         }).then(() => {
@@ -136,7 +168,6 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
             if(data.match(new RegExp(/Chip is /i))) {
                 SetChip(data.match(new RegExp(/(?<=Chip is ).*/i))[0]);
-                SetState(ConnectionState.CONNECTED);
             }
 
             if(data.match(new RegExp(/Features:.*Wi-?Fi/igm))) {
@@ -155,6 +186,9 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 SetHz(data.match(new RegExp(/\d+(k|m|g)hz/im))[0]);
             }
 
+            if(data.match(new RegExp(/Uploading stub\.\.\./i))) {
+                SetState(ConnectionState.CONNECTED);
+            }
 
             if(data.match(new RegExp(/(Wrote)/gim)) && (fileFlashIndex || -1) === fileFlashCount) {
                 SetStep(Steps.UEBERPRUEFEN)
@@ -239,9 +273,15 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
     useEffect(() => {
         if(state === ConnectionState.CONNECTED) {
-            SetStep(Steps.FLASHEN);
+
+            if(!wifi) {
+                SetStep(Steps.FLASHEN);
+            } else {
+                SetStep(Steps.CONFIGURE)
+            }
+
         }
-    }, [state]);
+    }, [state, wifi]);
 
 
     const InstructionPlugIn = () => {
@@ -293,15 +333,63 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                                     }
                                 </> :
                                 <>
-                                    <span className={"text-xl font-bold text-center"}>Verbindung wird auf gebaut</span>
+                                    <span className={"text-xl font-bold text-center"}>Verbindung wird aufgebaut</span>
                                     <div className={"relative flex flex-row justify-center mt-4"}><Spinner className={"h-24"}></Spinner></div>
                                 </>
                         }
                     </div>
                 }
-                action={<div className={"btn-primary w-min"} onClick={() => {
+                action={<div className={"btn-primary w-fit"} onClick={() => {
                     select();
-                }}>Auswählen</div>} />
+                }}>{state === ConnectionState.CONNECTING ? "Auswahl ändern" : "Auswählen"}</div>} />
+        );
+    }
+
+    const InstructionConfigure = () => {
+
+        const [wifiSSID , SetWifiSSID] = useState<string>("");
+        const [wifiPassword, SetWifiPassword] = useState<string>("");
+        const [wifiSec, SetWifiSec] = useState<string>("wpa2");
+
+        const submitWifiCreds = () => {
+            if((wifiSSID.length > 0 && wifiPassword.length >= 8)) {
+                SetDeviceConfig(Object.assign(deviceConfig, {
+                    wifi: {
+                        ssid: wifiSSID,
+                        password: wifiPassword,
+                        security: wifiSec
+                    }
+                }))
+
+                SetStep(Steps.FLASHEN);
+            }
+        }
+
+        return (
+            <Instruction
+                title={"Konfigurieren"}
+                content={
+                    <div className={" flex flex-col place-content-start h-full bg-black/10 rounded-lg"}>
+                        <div className={"flex flex-row flex-grow-0 flex-shrink-0 font-bold text-lg gap-x-1 bg-zinc-700"}>
+                            <div className={"bg-black/10 px-6 py-4 flex-grow-0 cursor-pointer rounded-t-lg"}>WLAN</div>
+                        </div>
+                        <form className={"flex-grow-1 overflow-y-auto p-4 gap-y-2 flex flex-col rounded-tr-lg"}>
+                            <FieldSetInput label={"Wlan-Name (SSID)"} required={true} onChange={(event: any) => SetWifiSSID(event.currentTarget.value)}/>
+                            <FieldSetInput label={"Passwort"} type={"password"} required={true}  onChange={(event: any) => SetWifiPassword(event.currentTarget.value)}/>
+                            <FieldSetSelect label={"Sicherheit"}  required={true}  onChange={(event: any) => SetWifiSec(event.currentTarget.value)}>
+                                <optgroup label={"WPA"}>
+                                    <option value={"wpa3"}>WPA3 (empfohlen)</option>
+                                    <option selected={true} value={"wpa2"}>WPA2 (standard)</option>
+                                    <option value={"wpa"}>WPA</option>
+                                </optgroup>
+                                <option value={"wep"}>WEP (nicht empfohlen)</option>
+                            </FieldSetSelect>
+                        </form>
+                    </div>
+                }
+                action={
+                    <div className={`btn-primary w-min ${!(wifiSSID.length > 0 && wifiPassword.length >= 8) ? "bg-gray-600 cursor-not-allowed": ""} `}
+                         onClick={() => submitWifiCreds()} >Übernehmen</div>} />
         );
     }
 
@@ -437,7 +525,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                                 littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")})}`,
                                 {
                                     method: "post",
-                                    body: JSON.stringify({ "deviceToken": deviceToken})
+                                    body: JSON.stringify({ "deviceToken": deviceToken, ...deviceConfig })
                                 }
                             );
                             if (!response.ok) {
@@ -555,7 +643,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
 
             resolve();
         }).then(() => {
-            SetState("Complete")
+            SetState(FlashState.COMPLETE)
             console.log("complete flash")
         })
 
@@ -563,7 +651,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     }
 
     useEffect(() => {
-        if(state === "Complete") {
+        if(state === FlashState.COMPLETE) {
             SetStep(Steps.FERTIG);
         }
     }, [state]);
@@ -620,6 +708,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                 { step === Steps.VORBEREITUNG && (<InstructionPreparation />) }
                 { step === Steps.ANSCHLIESSEN && (<InstructionPlugIn />) }
                 { step === Steps.VERBINDEN && (<InstructionConnect />) }
+                { step === Steps.CONFIGURE && (<InstructionConfigure />) }
                 { step === Steps.FLASHEN && (<InstructionFlash />) }
                 { step === Steps.UEBERPRUEFEN && (<InstructionValidate />) }
                 { step === Steps.FERTIG && (<InstructionComplete />) }

@@ -1,4 +1,4 @@
-import type { Schema, Attribute } from '@strapi/strapi';
+import type { Attribute, Schema } from "@strapi/strapi";
 
 export interface AdminPermission extends Schema.CollectionType {
   collectionName: 'admin_permissions';
@@ -1036,7 +1036,8 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
     slug: Attribute.UID<'api::glossar.glossar', 'word'> & Attribute.Required;
     shortdescription: Attribute.Text & Attribute.Required;
     thumbnail: Attribute.Media;
-    keyWords: Attribute.JSON & Attribute.Required;
+    keyWords: Attribute.JSON &
+      Attribute.CustomField<'plugin::thingsboard-plugin.componentListInput'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1202,7 +1203,7 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
   };
   attributes: {
     Titel: Attribute.String & Attribute.Required;
-    description: Attribute.RichText & Attribute.Required;
+    description: Attribute.Blocks & Attribute.Required;
     thumbnail: Attribute.Media;
     pictures: Attribute.Media;
     slug: Attribute.UID<'api::use-case.use-case', 'Titel'> & Attribute.Required;

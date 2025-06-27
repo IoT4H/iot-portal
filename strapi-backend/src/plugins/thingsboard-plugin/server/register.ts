@@ -51,4 +51,15 @@ export default ({ strapi }: { strapi: Strapi }) => {
       isResizable: false,
     },
   });
+
+  strapi.customFields.register({
+    name: "componentListInput",
+    plugin: pluginId,
+    type: "json",
+    inputSize: {
+      // optional
+      default: 12,
+      isResizable: false,
+    },
+  });
 };

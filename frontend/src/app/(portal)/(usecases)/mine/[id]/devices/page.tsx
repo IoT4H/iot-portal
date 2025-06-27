@@ -18,6 +18,7 @@ const dynamic = 'force-dynamic';
 
 const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, setup: any, stepData: any, devicesRefresh: Function }) => {
   const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
+  const [editModalOpen, toggleEditModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [availableKeys, setAvailableKeys] = useState<string[]>([]);
   const defaultDateRange: Range[] = [
@@ -166,8 +167,8 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
                          className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}>
                         <CpuChipIcon className={"w-4 aspect-square"}/>
                     </div> }
-                    <div title={"Bearbeiten"}
-                         className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer hidden"}>
+                    <div title={"Bearbeiten"} onClick={() => toggleEditModalOpen}
+                         className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"}>
                         <PencilIcon className={"w-4 aspect-square"}/>
                     </div>
                     <div title={"Export"} onClick={() => setExportModalOpen(true)}
@@ -180,8 +181,8 @@ const DeviceBox = ({ device, setup, stepData, devicesRefresh }: { device: any, s
                     </div>
                 </div>
             </div>
-            { flashModalOpen && <FlashProgress stepData={{...stepData, deployment: setup.id, state: { device: { id: device.id.id }}}} onClose={() => toggleFlashModalOpen()}/> /*TODO: correct StepDAta information to properly flash device*/ }
-
+            { flashModalOpen && <FlashProgress stepData={{...stepData, deployment: setup.id, state: { device: { id: device.id.id }}}} onClose={() => toggleFlashModalOpen()}/>  }
+            { editModalOpen && <FlashProgress stepData={{...stepData, deployment: setup.id, state: { device: { id: device.id.id }}}} onClose={() => toggleFlashModalOpen()}/>  }
             {exportModalOpen &&
               typeof window !== "undefined" &&
               <ExportTelemetryModal
@@ -322,5 +323,3 @@ const Page = ({params}: { params: { id: number } }) => {
     </>;
 }
 export default Page;
-
-

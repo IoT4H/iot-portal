@@ -5,6 +5,7 @@
 import i18N from "@strapi/plugin-i18n/strapi-admin";
 import usersPermissions from "@strapi/plugin-users-permissions/strapi-admin";
 import duplicateButton from "strapi-plugin-duplicate-button/strapi-admin";
+import heroiconsField from "strapi-plugin-heroicons-field/strapi-admin";
 import menus from "strapi-plugin-menus/strapi-admin";
 import thingsboardPlugin from "../../src/plugins/thingsboard-plugin/strapi-admin";
 import { renderAdmin } from "@strapi/strapi/admin";
@@ -18,6 +19,7 @@ renderAdmin(document.getElementById("strapi"), {
     i18n: i18N,
     "users-permissions": usersPermissions,
     "duplicate-button": duplicateButton,
+    "heroicons-field": heroiconsField,
     menus: menus,
     "thingsboard-plugin": thingsboardPlugin,
   },

@@ -39,6 +39,18 @@ export function getLittleFSURL() {
     return APITool.LittlefsURL;
 }
 
+export function getPlatformURL() {
+    APITool.init();
+
+    return APITool.PlatformURL;
+}
+
+export function getDashboardURL() {
+    APITool.init();
+
+    return APITool.DashboardURL;
+}
+
 /**
  * Helper to make GET requests to Strapi API endpoints
  * @param {string} path Path of the API route
