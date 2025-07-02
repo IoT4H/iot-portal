@@ -9,10 +9,10 @@ repos:
               - prettier@3.5.3
               - --ignore-unknown
               - --write
-          files: ^frontend/src/app/auth/.*\.(js|jsx|ts|tsx)$
+          files: ^frontend/src/app/\(auth\)/.*\.(js|jsx|ts|tsx)$
         - id: eslint
           name: eslint
-          entry: npx -y eslint
+          entry: frontend\\node_modules\\.bin\\eslint.cmd
           pass_filenames: true
           language: system
-          files: ^frontend/src/app/auth/.*\.(js|jsx|ts|tsx|css|scss|json|md|html)$
+          files: ^frontend/src/app/\(auth\)/.*\.(js|jsx|ts|tsx|css|scss|json|md|html)$
