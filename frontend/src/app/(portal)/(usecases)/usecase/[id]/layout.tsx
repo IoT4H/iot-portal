@@ -153,7 +153,8 @@ export default async function UseCase(props: { children: React.ReactNode, params
                                     text: "Das sieht interessant aus!",
                                     url: 'https://portal.iot4h.de/usecase/'+ props.params.id,
                                 }}></ShareButton>
-                                <div className={"block w-min border-solid border-b-4 pr-2 border-orange-500 "}><h1 className={"dark:text-white font-bold text-3xl capitalize "}>{useCase.title}</h1></div>
+                              <div className={"block w-fit max-w-max border-solid border-b-4 pr-2 border-orange-500 "}>
+                                <h1 className={"dark:text-white font-bold text-3xl"}>{useCase.title}</h1></div>
                             </div>
                             <div className="flex flex-row gap-2 flex-wrap text-orange-500 empty:hidden">
                                 {
