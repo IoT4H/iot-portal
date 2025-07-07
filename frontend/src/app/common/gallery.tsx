@@ -1,11 +1,10 @@
-'use client'
+"use client";
 import { XMarkIcon } from "@heroicons/react/20/solid";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
-import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import {  useContext, useEffect,  useState } from "react";
-import {  getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
+import { useContext, useEffect, useState } from "react";
 
 export default function Gallery({ index, pics} : { index: number; pics: any[]}) {
 
@@ -58,8 +57,10 @@ export default function Gallery({ index, pics} : { index: number; pics: any[]}) 
                                     <img src={picUrls[currentIndex] && (getStrapiURLForFrontend() + picUrls[currentIndex])} alt={pics[currentIndex]?.alternativeText || ""} onClick={ () => gallery(0, [])} onLoad={() => SetCanPlay(true)} className={(canPlay ? "visible " :  "invisible ") + "min-h-0 min-w-0 w-min h-min transition-all ease-out bg-white duration-500 object-contain max-height-100"}/>
 
                                     <Spinner className={`${canPlay ? "hidden" : "w-full"} aspect-square h-24`}/>
-                                    { pics[currentIndex].alternativeText && <div className={"relative h-8 text-center align-middle dark:bg-zinc-900/50 float pt-1 px-8 empty:hidden rounded"}> { pics[currentIndex].alternativeText }</div> }
-                                    {pics[currentIndex] && <div className={"h-8 text-center align-middle dark:bg-zinc-900/50 float pt-1 px-8 empty:hidden rounded"}>
+                                    {pics[currentIndex].alternativeText && <div
+                                      className={"relative h-10 text-center align-middle dark:bg-zinc-900 float py-2 px-8 empty:hidden rounded"}> {pics[currentIndex].alternativeText}</div>}
+                                    {pics[currentIndex] && <div
+                                      className={"h-10 text-center align-middle dark:bg-zinc-900 float py-2 px-8 empty:hidden rounded"}>
                                         { pics[currentIndex].caption }
                                     </div> }
                                 </div>
