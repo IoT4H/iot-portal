@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { CheckBadgeIcon, CheckIcon, WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
-import { FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetCheckbox, FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
@@ -50,7 +50,7 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
     ];
 
 
-    const [step, SetStep] = useState<Steps>(Steps.VORBEREITUNG);
+    const [step, SetStep] = useState<Steps>(Steps.CONFIGURE);
 
     const [open, SetOpen] = useState<boolean>(true);
 
@@ -350,16 +350,27 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
         const [wifiSSID , SetWifiSSID] = useState<string>("");
         const [wifiPassword, SetWifiPassword] = useState<string>("");
         const [wifiSec, SetWifiSec] = useState<string>("wpa2");
+        const [wifiConfig, SetWifiConfig] = useState<boolean>(false);
 
         const submitWifiCreds = () => {
-            if((wifiSSID.length > 0 && wifiPassword.length >= 8)) {
+            if (wifiConfig && (wifiSSID.length > 0 && wifiPassword.length >= 8)) {
                 SetDeviceConfig(Object.assign(deviceConfig, {
                     wifi: {
+                        disabled: false,
                         ssid: wifiSSID,
                         password: wifiPassword,
                         security: wifiSec
                     }
                 }))
+
+                SetStep(Steps.FLASHEN);
+            } else if (!wifiConfig) {
+
+                SetDeviceConfig(Object.assign(deviceConfig, {
+                    wifi: {
+                        disabled: true
+                    }
+                }));
 
                 SetStep(Steps.FLASHEN);
             }
@@ -374,9 +385,16 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                             <div className={"bg-black/10 px-6 py-4 flex-grow-0 cursor-pointer rounded-t-lg"}>WLAN</div>
                         </div>
                         <form className={"flex-grow-1 overflow-y-auto p-4 gap-y-2 flex flex-col rounded-tr-lg"}>
-                            <FieldSetInput label={"Wlan-Name (SSID)"} required={true} onChange={(event: any) => SetWifiSSID(event.currentTarget.value)}/>
-                            <FieldSetInput label={"Passwort"} type={"password"} required={true}  onChange={(event: any) => SetWifiPassword(event.currentTarget.value)}/>
-                            <FieldSetSelect label={"Sicherheit"}  required={true}  onChange={(event: any) => SetWifiSec(event.currentTarget.value)}>
+                            <FieldSetCheckbox label={"Ein / Aus"}
+                                              onClick={(event: any) => SetWifiConfig(event.currentTarget.checked)}
+                                              className={"mb-4"}></FieldSetCheckbox>
+                            <FieldSetInput label={"Wlan-Name (SSID)"} disabled={!wifiConfig} required={wifiConfig}
+                                           onChange={(event: any) => SetWifiSSID(event.currentTarget.value)} />
+                            <FieldSetInput label={"Passwort"} type={"password"} disabled={!wifiConfig}
+                                           required={wifiConfig}
+                                           onChange={(event: any) => SetWifiPassword(event.currentTarget.value)} />
+                            <FieldSetSelect label={"Sicherheit"} disabled={!wifiConfig} required={wifiConfig}
+                                            onChange={(event: any) => SetWifiSec(event.currentTarget.value)}>
                                 <optgroup label={"WPA"}>
                                     <option value={"wpa3"}>WPA3 (empfohlen)</option>
                                     <option selected={true} value={"wpa2"}>WPA2 (standard)</option>
@@ -388,7 +406,8 @@ const FlashProgress = ({ onClose, stepData } : {onClose?: Function, stepData: an
                     </div>
                 }
                 action={
-                    <div className={`btn-primary w-min ${!(wifiSSID.length > 0 && wifiPassword.length >= 8) ? "bg-gray-600 cursor-not-allowed": ""} `}
+                    <div
+                      className={`btn-primary w-min ${wifiConfig && !(wifiSSID.length > 0 && wifiPassword.length >= 8) ? "bg-gray-600 cursor-not-allowed" : ""} `}
                          onClick={() => submitWifiCreds()} >Übernehmen</div>} />
         );
     }
