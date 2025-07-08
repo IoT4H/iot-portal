@@ -823,6 +823,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     >;
     profilPic: Attribute.Media;
     firmname: Attribute.String;
+    platformButton: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1010,6 +1013,9 @@ export interface ApiFirmFirm extends Schema.CollectionType {
       Attribute.DefaultTo<false>;
     Address: Attribute.Component<'general.address'>;
     darkLogo: Attribute.Media;
+    platformButton: Attribute.Enumeration<["true", "false", "user"]> &
+      Attribute.Required &
+      Attribute.DefaultTo<"false">;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &

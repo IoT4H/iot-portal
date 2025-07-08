@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
-import { APITool } from "@iot-portal/frontend/lib/APITool";
+import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { useContext, useEffect, useState } from "react";
 
 export type User = {
@@ -12,7 +11,8 @@ export type User = {
     firstname: string;
     middlename: string;
     lastname: string;
-    firm: {  name: string };
+    firm: { name: string, platformButton: "true" | "false" | "user" };
+    platformButton: boolean
 
 
 }
@@ -61,7 +61,15 @@ export class Auth {
         }
 
         if(!!u) {
-            return { auth: this, email: u.email, firstname: u.firstname, middlename: u.middlename, lastname: u.lastname, firm: u.firm };
+            return {
+                auth: this,
+                email: u.email,
+                firstname: u.firstname,
+                middlename: u.middlename,
+                lastname: u.lastname,
+                firm: u.firm,
+                platformButton: u.platformButton
+            };
         }
 
         return undefined;

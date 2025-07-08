@@ -111,6 +111,11 @@
     },
     "firmname": {
       "type": "string"
+    },
+    "platformButton": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }
