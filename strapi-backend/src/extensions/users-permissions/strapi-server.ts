@@ -1,10 +1,7 @@
+import utils, { contentTypes, validateYupSchema, yup } from "@strapi/utils";
+/* eslint-disable no-useless-escape */
 import _ from "lodash";
 import { compact, concat, isArray } from "lodash/fp";
-
-import utils, { validateYupSchema, yup } from '@strapi/utils';
-import { contentTypes } from "@strapi/utils";
-/* eslint-disable no-useless-escape */
-import crypto from 'crypto';
 
 
 const { getAbsoluteAdminUrl, getAbsoluteServerUrl, sanitize } = utils;
@@ -15,8 +12,6 @@ const validateRegisterBody = validateYupSchema(yup.object({
   username: yup.string().required(),
   password: yup.string().required(),
 }));
-
-import Attribute from "@strapi/types/dist/types/core/index"
 
 
 const sanitizeUser = (user, ctx) => {
@@ -123,7 +118,14 @@ export default (plugin) => {
       }
     }
 
-    const firm = await strapi.entityService.create("api::firm.firm", { data: { name: params.firstname + " " + params.lastname, verified: false, Address: { Country: "Germany"}}});
+    const firm = await strapi.entityService.create("api::firm.firm", {
+      data: {
+        name: params.firstname + " " + params.lastname,
+        verified: false,
+        Address: { Country: "Germany" },
+        platformButton: "false"
+      }
+    });
 
     const newUser = {
       ...params,
