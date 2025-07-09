@@ -1,41 +1,50 @@
-"use client"
+"use client";
 
+import * as HeroIcons from "@heroicons/react/20/solid";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import * as HeroIcons from "@heroicons/react/20/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
-import RelationMappingWindow from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Auth } from "@iot-portal/frontend/lib/auth";
 import * as React from "react";
-
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 type StepData = {
-    state: any,
-    viewStatus: boolean,
-    locked: boolean,
-    deployment: number,
-    data: any,
-    updateState: Function
+    state: any;
+    viewStatus: boolean;
+    locked: boolean;
+    deployment: number;
+    data: any;
+    updateState: Function;
 };
 
-const StepStatus = ({color, progress, Icon} : { color: string, progress: number | undefined, Icon: any | undefined }) => {
-
+const StepStatus = ({
+    color,
+    progress,
+    Icon
+}: {
+    color: string;
+    progress: number | undefined;
+    Icon: any | undefined;
+}) => {
     const [p, setP] = useState(0);
 
     useEffect(() => {
-        var val = progress || 0;
-        var r = 90;
-        var c = Math.PI*(r*2);
+        let val = progress || 0;
+        const r = 90;
+        const c = Math.PI * (r * 2);
 
-        if (val < 0) { val = 0;}
-        if (val > 100) { val = 100;}
+        if (val < 0) {
+            val = 0;
+        }
+        if (val > 100) {
+            val = 100;
+        }
 
-        setP(((100-val)/100)*c);
-    }, [, progress])
+        setP(((100 - val) / 100) * c);
+    }, [, progress]);
 
     const style = useMemo(() => {
         return {
@@ -43,93 +52,154 @@ const StepStatus = ({color, progress, Icon} : { color: string, progress: number 
             transition: "all 0.1s linear",
             strokeWidth: "1em",
             stroke: color
-        }
-    }, [color, p])
+        };
+    }, [color, p]);
 
-    return (<div className={`w-12 aspect-square rounded-3xl flex items-center justify-center relative `} >
-        <svg id="svg" className={"w-12 aspect-square -rotate-90"} viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <circle id="bar" r="90" cx="100" cy="100" fill="transparent" strokeDasharray="565.48" strokeDashoffset="0" style={style}></circle>
-        </svg>
-        <div className={`absolute ${progress !== 100 && progress !== undefined ? ' w-8 m-1 ' : 'w-12'} ease delay-150 duration-100 transition-all aspect-square rounded-3xl bg-zinc-500/50 ${progress !== undefined && 'bg-zinc-300/50'}  flex items-center justify-center`} style={progress === 100 ? {backgroundColor: color} : {}} >
-            { progress === 100 ? <HeroIcons.CheckIcon className={"w-6 ease delay-150 duration-100 transition-all  aspect-square"}/> : <Icon className={` ${progress && progress > 0 ? ' w-4 ' : 'w-6'} ease delay-150 duration-100 transition-all  aspect-square`}/>}
+    return (
+        <div
+            className={`w-12 aspect-square rounded-3xl flex items-center justify-center relative `}
+        >
+            <svg
+                id="svg"
+                className={"w-12 aspect-square -rotate-90"}
+                viewBox="0 0 200 200"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <circle
+                    id="bar"
+                    r="90"
+                    cx="100"
+                    cy="100"
+                    fill="transparent"
+                    strokeDasharray="565.48"
+                    strokeDashoffset="0"
+                    style={style}
+                ></circle>
+            </svg>
+            <div
+                className={`absolute ${progress !== 100 && progress !== undefined ? " w-8 m-1 " : "w-12"} ease delay-150 duration-100 transition-all aspect-square rounded-3xl bg-zinc-500/50 ${progress !== undefined && "bg-zinc-300/50"}  flex items-center justify-center`}
+                style={progress === 100 ? { backgroundColor: color } : {}}
+            >
+                {progress === 100 ? (
+                    <HeroIcons.CheckIcon
+                        className={"w-6 ease delay-150 duration-100 transition-all  aspect-square"}
+                    />
+                ) : (
+                    <Icon
+                        className={` ${progress && progress > 0 ? " w-4 " : "w-6"} ease delay-150 duration-100 transition-all  aspect-square`}
+                    />
+                )}
+            </div>
         </div>
-    </div>);
-}
+    );
+};
 
-export const CheckBox = ({label, init, locked, onChange}: {label: string, init: boolean, locked: boolean, onChange?: Function}) => {
-
+export const CheckBox = ({
+    label,
+    init,
+    locked,
+    onChange
+}: {
+    label: string;
+    init: boolean;
+    locked: boolean;
+    onChange?: Function;
+}) => {
     const sOnChange = (e: any) => onChange && onChange(e);
     const [check, setCheck] = useState(init);
 
     useEffect(() => {
-        setCheck(init)
+        setCheck(init);
     }, [init]);
 
-    return (<label className={`relative ${ !locked && 'cursor-pointer'} flex gap-2 flex-row items-center p-0.5 group/checkbox`}>
-                                    <span className={`h-6 aspect-square border-2 border-orange-500 ${ !locked ? 'bg-orange-500/20' : 'bg-orange-500'}  ${ !locked && 'group-hover/checkbox:bg-orange-500/40'} group/indicator`}>
-                                        <CheckIcon className={`w-full aspect-square  ${ check ? 'visible' : 'invisible'}`} />
-                                    </span>
-        <input type={"checkbox"} className={`absolute opacity-0 h-2 w-2  ${ !locked && 'cursor-pointer'} `} checked={init} onChange={(e) => {
-            if(!locked)  {
-                setCheck(e.currentTarget.checked); sOnChange(e);
-            }
-        }}
-        />
-        {label}
-    </label>);
-}
+    return (
+        <label
+            className={`relative ${!locked && "cursor-pointer"} flex gap-2 flex-row items-center p-0.5 group/checkbox`}
+        >
+            <span
+                className={`h-6 aspect-square border-2 border-orange-500 ${!locked ? "bg-orange-500/20" : "bg-orange-500"}  ${!locked && "group-hover/checkbox:bg-orange-500/40"} group/indicator`}
+            >
+                <CheckIcon className={`w-full aspect-square  ${check ? "visible" : "invisible"}`} />
+            </span>
+            <input
+                type={"checkbox"}
+                className={`absolute opacity-0 h-2 w-2  ${!locked && "cursor-pointer"} `}
+                checked={init}
+                onChange={(e) => {
+                    if (!locked) {
+                        setCheck(e.currentTarget.checked);
+                        sOnChange(e);
+                    }
+                }}
+            />
+            {label}
+        </label>
+    );
+};
 
 export default function Step(stepData: StepData) {
-
-
     const [open, toggleOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
     const [progress, SetProgress] = useState<number | undefined>();
 
     const [color, SetColor] = useState("#f97316");
 
-    const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
+    const [modalOpen, toggleModalOpen] = useReducer(
+        (prevState: boolean): boolean => !prevState,
+        false
+    );
 
     const subtaskComplete = (id: number) => {
-        return stepData.data.tasks.find((f: any) => f.id === id).progress === 100 || stepData.data.__component === "instructions.text-instruction";
-    }
+        return (
+            stepData.data.tasks.find((f: any) => f.id === id).progress === 100 ||
+            stepData.data.__component === "instructions.text-instruction"
+        );
+    };
 
     useEffect(() => {
-            if(progress === 100 && open) {
-                toggleOpen();
-            } else if (progress !== undefined && progress >= 0 && progress < 100 && !open) {
-                toggleOpen();
-            }
-    } , [progress])
+        if (progress === 100 && open) {
+            toggleOpen();
+        } else if (progress !== undefined && progress >= 0 && progress < 100 && !open) {
+            toggleOpen();
+        }
+    }, [progress]);
 
     const taskForm = useRef();
 
     const performStepAction = (param: any = {}) => {
         LoadingState.startLoading();
         const copyStep = Object.assign({}, stepData);
-        fetchAPI(`/api/thingsboard-plugin/deployment/${stepData.deployment}/steps/action`, {}, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${Auth.getToken()}`
-            },
-            body: JSON.stringify({
-                step: copyStep,
-                parameter: param
+        fetchAPI(
+            `/api/thingsboard-plugin/deployment/${stepData.deployment}/steps/action`,
+            {},
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify({
+                    step: copyStep,
+                    parameter: param
+                })
+            }
+        )
+            .then(() => {
+                stepData.updateState();
             })
-        }).then(() => {
-            stepData.updateState();
-        }).finally(() => {
-            LoadingState.endLoading();
-        })
-    }
+            .finally(() => {
+                LoadingState.endLoading();
+            });
+    };
 
-
-    const actionable = useCallback( (preCondition: () => boolean = () => true) => {
-        return !stepData.locked && preCondition();
-    }, [stepData.locked])
+    const actionable = useCallback(
+        (preCondition: () => boolean = () => true) => {
+            return !stepData.locked && preCondition();
+        },
+        [stepData.locked]
+    );
 
     useEffect(() => {
-
         switch (progress) {
             case 100:
                 SetColor("#16a34a");
@@ -147,119 +217,219 @@ export default function Step(stepData: StepData) {
                 break;
             default:
         }
-    }, [,progress])
+    }, [, progress]);
 
     const defineIcon = useCallback((name: string) => {
-            if(name.match(/Einkauf|Beschaffung/gim)) {
-                return HeroIcons.ShoppingBagIcon;
-            }
-            if(name.match(/container|Lager|Storage|Aufbewahrung/gim)) {
-                return HeroIcons.CubeIcon;
-            }
-            if(name.match(/Gateway/gim)) {
-                return HeroIcons.CpuChipIcon;
-            }
-            return HeroIcons.WrenchScrewdriverIcon;
-    }, [])
+        if (name.match(/Einkauf|Beschaffung/gim)) {
+            return HeroIcons.ShoppingBagIcon;
+        }
+        if (name.match(/container|Lager|Storage|Aufbewahrung/gim)) {
+            return HeroIcons.CubeIcon;
+        }
+        if (name.match(/Gateway/gim)) {
+            return HeroIcons.CpuChipIcon;
+        }
+        return HeroIcons.WrenchScrewdriverIcon;
+    }, []);
 
     return (
         <>
-            <div className={`w-full flex flex-row group rounded-2xl bg-zinc-900/50 peer ${progress === 100 && 'done'}`}>
+            <div
+                className={`w-full flex flex-row group rounded-2xl bg-zinc-900/50 peer ${progress === 100 && "done"}`}
+            >
                 <div className={"w-16 flex-shrink-0 flex-grow-0 flex flex-col"}>
                     <div className={`w-16 aspect-square p-2 mb-0 bg-zinc-700/80 rounded-l-2xl`}>
-                        <StepStatus color={color} progress={stepData.state?.progress} Icon={defineIcon(stepData.data.meta.name)}  />
+                        <StepStatus
+                            color={color}
+                            progress={stepData.state?.progress}
+                            Icon={defineIcon(stepData.data.meta.name)}
+                        />
                     </div>
                     <div className={"flex-grow flex flex-row justify-center -mb-8"}>
-                        <div className={`h-full border-l border-zinc-500/50 group-[:last-of-type]:hidden `} style={progress === 100 ? {borderColor: color} : {}}></div>
+                        <div
+                            className={`h-full border-l border-zinc-500/50 group-[:last-of-type]:hidden `}
+                            style={progress === 100 ? { borderColor: color } : {}}
+                        ></div>
                     </div>
                 </div>
                 <div className={"w-full"}>
-                    <div className={`step-header w-full h-16 flex flex-row bg-zinc-700/80 rounded-r-2xl cursor-pointer`} onClick={() => toggleOpen()}>
+                    <div
+                        className={`step-header w-full h-16 flex flex-row bg-zinc-700/80 rounded-r-2xl cursor-pointer`}
+                        onClick={() => toggleOpen()}
+                    >
                         <div className={"flex-grow flex flex-col justify-center px-2 pl-2"}>
-                            <span className={"text-xs align-bottom font-light"}>Schritt {stepData.data.index}</span>
-                            <h1 className={"text-xl font font-bold"}>{ stepData.data.meta.name }</h1>
+                            <span className={"text-xs align-bottom font-light"}>
+                                Schritt {stepData.data.index}
+                            </span>
+                            <h1 className={"text-xl font font-bold"}>{stepData.data.meta.name}</h1>
                         </div>
-                        { stepData.locked && <div className={" flex-grow-0 flex-shrink-0 h-16 flex flex-col justify-center items-center"}>
-                            <LockClosedIcon className={"w-6 aspect-square"}/>
-                        </div>}
-                        <div className={" flex-grow-0 flex-shrink-0 h-16 aspect-square flex flex-col justify-center items-center"}>
-                            { open ? <ChevronUpIcon className={"w-6 aspect-square"}></ChevronUpIcon> :
-                            <ChevronDownIcon className={"w-6 aspect-square"}></ChevronDownIcon> }
+                        {stepData.locked && (
+                            <div
+                                className={
+                                    " flex-grow-0 flex-shrink-0 h-16 flex flex-col justify-center items-center"
+                                }
+                            >
+                                <LockClosedIcon className={"w-6 aspect-square"} />
+                            </div>
+                        )}
+                        <div
+                            className={
+                                " flex-grow-0 flex-shrink-0 h-16 aspect-square flex flex-col justify-center items-center"
+                            }
+                        >
+                            {open ? (
+                                <ChevronUpIcon className={"w-6 aspect-square"}></ChevronUpIcon>
+                            ) : (
+                                <ChevronDownIcon className={"w-6 aspect-square"}></ChevronDownIcon>
+                            )}
                         </div>
                     </div>
-                    <div className={`step-bodyoverflow-hidden ${!open && 'hidden'}`}>
+                    <div className={`step-bodyoverflow-hidden ${!open && "hidden"}`}>
                         <div className={" mx-2 my-8 "}>
                             <BlocksRenderer content={stepData.data.meta.text}></BlocksRenderer>
-                            {
-                                ["instructions.list-instruction"].includes(stepData.data.__component) && (
-                                    <form id={"taskForm"} >
-                                    {
-                                        stepData.data.tasks.map((task: any) => {
-                                            let taskProgress = 0;
-                                            let fullProgress = 0;
-                                            if(stepData.state) {
-                                                fullProgress = stepData.state.progress;
+                            {["instructions.list-instruction"].includes(
+                                stepData.data.__component
+                            ) && (
+                                <form id={"taskForm"}>
+                                    {stepData.data.tasks.map((task: any) => {
+                                        let taskProgress = 0;
+                                        let fullProgress = 0;
+                                        if (stepData.state) {
+                                            fullProgress = stepData.state.progress;
 
-                                                if(stepData.state.tasks && Array.isArray(stepData.state.tasks) ) {
-                                                   const foundTask = stepData.state.tasks.find((e: any) => e.id === task.id);
-                                                   if(foundTask) {
-                                                       taskProgress = foundTask.progress;
-                                                   }
+                                            if (
+                                                stepData.state.tasks &&
+                                                Array.isArray(stepData.state.tasks)
+                                            ) {
+                                                const foundTask = stepData.state.tasks.find(
+                                                    (e: any) => e.id === task.id
+                                                );
+                                                if (foundTask) {
+                                                    taskProgress = foundTask.progress;
                                                 }
                                             }
+                                        }
 
-                                            return <CheckBox key={task.id} label={task.text} locked={fullProgress >= 100 } init={taskProgress >= 100 } onChange={(e: any) => {
-                                                task.progress = e.currentTarget.checked ? 100 : 0;
-                                                performStepAction({tasks: [
-                                                        {
-                                                            id: task.id,
-                                                            progress: e.currentTarget.checked ? 100 : 0
-                                                        }
-                                                    ]})
-                                            }} />
-                                        })
-                                    }
-
-                                    </form>
-                                )
-                            }
+                                        return (
+                                            <CheckBox
+                                                key={task.id}
+                                                label={task.text}
+                                                locked={fullProgress >= 100}
+                                                init={taskProgress >= 100}
+                                                onChange={(e: any) => {
+                                                    task.progress = e.currentTarget.checked
+                                                        ? 100
+                                                        : 0;
+                                                    performStepAction({
+                                                        tasks: [
+                                                            {
+                                                                id: task.id,
+                                                                progress: e.currentTarget.checked
+                                                                    ? 100
+                                                                    : 0
+                                                            }
+                                                        ]
+                                                    });
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </form>
+                            )}
                         </div>
-                        <div className={"w-full rounded-br-2xl relative flex flex-row justify-center m-4"}>
+                        <div
+                            className={
+                                "w-full rounded-br-2xl relative flex flex-row justify-center m-4"
+                            }
+                        >
                             <div className={"flex flex-row gap-4"}>
-                                {
-                                    ["instructions.setup-instruction"].includes(stepData.data.__component) && (
-                                        <>
-                                            <div className={"flex justify-center"}>
-                                                { stepData.state?.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"} onClick={() => toggleModalOpen()} disabled={ !actionable() }>{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Einrichten</button> }
-                                            </div>
-                                            {  modalOpen && <DeviceSetupModal onClose={() => {
-                                                stepData.updateState();
-                                                toggleModalOpen();
-                                            }} config={{
-                                                deployment: stepData.deployment,
-                                                "thingsboard_profile":  stepData.data.thingsboard_profile,
-                                                "form_alternative_label": stepData.data.alternativeLabel?.form_alternative_label,
-                                                "form_alternative_label_required" : !!stepData.data.alternativeLabel
-                                            }} step={stepData} triggerStateRefresh={stepData.updateState}></DeviceSetupModal> }
-                                        </>
-                                    )
-                                }
-                                {
-                                    ["instructions.text-instruction", "instructions.list-instruction"].includes(stepData.data.__component) && (
+                                {["instructions.setup-instruction"].includes(
+                                    stepData.data.__component
+                                ) && (
+                                    <>
                                         <div className={"flex justify-center"}>
-                                            { stepData.state?.progress === 100 ? <CheckIcon className={"h-16 text-orange-500"} /> : <button className={"rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"}
-                                            disabled={ !actionable(() => {
-                                                switch (stepData.data.__component) {
-                                                    case  "instructions.list-instruction":
-                                                        return Array.isArray(stepData.data.tasks) && Array.from(stepData.data.tasks).every((t: any) => subtaskComplete(t.id));
-                                                    default:
-                                                        return true;
-                                                }
-                                            }) } onClick={() => performStepAction({})}
-                                            >{ stepData.locked && <LockClosedIcon className={"h-6 mr-4 inline"}/> } Erledigt </button>}
+                                            {stepData.state?.progress === 100 ? (
+                                                <CheckIcon className={"h-16 text-orange-500"} />
+                                            ) : (
+                                                <button
+                                                    className={
+                                                        "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"
+                                                    }
+                                                    onClick={() => toggleModalOpen()}
+                                                    disabled={!actionable()}
+                                                >
+                                                    {stepData.locked && (
+                                                        <LockClosedIcon
+                                                            className={"h-6 mr-4 inline"}
+                                                        />
+                                                    )}{" "}
+                                                    Einrichten
+                                                </button>
+                                            )}
                                         </div>
-                                    )
-                                }
+                                        {modalOpen && (
+                                            <DeviceSetupModal
+                                                onClose={() => {
+                                                    stepData.updateState();
+                                                    toggleModalOpen();
+                                                }}
+                                                config={{
+                                                    deployment: stepData.deployment,
+                                                    thingsboard_profile:
+                                                        stepData.data.thingsboard_profile,
+                                                    form_alternative_label:
+                                                        stepData.data.alternativeLabel
+                                                            ?.form_alternative_label,
+                                                    form_alternative_label_required:
+                                                        !!stepData.data.alternativeLabel
+                                                }}
+                                                step={stepData}
+                                                triggerStateRefresh={stepData.updateState}
+                                            ></DeviceSetupModal>
+                                        )}
+                                    </>
+                                )}
+                                {[
+                                    "instructions.text-instruction",
+                                    "instructions.list-instruction"
+                                ].includes(stepData.data.__component) && (
+                                    <div className={"flex justify-center"}>
+                                        {stepData.state?.progress === 100 ? (
+                                            <CheckIcon className={"h-16 text-orange-500"} />
+                                        ) : (
+                                            <button
+                                                className={
+                                                    "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow shadow-white drop-shadow-xl disabled:bg-zinc-500 flex flex-row justify-center items-center"
+                                                }
+                                                disabled={
+                                                    !actionable(() => {
+                                                        switch (stepData.data.__component) {
+                                                            case "instructions.list-instruction":
+                                                                return (
+                                                                    Array.isArray(
+                                                                        stepData.data.tasks
+                                                                    ) &&
+                                                                    Array.from(
+                                                                        stepData.data.tasks
+                                                                    ).every((t: any) =>
+                                                                        subtaskComplete(t.id)
+                                                                    )
+                                                                );
+                                                            default:
+                                                                return true;
+                                                        }
+                                                    })
+                                                }
+                                                onClick={() => performStepAction({})}
+                                            >
+                                                {stepData.locked && (
+                                                    <LockClosedIcon className={"h-6 mr-4 inline"} />
+                                                )}{" "}
+                                                Erledigt{" "}
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -267,5 +437,4 @@ export default function Step(stepData: StepData) {
             </div>
         </>
     );
-
 }

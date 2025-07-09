@@ -1,44 +1,62 @@
-"use client"
+"use client";
 import {
     ExclamationCircleIcon,
     ExclamationTriangleIcon,
-    QuestionMarkCircleIcon,
-    InformationCircleIcon
+    InformationCircleIcon,
+    QuestionMarkCircleIcon
 } from "@heroicons/react/24/solid";
 import React from "react";
 import { createPortal } from "react-dom";
 
-export enum PromptType { Default, Request , Warning , Error }
-
-type HeroIcon = React.ForwardRefExoticComponent<Omit<React.SVGProps<SVGSVGElement>, "ref"> & { title?: string | undefined; titleId?: string | undefined; } & React.RefAttributes<SVGSVGElement>>;
-
-export type PromptAction = { Icon?: HeroIcon, className?: string, text: string, actionFunction: Function };
-
-export type PromptContext = {
-    type: PromptType, text: string | React.ReactNode, actions : PromptAction[], onClose: Function, title?: string
+export enum PromptType {
+    Default,
+    Request,
+    Warning,
+    Error
 }
 
-export const Prompt = (context: PromptContext) => {
+type HeroIcon = React.ForwardRefExoticComponent<
+    Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
+        title?: string | undefined;
+        titleId?: string | undefined;
+    } & React.RefAttributes<SVGSVGElement>
+>;
 
+export type PromptAction = {
+    Icon?: HeroIcon;
+    className?: string;
+    text: string;
+    actionFunction: Function;
+};
+
+export type PromptContext = {
+    type: PromptType;
+    text: string | React.ReactNode;
+    actions: PromptAction[];
+    onClose: Function;
+    title?: string;
+};
+
+export const Prompt = (context: PromptContext) => {
     const HeadlineIcon = () => {
         switch (context.type) {
             case PromptType.Request:
-                return <QuestionMarkCircleIcon className={"h-8 aspect-square inline"}/> ;
+                return <QuestionMarkCircleIcon className={"h-8 aspect-square inline"} />;
                 break;
             case PromptType.Error:
-                return <ExclamationTriangleIcon className={"h-8 aspect-square inline"}/> ;
+                return <ExclamationTriangleIcon className={"h-8 aspect-square inline"} />;
                 break;
             case PromptType.Warning:
-                return <ExclamationCircleIcon className={"h-8 aspect-square inline"}/> ;
+                return <ExclamationCircleIcon className={"h-8 aspect-square inline"} />;
                 break;
             case PromptType.Default:
             default:
-                return <InformationCircleIcon className={"h-8 aspect-square inline"}/> ;
+                return <InformationCircleIcon className={"h-8 aspect-square inline"} />;
         }
-    }
+    };
 
     const headline = () => {
-        if(context.title) {
+        if (context.title) {
             return context.title;
         }
 
@@ -56,7 +74,7 @@ export const Prompt = (context: PromptContext) => {
             default:
                 return "Information";
         }
-    }
+    };
 
     const headlineColor = () => {
         switch (context.type) {
@@ -71,27 +89,44 @@ export const Prompt = (context: PromptContext) => {
             default:
                 return "text-white";
         }
-    }
+    };
 
     const headers = () => {
-            return <div className={`flex flex-row gap-3 ${headlineColor()}`}><HeadlineIcon/> { headline() }</div>
-    }
+        return (
+            <div className={`flex flex-row gap-3 ${headlineColor()}`}>
+                <HeadlineIcon /> {headline()}
+            </div>
+        );
+    };
 
-
-   return createPortal(
-        <div className={"absolute mx-auto my-auto bg-orange-100/20 dark:bg-zinc-700 rounded min-w-[30vw] md:max-w-xl first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"}>
+    return createPortal(
+        <div
+            className={
+                "absolute mx-auto my-auto bg-orange-100/20 dark:bg-zinc-700 rounded min-w-[30vw] md:max-w-xl first:flex flex-col gap-3 overflow-hidden shadow-orange-100/90 dark:shadow-zinc-700/90 shadow-2xl"
+            }
+        >
             <div className={"px-6 py-3 font-bold text-2xl bg-orange-100/90 dark:bg-zinc-800/90"}>
-               {
-                   headers()
-               }
+                {headers()}
             </div>
-            <div className={"px-6 py-3 text-center"}>
-                { context.text }
-            </div>
+            <div className={"px-6 py-3 text-center"}>{context.text}</div>
             <div className={"px-6 py-3 flex flex-row gap-8 justify-around"}>
-                { context.actions.map((action) => {
-                    return <div key={action.text} onClick={() => { action.actionFunction && action.actionFunction(); context.onClose() }} className={`bg-orange-500/50 hover:bg-orange-500 cursor-pointer p-3 px-8 w-full justify-center rounded flex flex-row items-center gap-1 ${action.className}`}>{ action.Icon && (<action.Icon className={"h-6 inline"}/>)}{action.text}</div>
+                {context.actions.map((action) => {
+                    return (
+                        <div
+                            key={action.text}
+                            onClick={() => {
+                                action.actionFunction && action.actionFunction();
+                                context.onClose();
+                            }}
+                            className={`bg-orange-500/50 hover:bg-orange-500 cursor-pointer p-3 px-8 w-full justify-center rounded flex flex-row items-center gap-1 ${action.className}`}
+                        >
+                            {action.Icon && <action.Icon className={"h-6 inline"} />}
+                            {action.text}
+                        </div>
+                    );
                 })}
             </div>
-        </div>, document.getElementById("promptArea")!)
-}
+        </div>,
+        document.getElementById("promptArea")!
+    );
+};
