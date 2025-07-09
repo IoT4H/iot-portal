@@ -1,4 +1,4 @@
-import type { Attribute, Schema } from "@strapi/strapi";
+import type { Schema, Attribute } from '@strapi/strapi';
 
 export interface AdminPermission extends Schema.CollectionType {
   collectionName: 'admin_permissions';
@@ -1013,9 +1013,9 @@ export interface ApiFirmFirm extends Schema.CollectionType {
       Attribute.DefaultTo<false>;
     Address: Attribute.Component<'general.address'>;
     darkLogo: Attribute.Media;
-    platformButton: Attribute.Enumeration<["true", "false", "user"]> &
+    platformButton: Attribute.Enumeration<['true', 'false', 'user']> &
       Attribute.Required &
-      Attribute.DefaultTo<"false">;
+      Attribute.DefaultTo<'false'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &

@@ -337,7 +337,10 @@ export default function Page() {
                         }
                         actions={[
                             { text: "Login", actionFunction: () => router.push(`/login`) },
-                            { text: "Erneut Versuchen", actionFunction: () => {} }
+                            {
+                                text: "Erneut Versuchen",
+                                actionFunction: () => {}
+                            }
                         ]}
                         onClose={() => SetSignupError(undefined)}
                     />

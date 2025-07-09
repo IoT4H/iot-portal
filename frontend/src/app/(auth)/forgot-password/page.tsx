@@ -78,7 +78,12 @@ export default function Page() {
                         type={PromptType.Warning}
                         title={"Fehler"}
                         text={error?.message}
-                        actions={[{ text: "Erneut Versuchen", actionFunction: () => {} }]}
+                        actions={[
+                            {
+                                text: "Erneut Versuchen",
+                                actionFunction: () => {}
+                            }
+                        ]}
                         onClose={() => SetError(undefined)}
                     />
                 )}

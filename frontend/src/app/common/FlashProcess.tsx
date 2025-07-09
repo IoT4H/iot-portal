@@ -1,7 +1,13 @@
 "use client";
+
+// eslint-disable @typescript-eslint/ban-ts-comment
 import { CheckBadgeIcon, CheckIcon, WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
-import { FieldSetCheckbox, FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
+import {
+    FieldSetCheckbox,
+    FieldSetInput,
+    FieldSetSelect
+} from "@iot-portal/frontend/app/common/FieldSet";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
@@ -87,6 +93,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
     }, []);
 
     const scanForSerialDevices = () => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         navigator.serial.getPorts().then((devices) => {
             console.log(`Total devices: ${devices.length}`);
