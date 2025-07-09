@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { DefinedRange, createStaticRanges } from "react-date-range";
-import type { Range, RangeKeyDict } from "react-date-range";
-import { addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
-import "./exportTelemetryModal.css";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { addDays, endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import { useEffect, useState } from "react";
+import type { Range, RangeKeyDict } from "react-date-range";
+import { createStaticRanges, DefinedRange } from "react-date-range";
+import { createPortal } from "react-dom";
+import "./exportTelemetryModal.css";
 
 type Props = {
     isOpen: boolean;
@@ -23,14 +23,14 @@ const customStaticRanges = createStaticRanges([
         range: () => {
             const yesterday = addDays(new Date(), -1);
             return { startDate: yesterday, endDate: yesterday };
-        },
+        }
     },
     {
         label: "Diese Woche",
         range: () => ({
             startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
-            endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
-        }),
+            endDate: endOfWeek(new Date(), { weekStartsOn: 1 })
+        })
     },
     {
         label: "Letzte Woche",
@@ -38,14 +38,14 @@ const customStaticRanges = createStaticRanges([
             const start = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), -7);
             const end = addDays(endOfWeek(new Date(), { weekStartsOn: 1 }), -7);
             return { startDate: start, endDate: end };
-        },
+        }
     },
     {
         label: "Dieser Monat",
         range: () => ({
             startDate: startOfMonth(new Date()),
-            endDate: endOfMonth(new Date()),
-        }),
+            endDate: endOfMonth(new Date())
+        })
     },
     {
         label: "Letzter Monat",
@@ -53,8 +53,8 @@ const customStaticRanges = createStaticRanges([
             const start = startOfMonth(addDays(new Date(), -30));
             const end = endOfMonth(addDays(new Date(), -30));
             return { startDate: start, endDate: end };
-        },
-    },
+        }
+    }
 ]);
 
 const customInputRanges = [
@@ -63,7 +63,7 @@ const customInputRanges = [
         range(value: number) {
             return {
                 startDate: addDays(new Date(), -value),
-                endDate: new Date(),
+                endDate: new Date()
             };
         },
         getCurrentValue(range: Range) {
@@ -72,14 +72,14 @@ const customInputRanges = [
                 (new Date().getTime() - range.startDate.getTime()) / (1000 * 60 * 60 * 24)
             );
             return days >= 0 ? days : "";
-        },
+        }
     },
     {
         label: "🚀 Tage ab heute",
         range(value: number) {
             return {
                 startDate: new Date(),
-                endDate: addDays(new Date(), value),
+                endDate: addDays(new Date(), value)
             };
         },
         getCurrentValue(range: Range) {
@@ -88,8 +88,8 @@ const customInputRanges = [
                 (range.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
             );
             return days >= 0 ? days : "";
-        },
-    },
+        }
+    }
 ];
 
 const ExportTelemetryModal = ({
@@ -98,7 +98,7 @@ const ExportTelemetryModal = ({
     setDateRange,
     onCancel,
     onConfirm,
-    availableKeys,
+    availableKeys
 }: Props) => {
     const [selectedKeys, setSelectedKeys] = useState<string[]>(availableKeys);
 
@@ -138,12 +138,15 @@ const ExportTelemetryModal = ({
                                     setSelectedKeys(availableKeys);
                                 }
                             }}
-                            className={`px-2 py-0.5 text-xs rounded-full border font-medium ${selectedKeys.length === availableKeys.length
-                                ? "bg-red-500 text-white border-red-500"
-                                : "bg-blue-500 text-white border-blue-500"
-                                }`}
+                            className={`px-2 py-0.5 text-xs rounded-full border font-medium ${
+                                selectedKeys.length === availableKeys.length
+                                    ? "bg-red-500 text-white border-red-500"
+                                    : "bg-blue-500 text-white border-blue-500"
+                            }`}
                         >
-                            {selectedKeys.length === availableKeys.length ? "Alle abwählen" : "Alle auswählen"}
+                            {selectedKeys.length === availableKeys.length
+                                ? "Alle abwählen"
+                                : "Alle auswählen"}
                         </button>
 
                         {availableKeys.map((key) => {
@@ -158,10 +161,11 @@ const ExportTelemetryModal = ({
                                                 : [...prev, key]
                                         );
                                     }}
-                                    className={`px-2 py-0.5 text-xs rounded-full border ${isSelected
-                                        ? "bg-primary text-white border-primary"
-                                        : "bg-gray-200 text-gray-800 border-gray-300"
-                                        }`}
+                                    className={`px-2 py-0.5 text-xs rounded-full border ${
+                                        isSelected
+                                            ? "bg-primary text-white border-primary"
+                                            : "bg-gray-200 text-gray-800 border-gray-300"
+                                    }`}
                                 >
                                     {key}
                                 </button>

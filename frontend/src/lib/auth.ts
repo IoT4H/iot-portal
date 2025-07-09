@@ -5,62 +5,53 @@ import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { useContext, useEffect, useState } from "react";
 
 export type User = {
-
     auth: Auth;
     email: string;
     firstname: string;
     middlename: string;
     lastname: string;
-    firm: { name: string, platformButton: "true" | "false" | "user" };
-    platformButton: boolean
-
-
-}
+    firm: { name: string; platformButton: "true" | "false" | "user" };
+    platformButton: boolean;
+};
 
 export const useIsAuth = () => {
     const [isAuth, SetIsAuth] = useState(false);
 
     const user = useContext(AuthContext);
 
-
     useEffect(() => {
         SetIsAuth(user !== undefined);
-    }, [user])
+    }, [user]);
 
     return isAuth;
-}
+};
 
 export class Auth {
-
     static ID_ITEM_NAME = "token";
 
     static onUserChange = () => {};
 
     static async getUser(): Promise<User | undefined> {
-
-        if(!this.isAuth()) {
+        if (!this.isAuth()) {
             return undefined;
         }
 
-        const qsPara =
-            {
-                populate: '*',
-            }
-        ;
-
-        const u = await fetchAPI( "/api/users/me", qsPara, {
+        const qsPara = {
+            populate: "*"
+        };
+        const u = await fetchAPI("/api/users/me", qsPara, {
             headers: {
-                "Authorization": "Bearer " + this.getToken(),
+                Authorization: "Bearer " + this.getToken()
             },
             cache: "no-cache"
         });
 
-        if(u.error?.status === 401) {
+        if (u.error?.status === 401) {
             this.logout();
             return undefined;
         }
 
-        if(!!u) {
+        if (u) {
             return {
                 auth: this,
                 email: u.email,
@@ -87,7 +78,6 @@ export class Auth {
         return this.isAuth() && localStorage.getItem(Auth.ID_ITEM_NAME);
     }
 
-
     static setToken(token: string) {
         localStorage.setItem(Auth.ID_ITEM_NAME, token);
         Auth.onUserChange();
@@ -100,16 +90,20 @@ export class Auth {
     static async login(username: string, password: string) {
         return new Promise<void>(async (resolve, reject) => {
             LoadingState.startLoading();
-            const response = await fetchAPI("/api/auth/local", {}, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    identifier: username,
-                    password: password,
-                })
-            });
+            const response = await fetchAPI(
+                "/api/auth/local",
+                {},
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        identifier: username,
+                        password: password
+                    })
+                }
+            );
 
             if (response.error) {
                 LoadingState.endLoading();
@@ -123,16 +117,14 @@ export class Auth {
                 resolve();
             }
 
-
             reject("unknown reason");
-        })
+        });
     }
 
-     static logout() {
+    static logout() {
         LoadingState.startLoading();
         Auth.removeToken();
         Auth.onUserChange();
         LoadingState.endLoading();
     }
-
 }

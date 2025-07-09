@@ -1,16 +1,12 @@
-"use client"
-import { AuthContext } from "@iot-portal/frontend/app/common/AuthContext";
+"use client";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
-import { Auth, User } from "@iot-portal/frontend/lib/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export class LoadingState {
-
-
     static state = false;
 
     constructor(state?: boolean) {
-        if(state !== undefined) {
+        if (state !== undefined) {
             LoadingState.SetState(state);
         }
     }
@@ -19,7 +15,7 @@ export class LoadingState {
 
     static SetState(b: boolean) {
         LoadingState.state = b;
-        console.info("change to ", this.state)
+        console.info("change to ", this.state);
     }
 
     static isLoading() {
@@ -40,32 +36,33 @@ export class LoadingState {
 export const LoadingContext = createContext<boolean>(false);
 
 export default function PageBlockingSpinner() {
-
-
-
     const isLoading = useContext(LoadingContext);
 
-    return (<>
-            { isLoading && (
-                <div className={"fixed w-full h-full z-[99] bg-zinc-900/80 flex flex-col items-center justify-center"}>
-                    <Spinner className={"h-24"}/>
-                </div> ) }
-    </>);
+    return (
+        <>
+            {isLoading && (
+                <div
+                    className={
+                        "fixed w-full h-full z-[99] bg-zinc-900/80 flex flex-col items-center justify-center"
+                    }
+                >
+                    <Spinner className={"h-24"} />
+                </div>
+            )}
+        </>
+    );
 }
 
-
-export function LoadingWrapper ({children} : {children: any}) {
-
+export function LoadingWrapper({ children }: { children: any }) {
     const [loading, SetLoading] = useState<boolean>(false);
 
     LoadingState.onChange = (state) => {
         SetLoading(state);
-    }
+    };
 
     useEffect(() => {
-        SetLoading(LoadingState.isLoading())
-    }, [])
+        SetLoading(LoadingState.isLoading());
+    }, []);
 
-    return <LoadingContext.Provider value={loading}>
-        {children}</LoadingContext.Provider>
+    return <LoadingContext.Provider value={loading}>{children}</LoadingContext.Provider>;
 }

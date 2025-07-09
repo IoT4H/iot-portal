@@ -1,11 +1,9 @@
-import qs from "qs";
 import { APITool } from "@iot-portal/frontend/lib/APITool";
-
+import qs from "qs";
 
 export function isServer() {
-    return typeof window === 'undefined';
+    return typeof window === "undefined";
 }
-
 
 /**
  * Get full Strapi URL from path
@@ -14,24 +12,18 @@ export function isServer() {
  */
 export function getStrapiURL(path = "") {
     APITool.init();
-    let strapi_url = isServer() ? APITool.ServerStrapiURL : APITool.FrontendStrapiURL;
+    const strapi_url = isServer() ? APITool.ServerStrapiURL : APITool.FrontendStrapiURL;
 
-    return `${(
-        strapi_url || "/"
-    ).replace(/\/$/, "")}${path}`;
+    return `${(strapi_url || "/").replace(/\/$/, "")}${path}`;
 }
 
 export function getStrapiURLForFrontend(path = "") {
-
     APITool.init();
 
-    let strapi_url = APITool.FrontendStrapiURL;
+    const strapi_url = APITool.FrontendStrapiURL;
 
-    return `${(
-        strapi_url || "/"
-    ).replace(/\/$/, "")}${path}`;
+    return `${(strapi_url || "/").replace(/\/$/, "")}${path}`;
 }
-
 
 export function getLittleFSURL() {
     APITool.init();
@@ -60,18 +52,20 @@ export function getDashboardURL() {
  */
 export async function fetchAPI(path: string, urlParamsObject = {}, options = {}) {
     // Merge default and user options
-    const mergedOptions = Object.assign({}, {
-        headers: {
-            "Content-Type": "application/json",
+    const mergedOptions = Object.assign(
+        {},
+        {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            next: { revalidate: 0 }
         },
-        next: { revalidate: 0 },
-    }, options);
+        options
+    );
 
     // Build request URL
     const queryString = qs.stringify(urlParamsObject);
-    const requestUrl = `${(getStrapiURL(
-        `${path}${queryString ? `?${queryString}` : ""}`
-    ))}`;
+    const requestUrl = `${getStrapiURL(`${path}${queryString ? `?${queryString}` : ""}`)}`;
 
     // Trigger API call
     try {
@@ -79,8 +73,7 @@ export async function fetchAPI(path: string, urlParamsObject = {}, options = {})
         // Handle response
         return await response.json();
     } catch (e) {
-        console.error(e)
+        console.error(e);
         return null;
     }
-
 }
