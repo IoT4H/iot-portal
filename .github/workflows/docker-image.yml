@@ -1,10 +1,10 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main", "develop" ]
-    tags: ["*"]
-
+  workflow_run:
+    workflows: [ "Build All Projects" ]
+    types:
+      - completed
 
 jobs:
   # This pushes the image to GitHub Packages.
