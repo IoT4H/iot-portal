@@ -22,19 +22,6 @@ jobs:
           # install dependencies if needed
           npm install
           npm run build
-
-  build-littlefs:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./littlefs-data-creator
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build Littlefs creator
-        run: |
-          npm install
-          npm run build
-
   build-backend:
     runs-on: ubuntu-latest
     defaults:
