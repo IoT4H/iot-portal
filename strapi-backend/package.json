@@ -2,7 +2,7 @@
   "name": "strapi-backend",
   "private": true,
   "version": "0.1.0",
-  "description": "A Strapi application",
+  "description": "A Strapi application for IOT4H Portal",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -26,7 +26,8 @@
     "styled-components": "^5.3.3"
   },
   "author": {
-    "name": "A Strapi developer"
+    "name": "Bastian Rickmann",
+    "email": "bastian.rickmann@accenture.com"
   },
   "strapi": {
     "uuid": "eab5288d-719a-438c-b201-56cf53f1337a"
