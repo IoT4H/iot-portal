@@ -1,19 +1,19 @@
 import type { Attribute, Schema } from "@strapi/strapi";
 
 export interface AdminPermission extends Schema.CollectionType {
-  collectionName: 'admin_permissions';
+  collectionName: "admin_permissions";
   info: {
-    name: 'Permission';
-    description: '';
-    singularName: 'permission';
-    pluralName: 'permissions';
-    displayName: 'Permission';
+    name: "Permission";
+    description: "";
+    singularName: "permission";
+    pluralName: "permissions";
+    displayName: "Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -30,38 +30,38 @@ export interface AdminPermission extends Schema.CollectionType {
       }>;
     properties: Attribute.JSON & Attribute.DefaultTo<{}>;
     conditions: Attribute.JSON & Attribute.DefaultTo<[]>;
-    role: Attribute.Relation<'admin::permission', 'manyToOne', 'admin::role'>;
+    role: Attribute.Relation<"admin::permission", "manyToOne", "admin::role">;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'admin::permission',
-      'oneToOne',
-      'admin::user'
+      "admin::permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'admin::permission',
-      'oneToOne',
-      'admin::user'
+      "admin::permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface AdminUser extends Schema.CollectionType {
-  collectionName: 'admin_users';
+  collectionName: "admin_users";
   info: {
-    name: 'User';
-    description: '';
-    singularName: 'user';
-    pluralName: 'users';
-    displayName: 'User';
+    name: "User";
+    description: "";
+    singularName: "user";
+    pluralName: "users";
+    displayName: "User";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -92,33 +92,33 @@ export interface AdminUser extends Schema.CollectionType {
     isActive: Attribute.Boolean &
       Attribute.Private &
       Attribute.DefaultTo<false>;
-    roles: Attribute.Relation<'admin::user', 'manyToMany', 'admin::role'> &
+    roles: Attribute.Relation<"admin::user", "manyToMany", "admin::role"> &
       Attribute.Private;
     blocked: Attribute.Boolean & Attribute.Private & Attribute.DefaultTo<false>;
     preferedLanguage: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<"admin::user", "oneToOne", "admin::user"> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<"admin::user", "oneToOne", "admin::user"> &
       Attribute.Private;
   };
 }
 
 export interface AdminRole extends Schema.CollectionType {
-  collectionName: 'admin_roles';
+  collectionName: "admin_roles";
   info: {
-    name: 'Role';
-    description: '';
-    singularName: 'role';
-    pluralName: 'roles';
-    displayName: 'Role';
+    name: "Role";
+    description: "";
+    singularName: "role";
+    pluralName: "roles";
+    displayName: "Role";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -136,35 +136,35 @@ export interface AdminRole extends Schema.CollectionType {
         minLength: 1;
       }>;
     description: Attribute.String;
-    users: Attribute.Relation<'admin::role', 'manyToMany', 'admin::user'>;
+    users: Attribute.Relation<"admin::role", "manyToMany", "admin::user">;
     permissions: Attribute.Relation<
-      'admin::role',
-      'oneToMany',
-      'admin::permission'
+      "admin::role",
+      "oneToMany",
+      "admin::permission"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<"admin::role", "oneToOne", "admin::user"> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<"admin::role", "oneToOne", "admin::user"> &
       Attribute.Private;
   };
 }
 
 export interface AdminApiToken extends Schema.CollectionType {
-  collectionName: 'strapi_api_tokens';
+  collectionName: "strapi_api_tokens";
   info: {
-    name: 'Api Token';
-    singularName: 'api-token';
-    pluralName: 'api-tokens';
-    displayName: 'Api Token';
-    description: '';
+    name: "Api Token";
+    singularName: "api-token";
+    pluralName: "api-tokens";
+    displayName: "Api Token";
+    description: "";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -179,10 +179,10 @@ export interface AdminApiToken extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }> &
-      Attribute.DefaultTo<''>;
-    type: Attribute.Enumeration<['read-only', 'full-access', 'custom']> &
+      Attribute.DefaultTo<"">;
+    type: Attribute.Enumeration<["read-only", "full-access", "custom"]> &
       Attribute.Required &
-      Attribute.DefaultTo<'read-only'>;
+      Attribute.DefaultTo<"read-only">;
     accessKey: Attribute.String &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
@@ -190,43 +190,43 @@ export interface AdminApiToken extends Schema.CollectionType {
       }>;
     lastUsedAt: Attribute.DateTime;
     permissions: Attribute.Relation<
-      'admin::api-token',
-      'oneToMany',
-      'admin::api-token-permission'
+      "admin::api-token",
+      "oneToMany",
+      "admin::api-token-permission"
     >;
     expiresAt: Attribute.DateTime;
     lifespan: Attribute.BigInteger;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'admin::api-token',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'admin::api-token',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface AdminApiTokenPermission extends Schema.CollectionType {
-  collectionName: 'strapi_api_token_permissions';
+  collectionName: "strapi_api_token_permissions";
   info: {
-    name: 'API Token Permission';
-    description: '';
-    singularName: 'api-token-permission';
-    pluralName: 'api-token-permissions';
-    displayName: 'API Token Permission';
+    name: "API Token Permission";
+    description: "";
+    singularName: "api-token-permission";
+    pluralName: "api-token-permissions";
+    displayName: "API Token Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -237,41 +237,41 @@ export interface AdminApiTokenPermission extends Schema.CollectionType {
         minLength: 1;
       }>;
     token: Attribute.Relation<
-      'admin::api-token-permission',
-      'manyToOne',
-      'admin::api-token'
+      "admin::api-token-permission",
+      "manyToOne",
+      "admin::api-token"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'admin::api-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'admin::api-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::api-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface AdminTransferToken extends Schema.CollectionType {
-  collectionName: 'strapi_transfer_tokens';
+  collectionName: "strapi_transfer_tokens";
   info: {
-    name: 'Transfer Token';
-    singularName: 'transfer-token';
-    pluralName: 'transfer-tokens';
-    displayName: 'Transfer Token';
-    description: '';
+    name: "Transfer Token";
+    singularName: "transfer-token";
+    pluralName: "transfer-tokens";
+    displayName: "Transfer Token";
+    description: "";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -286,7 +286,7 @@ export interface AdminTransferToken extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }> &
-      Attribute.DefaultTo<''>;
+      Attribute.DefaultTo<"">;
     accessKey: Attribute.String &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
@@ -294,43 +294,43 @@ export interface AdminTransferToken extends Schema.CollectionType {
       }>;
     lastUsedAt: Attribute.DateTime;
     permissions: Attribute.Relation<
-      'admin::transfer-token',
-      'oneToMany',
-      'admin::transfer-token-permission'
+      "admin::transfer-token",
+      "oneToMany",
+      "admin::transfer-token-permission"
     >;
     expiresAt: Attribute.DateTime;
     lifespan: Attribute.BigInteger;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'admin::transfer-token',
-      'oneToOne',
-      'admin::user'
+      "admin::transfer-token",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'admin::transfer-token',
-      'oneToOne',
-      'admin::user'
+      "admin::transfer-token",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface AdminTransferTokenPermission extends Schema.CollectionType {
-  collectionName: 'strapi_transfer_token_permissions';
+  collectionName: "strapi_transfer_token_permissions";
   info: {
-    name: 'Transfer Token Permission';
-    description: '';
-    singularName: 'transfer-token-permission';
-    pluralName: 'transfer-token-permissions';
-    displayName: 'Transfer Token Permission';
+    name: "Transfer Token Permission";
+    description: "";
+    singularName: "transfer-token-permission";
+    pluralName: "transfer-token-permissions";
+    displayName: "Transfer Token Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -341,40 +341,40 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
         minLength: 1;
       }>;
     token: Attribute.Relation<
-      'admin::transfer-token-permission',
-      'manyToOne',
-      'admin::transfer-token'
+      "admin::transfer-token-permission",
+      "manyToOne",
+      "admin::transfer-token"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'admin::transfer-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::transfer-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'admin::transfer-token-permission',
-      'oneToOne',
-      'admin::user'
+      "admin::transfer-token-permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginUploadFile extends Schema.CollectionType {
-  collectionName: 'files';
+  collectionName: "files";
   info: {
-    singularName: 'file';
-    pluralName: 'files';
-    displayName: 'File';
-    description: '';
+    singularName: "file";
+    pluralName: "files";
+    displayName: "File";
+    description: "";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -393,11 +393,11 @@ export interface PluginUploadFile extends Schema.CollectionType {
     previewUrl: Attribute.String;
     provider: Attribute.String & Attribute.Required;
     provider_metadata: Attribute.JSON;
-    related: Attribute.Relation<'plugin::upload.file', 'morphToMany'>;
+    related: Attribute.Relation<"plugin::upload.file", "morphToMany">;
     folder: Attribute.Relation<
-      'plugin::upload.file',
-      'manyToOne',
-      'plugin::upload.folder'
+      "plugin::upload.file",
+      "manyToOne",
+      "plugin::upload.folder"
     > &
       Attribute.Private;
     folderPath: Attribute.String &
@@ -409,32 +409,32 @@ export interface PluginUploadFile extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::upload.file',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.file",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::upload.file',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.file",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginUploadFolder extends Schema.CollectionType {
-  collectionName: 'upload_folders';
+  collectionName: "upload_folders";
   info: {
-    singularName: 'folder';
-    pluralName: 'folders';
-    displayName: 'Folder';
+    singularName: "folder";
+    pluralName: "folders";
+    displayName: "Folder";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -446,19 +446,19 @@ export interface PluginUploadFolder extends Schema.CollectionType {
       }>;
     pathId: Attribute.Integer & Attribute.Required & Attribute.Unique;
     parent: Attribute.Relation<
-      'plugin::upload.folder',
-      'manyToOne',
-      'plugin::upload.folder'
+      "plugin::upload.folder",
+      "manyToOne",
+      "plugin::upload.folder"
     >;
     children: Attribute.Relation<
-      'plugin::upload.folder',
-      'oneToMany',
-      'plugin::upload.folder'
+      "plugin::upload.folder",
+      "oneToMany",
+      "plugin::upload.folder"
     >;
     files: Attribute.Relation<
-      'plugin::upload.folder',
-      'oneToMany',
-      'plugin::upload.file'
+      "plugin::upload.folder",
+      "oneToMany",
+      "plugin::upload.file"
     >;
     path: Attribute.String &
       Attribute.Required &
@@ -468,35 +468,35 @@ export interface PluginUploadFolder extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::upload.folder',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.folder",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::upload.folder',
-      'oneToOne',
-      'admin::user'
+      "plugin::upload.folder",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginContentReleasesRelease extends Schema.CollectionType {
-  collectionName: 'strapi_releases';
+  collectionName: "strapi_releases";
   info: {
-    singularName: 'release';
-    pluralName: 'releases';
-    displayName: 'Release';
+    singularName: "release";
+    pluralName: "releases";
+    displayName: "Release";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -504,22 +504,22 @@ export interface PluginContentReleasesRelease extends Schema.CollectionType {
     name: Attribute.String & Attribute.Required;
     releasedAt: Attribute.DateTime;
     actions: Attribute.Relation<
-      'plugin::content-releases.release',
-      'oneToMany',
-      'plugin::content-releases.release-action'
+      "plugin::content-releases.release",
+      "oneToMany",
+      "plugin::content-releases.release-action"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::content-releases.release',
-      'oneToOne',
-      'admin::user'
+      "plugin::content-releases.release",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::content-releases.release',
-      'oneToOne',
-      'admin::user'
+      "plugin::content-releases.release",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
@@ -527,114 +527,114 @@ export interface PluginContentReleasesRelease extends Schema.CollectionType {
 
 export interface PluginContentReleasesReleaseAction
   extends Schema.CollectionType {
-  collectionName: 'strapi_release_actions';
+  collectionName: "strapi_release_actions";
   info: {
-    singularName: 'release-action';
-    pluralName: 'release-actions';
-    displayName: 'Release Action';
+    singularName: "release-action";
+    pluralName: "release-actions";
+    displayName: "Release Action";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
   attributes: {
-    type: Attribute.Enumeration<['publish', 'unpublish']> & Attribute.Required;
+    type: Attribute.Enumeration<["publish", "unpublish"]> & Attribute.Required;
     entry: Attribute.Relation<
-      'plugin::content-releases.release-action',
-      'morphToOne'
+      "plugin::content-releases.release-action",
+      "morphToOne"
     >;
     contentType: Attribute.String & Attribute.Required;
     release: Attribute.Relation<
-      'plugin::content-releases.release-action',
-      'manyToOne',
-      'plugin::content-releases.release'
+      "plugin::content-releases.release-action",
+      "manyToOne",
+      "plugin::content-releases.release"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::content-releases.release-action',
-      'oneToOne',
-      'admin::user'
+      "plugin::content-releases.release-action",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::content-releases.release-action',
-      'oneToOne',
-      'admin::user'
+      "plugin::content-releases.release-action",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginMenusMenu extends Schema.CollectionType {
-  collectionName: 'menus';
+  collectionName: "menus";
   info: {
-    name: 'Menu';
-    displayName: 'Menu';
-    singularName: 'menu';
-    pluralName: 'menus';
-    tableName: 'menus';
+    name: "Menu";
+    displayName: "Menu";
+    singularName: "menu";
+    pluralName: "menus";
+    tableName: "menus";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
   attributes: {
     title: Attribute.String & Attribute.Required;
-    slug: Attribute.UID<'plugin::menus.menu', 'title'> & Attribute.Required;
+    slug: Attribute.UID<"plugin::menus.menu", "title"> & Attribute.Required;
     items: Attribute.Relation<
-      'plugin::menus.menu',
-      'oneToMany',
-      'plugin::menus.menu-item'
+      "plugin::menus.menu",
+      "oneToMany",
+      "plugin::menus.menu-item"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::menus.menu',
-      'oneToOne',
-      'admin::user'
+      "plugin::menus.menu",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::menus.menu',
-      'oneToOne',
-      'admin::user'
+      "plugin::menus.menu",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginMenusMenuItem extends Schema.CollectionType {
-  collectionName: 'menu_items';
+  collectionName: "menu_items";
   info: {
-    name: 'MenuItem';
-    displayName: 'Menu Item';
-    singularName: 'menu-item';
-    pluralName: 'menu-items';
-    tableName: 'menu_items';
+    name: "MenuItem";
+    displayName: "Menu Item";
+    singularName: "menu-item";
+    pluralName: "menu-items";
+    tableName: "menu_items";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -642,30 +642,30 @@ export interface PluginMenusMenuItem extends Schema.CollectionType {
     order: Attribute.Integer;
     title: Attribute.String & Attribute.Required;
     url: Attribute.String;
-    target: Attribute.Enumeration<['_blank', '_parent', '_self', '_top']>;
+    target: Attribute.Enumeration<["_blank", "_parent", "_self", "_top"]>;
     root_menu: Attribute.Relation<
-      'plugin::menus.menu-item',
-      'manyToOne',
-      'plugin::menus.menu'
+      "plugin::menus.menu-item",
+      "manyToOne",
+      "plugin::menus.menu"
     > &
       Attribute.Required;
     parent: Attribute.Relation<
-      'plugin::menus.menu-item',
-      'oneToOne',
-      'plugin::menus.menu-item'
+      "plugin::menus.menu-item",
+      "oneToOne",
+      "plugin::menus.menu-item"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::menus.menu-item',
-      'oneToOne',
-      'admin::user'
+      "plugin::menus.menu-item",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::menus.menu-item',
-      'oneToOne',
-      'admin::user'
+      "plugin::menus.menu-item",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
@@ -673,60 +673,60 @@ export interface PluginMenusMenuItem extends Schema.CollectionType {
 
 export interface PluginUsersPermissionsPermission
   extends Schema.CollectionType {
-  collectionName: 'up_permissions';
+  collectionName: "up_permissions";
   info: {
-    name: 'permission';
-    description: '';
-    singularName: 'permission';
-    pluralName: 'permissions';
-    displayName: 'Permission';
+    name: "permission";
+    description: "";
+    singularName: "permission";
+    pluralName: "permissions";
+    displayName: "Permission";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
   attributes: {
     action: Attribute.String & Attribute.Required;
     role: Attribute.Relation<
-      'plugin::users-permissions.permission',
-      'manyToOne',
-      'plugin::users-permissions.role'
+      "plugin::users-permissions.permission",
+      "manyToOne",
+      "plugin::users-permissions.role"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::users-permissions.permission',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::users-permissions.permission',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.permission",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginUsersPermissionsRole extends Schema.CollectionType {
-  collectionName: 'up_roles';
+  collectionName: "up_roles";
   info: {
-    name: 'role';
-    description: '';
-    singularName: 'role';
-    pluralName: 'roles';
-    displayName: 'Role';
+    name: "role";
+    description: "";
+    singularName: "role";
+    pluralName: "roles";
+    displayName: "Role";
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -739,40 +739,40 @@ export interface PluginUsersPermissionsRole extends Schema.CollectionType {
     description: Attribute.String;
     type: Attribute.String & Attribute.Unique;
     permissions: Attribute.Relation<
-      'plugin::users-permissions.role',
-      'oneToMany',
-      'plugin::users-permissions.permission'
+      "plugin::users-permissions.role",
+      "oneToMany",
+      "plugin::users-permissions.permission"
     >;
     users: Attribute.Relation<
-      'plugin::users-permissions.role',
-      'oneToMany',
-      'plugin::users-permissions.user'
+      "plugin::users-permissions.role",
+      "oneToMany",
+      "plugin::users-permissions.user"
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::users-permissions.role',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.role",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::users-permissions.role',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.role",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginUsersPermissionsUser extends Schema.CollectionType {
-  collectionName: 'up_users';
+  collectionName: "up_users";
   info: {
-    name: 'user';
-    description: '';
-    singularName: 'user';
-    pluralName: 'users';
-    displayName: 'User';
+    name: "user";
+    description: "";
+    singularName: "user";
+    pluralName: "users";
+    displayName: "User";
   };
   options: {
     draftAndPublish: false;
@@ -786,7 +786,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       }>;
     thingsboardUserId: Attribute.String &
       Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardUserId">;
     email: Attribute.Email &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
@@ -803,23 +803,23 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     confirmed: Attribute.Boolean & Attribute.DefaultTo<false>;
     blocked: Attribute.Boolean & Attribute.DefaultTo<false>;
     role: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'manyToOne',
-      'plugin::users-permissions.role'
+      "plugin::users-permissions.user",
+      "manyToOne",
+      "plugin::users-permissions.role"
     >;
     lastname: Attribute.String & Attribute.Required;
     firstname: Attribute.String & Attribute.Required;
     middlename: Attribute.String;
     firm: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'api::firm.firm'
+      "plugin::users-permissions.user",
+      "oneToOne",
+      "api::firm.firm"
     >;
     phone: Attribute.String;
     merkliste: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::use-case.use-case'
+      "plugin::users-permissions.user",
+      "oneToMany",
+      "api::use-case.use-case"
     >;
     profilPic: Attribute.Media;
     firmname: Attribute.String;
@@ -829,37 +829,37 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.user",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
+      "plugin::users-permissions.user",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface PluginI18NLocale extends Schema.CollectionType {
-  collectionName: 'i18n_locale';
+  collectionName: "i18n_locale";
   info: {
-    singularName: 'locale';
-    pluralName: 'locales';
-    collectionName: 'locales';
-    displayName: 'Locale';
-    description: '';
+    singularName: "locale";
+    pluralName: "locales";
+    collectionName: "locales";
+    displayName: "Locale";
+    description: "";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-manager': {
+    "content-manager": {
       visible: false;
     };
-    'content-type-builder': {
+    "content-type-builder": {
       visible: false;
     };
   };
@@ -873,125 +873,125 @@ export interface PluginI18NLocale extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::i18n.locale',
-      'oneToOne',
-      'admin::user'
+      "plugin::i18n.locale",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::i18n.locale',
-      'oneToOne',
-      'admin::user'
+      "plugin::i18n.locale",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface ApiDeploymentDeployment extends Schema.CollectionType {
-  collectionName: 'deployments';
+  collectionName: "deployments";
   info: {
-    singularName: 'deployment';
-    pluralName: 'deployments';
-    displayName: 'Setups';
-    description: '';
+    singularName: "deployment";
+    pluralName: "deployments";
+    displayName: "Setups";
+    description: "";
   };
   options: {
     draftAndPublish: false;
   };
   pluginOptions: {
-    'content-type-builder': {
+    "content-type-builder": {
       visible: true;
     };
   };
   attributes: {
     use_case: Attribute.Relation<
-      'api::deployment.deployment',
-      'oneToOne',
-      'api::use-case.use-case'
+      "api::deployment.deployment",
+      "oneToOne",
+      "api::use-case.use-case"
     >;
     firm: Attribute.Relation<
-      'api::deployment.deployment',
-      'oneToOne',
-      'api::firm.firm'
+      "api::deployment.deployment",
+      "oneToOne",
+      "api::firm.firm"
     >;
     status: Attribute.Enumeration<
-      ['created', 'deploying', 'deployed', 'failed', 'updating']
+      ["created", "deploying", "deployed", "failed", "updating"]
     > &
       Attribute.Required &
-      Attribute.DefaultTo<'created'>;
+      Attribute.DefaultTo<"created">;
     sync: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
     CustomerUID: Attribute.String &
       Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardUserId">;
     name: Attribute.String;
     description: Attribute.Text;
     deployed: Attribute.JSON &
-      Attribute.CustomField<'plugin::thingsboard-plugin.componentLinksComponent'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.componentLinksComponent">;
     stepStatus: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::deployment.deployment',
-      'oneToOne',
-      'admin::user'
+      "api::deployment.deployment",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::deployment.deployment',
-      'oneToOne',
-      'admin::user'
+      "api::deployment.deployment",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface ApiDeviceDevice extends Schema.CollectionType {
-  collectionName: 'devices';
+  collectionName: "devices";
   info: {
-    singularName: 'device';
-    pluralName: 'devices';
-    displayName: 'Device';
-    description: '';
+    singularName: "device";
+    pluralName: "devices";
+    displayName: "Device";
+    description: "";
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
     name: Attribute.String & Attribute.Required;
-    type: Attribute.Enumeration<['sensor', 'microcontroller', 'computer']> &
+    type: Attribute.Enumeration<["sensor", "microcontroller", "computer"]> &
       Attribute.Required &
-      Attribute.DefaultTo<'sensor'>;
+      Attribute.DefaultTo<"sensor">;
     ComponentReference: Attribute.JSON &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        "plugin::thingsboard-plugin.singleThingsboardComponent",
         {
-          type: 'Dashboard';
+          type: "Dashboard";
         }
       >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::device.device',
-      'oneToOne',
-      'admin::user'
+      "api::device.device",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::device.device',
-      'oneToOne',
-      'admin::user'
+      "api::device.device",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface ApiFirmFirm extends Schema.CollectionType {
-  collectionName: 'firms';
+  collectionName: "firms";
   info: {
-    singularName: 'firm';
-    pluralName: 'firms';
-    displayName: 'Betriebe';
-    description: '';
+    singularName: "firm";
+    pluralName: "firms";
+    displayName: "Betriebe";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -999,39 +999,39 @@ export interface ApiFirmFirm extends Schema.CollectionType {
   attributes: {
     TenentUID: Attribute.String &
       Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardUserId">;
     CustomerUID: Attribute.String &
       Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardUserId">;
     CustomerUserUID: Attribute.String &
       Attribute.Unique &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardUserId'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardUserId">;
     name: Attribute.String & Attribute.Required;
     Logo: Attribute.Media;
     verified: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    Address: Attribute.Component<'general.address'>;
+    Address: Attribute.Component<"general.address">;
     darkLogo: Attribute.Media;
     platformButton: Attribute.Enumeration<["true", "false", "user"]> &
       Attribute.Required &
       Attribute.DefaultTo<"false">;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<"api::firm.firm", "oneToOne", "admin::user"> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::firm.firm', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<"api::firm.firm", "oneToOne", "admin::user"> &
       Attribute.Private;
   };
 }
 
 export interface ApiGlossarGlossar extends Schema.CollectionType {
-  collectionName: 'glossars';
+  collectionName: "glossars";
   info: {
-    singularName: 'glossar';
-    pluralName: 'glossars';
-    displayName: 'Wissenbasis';
-    description: '';
+    singularName: "glossar";
+    pluralName: "glossars";
+    displayName: "Wissenbasis";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -1039,36 +1039,36 @@ export interface ApiGlossarGlossar extends Schema.CollectionType {
   attributes: {
     word: Attribute.String;
     text: Attribute.Blocks & Attribute.Required;
-    slug: Attribute.UID<'api::glossar.glossar', 'word'> & Attribute.Required;
+    slug: Attribute.UID<"api::glossar.glossar", "word"> & Attribute.Required;
     shortdescription: Attribute.Text & Attribute.Required;
     thumbnail: Attribute.Media;
     keyWords: Attribute.JSON &
-      Attribute.CustomField<'plugin::thingsboard-plugin.componentListInput'>;
+      Attribute.CustomField<"plugin::thingsboard-plugin.componentListInput">;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::glossar.glossar',
-      'oneToOne',
-      'admin::user'
+      "api::glossar.glossar",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::glossar.glossar',
-      'oneToOne',
-      'admin::user'
+      "api::glossar.glossar",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface ApiPagePage extends Schema.CollectionType {
-  collectionName: 'pages';
+  collectionName: "pages";
   info: {
-    singularName: 'page';
-    pluralName: 'pages';
-    displayName: 'Seiten';
-    description: '';
+    singularName: "page";
+    pluralName: "pages";
+    displayName: "Seiten";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -1080,26 +1080,26 @@ export interface ApiPagePage extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }> &
-      Attribute.DefaultTo<'/'>;
+      Attribute.DefaultTo<"/">;
     content: Attribute.Blocks & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<"api::page.page", "oneToOne", "admin::user"> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::page.page', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<"api::page.page", "oneToOne", "admin::user"> &
       Attribute.Private;
   };
 }
 
 export interface ApiPortalEinstellungenPortalEinstellungen
   extends Schema.SingleType {
-  collectionName: 'portal_einstellungens';
+  collectionName: "portal_einstellungens";
   info: {
-    singularName: 'portal-einstellungen';
-    pluralName: 'portal-einstellungens';
-    displayName: 'Portal Einstellungen';
-    description: '';
+    singularName: "portal-einstellungen";
+    pluralName: "portal-einstellungens";
+    displayName: "Portal Einstellungen";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -1107,32 +1107,32 @@ export interface ApiPortalEinstellungenPortalEinstellungen
   attributes: {
     title: Attribute.String &
       Attribute.Required &
-      Attribute.DefaultTo<'Portal | IoT4H'>;
+      Attribute.DefaultTo<"Portal | IoT4H">;
     description: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::portal-einstellungen.portal-einstellungen',
-      'oneToOne',
-      'admin::user'
+      "api::portal-einstellungen.portal-einstellungen",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::portal-einstellungen.portal-einstellungen',
-      'oneToOne',
-      'admin::user'
+      "api::portal-einstellungen.portal-einstellungen",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
 export interface ApiStartpageStartpage extends Schema.SingleType {
-  collectionName: 'startseites';
+  collectionName: "startseites";
   info: {
-    singularName: 'startpage';
-    pluralName: 'startseites';
-    displayName: 'Startseite';
-    description: '';
+    singularName: "startpage";
+    pluralName: "startseites";
+    displayName: "Startseite";
+    description: "";
   };
   options: {
     draftAndPublish: false;
@@ -1152,33 +1152,33 @@ export interface ApiStartpageStartpage extends Schema.SingleType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::startpage.startpage',
-      'oneToOne',
-      'admin::user'
+      "api::startpage.startpage",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::startpage.startpage',
-      'oneToOne',
-      'admin::user'
+      "api::startpage.startpage",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     localizations: Attribute.Relation<
-      'api::startpage.startpage',
-      'oneToMany',
-      'api::startpage.startpage'
+      "api::startpage.startpage",
+      "oneToMany",
+      "api::startpage.startpage"
     >;
     locale: Attribute.String;
   };
 }
 
 export interface ApiTagTag extends Schema.CollectionType {
-  collectionName: 'tags';
+  collectionName: "tags";
   info: {
-    singularName: 'tag';
-    pluralName: 'tags';
-    displayName: 'Tag';
-    description: '';
+    singularName: "tag";
+    pluralName: "tags";
+    displayName: "Tag";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -1189,20 +1189,20 @@ export interface ApiTagTag extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<"api::tag.tag", "oneToOne", "admin::user"> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<"api::tag.tag", "oneToOne", "admin::user"> &
       Attribute.Private;
   };
 }
 
 export interface ApiUseCaseUseCase extends Schema.CollectionType {
-  collectionName: 'use_cases';
+  collectionName: "use_cases";
   info: {
-    singularName: 'use-case';
-    pluralName: 'use-cases';
-    displayName: 'Use-Case';
-    description: '';
+    singularName: "use-case";
+    pluralName: "use-cases";
+    displayName: "Use-Case";
+    description: "";
   };
   options: {
     draftAndPublish: true;
@@ -1212,11 +1212,11 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
     description: Attribute.Blocks & Attribute.Required;
     thumbnail: Attribute.Media;
     pictures: Attribute.Media;
-    slug: Attribute.UID<'api::use-case.use-case', 'Titel'> & Attribute.Required;
+    slug: Attribute.UID<"api::use-case.use-case", "Titel"> & Attribute.Required;
     tags: Attribute.Relation<
-      'api::use-case.use-case',
-      'oneToMany',
-      'api::tag.tag'
+      "api::use-case.use-case",
+      "oneToMany",
+      "api::tag.tag"
     >;
     summary: Attribute.Text &
       Attribute.Required &
@@ -1234,23 +1234,23 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
         min: 0;
       }>;
     firms: Attribute.Relation<
-      'api::use-case.use-case',
-      'oneToMany',
-      'api::firm.firm'
+      "api::use-case.use-case",
+      "oneToMany",
+      "api::firm.firm"
     >;
     components: Attribute.DynamicZone<
       [
-        'thingsboard.asset-profile',
-        'thingsboard.component',
-        'thingsboard.dashboard',
-        'thingsboard.rule-chain'
+        "thingsboard.asset-profile",
+        "thingsboard.component",
+        "thingsboard.dashboard",
+        "thingsboard.rule-chain"
       ]
     >;
     setupSteps: Attribute.DynamicZone<
       [
-        'instructions.setup-instruction',
-        'instructions.list-instruction',
-        'instructions.text-instruction'
+        "instructions.setup-instruction",
+        "instructions.list-instruction",
+        "instructions.text-instruction"
       ]
     >;
     partnerLogos: Attribute.Media;
@@ -1258,49 +1258,49 @@ export interface ApiUseCaseUseCase extends Schema.CollectionType {
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::use-case.use-case',
-      'oneToOne',
-      'admin::user'
+      "api::use-case.use-case",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::use-case.use-case',
-      'oneToOne',
-      'admin::user'
+      "api::use-case.use-case",
+      "oneToOne",
+      "admin::user"
     > &
       Attribute.Private;
   };
 }
 
-declare module '@strapi/types' {
+declare module "@strapi/types" {
   export module Shared {
     export interface ContentTypes {
-      'admin::permission': AdminPermission;
-      'admin::user': AdminUser;
-      'admin::role': AdminRole;
-      'admin::api-token': AdminApiToken;
-      'admin::api-token-permission': AdminApiTokenPermission;
-      'admin::transfer-token': AdminTransferToken;
-      'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'plugin::upload.file': PluginUploadFile;
-      'plugin::upload.folder': PluginUploadFolder;
-      'plugin::content-releases.release': PluginContentReleasesRelease;
-      'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
-      'plugin::menus.menu': PluginMenusMenu;
-      'plugin::menus.menu-item': PluginMenusMenuItem;
-      'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
-      'plugin::users-permissions.role': PluginUsersPermissionsRole;
-      'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'plugin::i18n.locale': PluginI18NLocale;
-      'api::deployment.deployment': ApiDeploymentDeployment;
-      'api::device.device': ApiDeviceDevice;
-      'api::firm.firm': ApiFirmFirm;
-      'api::glossar.glossar': ApiGlossarGlossar;
-      'api::page.page': ApiPagePage;
-      'api::portal-einstellungen.portal-einstellungen': ApiPortalEinstellungenPortalEinstellungen;
-      'api::startpage.startpage': ApiStartpageStartpage;
-      'api::tag.tag': ApiTagTag;
-      'api::use-case.use-case': ApiUseCaseUseCase;
+      "admin::permission": AdminPermission;
+      "admin::user": AdminUser;
+      "admin::role": AdminRole;
+      "admin::api-token": AdminApiToken;
+      "admin::api-token-permission": AdminApiTokenPermission;
+      "admin::transfer-token": AdminTransferToken;
+      "admin::transfer-token-permission": AdminTransferTokenPermission;
+      "plugin::upload.file": PluginUploadFile;
+      "plugin::upload.folder": PluginUploadFolder;
+      "plugin::content-releases.release": PluginContentReleasesRelease;
+      "plugin::content-releases.release-action": PluginContentReleasesReleaseAction;
+      "plugin::menus.menu": PluginMenusMenu;
+      "plugin::menus.menu-item": PluginMenusMenuItem;
+      "plugin::users-permissions.permission": PluginUsersPermissionsPermission;
+      "plugin::users-permissions.role": PluginUsersPermissionsRole;
+      "plugin::users-permissions.user": PluginUsersPermissionsUser;
+      "plugin::i18n.locale": PluginI18NLocale;
+      "api::deployment.deployment": ApiDeploymentDeployment;
+      "api::device.device": ApiDeviceDevice;
+      "api::firm.firm": ApiFirmFirm;
+      "api::glossar.glossar": ApiGlossarGlossar;
+      "api::page.page": ApiPagePage;
+      "api::portal-einstellungen.portal-einstellungen": ApiPortalEinstellungenPortalEinstellungen;
+      "api::startpage.startpage": ApiStartpageStartpage;
+      "api::tag.tag": ApiTagTag;
+      "api::use-case.use-case": ApiUseCaseUseCase;
     }
   }
 }
