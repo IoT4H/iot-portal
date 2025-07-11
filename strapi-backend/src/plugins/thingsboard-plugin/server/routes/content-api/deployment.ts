@@ -2,8 +2,8 @@ import pluginId from "../../../admin/src/pluginId";
 
 export default [
   {
-    method: 'GET',
-    path: '/usecase/:useCaseId/setup/deploy',
+    method: "GET",
+    path: "/usecase/:useCaseId/setup/deploy",
     handler: `plugin::${pluginId}.deployment.create`,
     config: {
       policies: [
@@ -13,13 +13,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployments',
+    method: "GET",
+    path: "/deployments",
     handler: `plugin::${pluginId}.deployment.findAll`,
     config: {
       policies: [
@@ -29,47 +29,72 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:id',
+    method: "GET",
+    path: "/deployment/exist",
+    handler: `plugin::${pluginId}.deployment.deploymentNameAlreadyExist`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          console.log(policyContext);
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        },
+      ],
+    },
+  },
+  {
+    method: "GET",
+    path: "/deployment/:id",
     handler: `plugin::${pluginId}.deployment.findOne`,
     config: {
       policies: [
         (policyContext, config, { strapi }) => {
-
           if (!policyContext.state.isAuthenticated) {
             return false;
           }
 
-          strapi.entityService.findOne('plugin::users-permissions.user', policyContext.state.user.id, {
-            fields: [],
-            populate: { firm : { fields: ["id"] } }
-          }).then((u: any) => {
-            //console.warn(u.firm.id)
-          });
+          strapi.entityService
+            .findOne(
+              "plugin::users-permissions.user",
+              policyContext.state.user.id,
+              {
+                fields: [],
+                populate: { firm: { fields: ["id"] } },
+              }
+            )
+            .then((u: any) => {
+              //console.warn(u.firm.id)
+            });
 
-
-
-          strapi.entityService.findOne("api::deployment.deployment", Number(policyContext.params.id), {
-            fields: [],
-            populate: { firm : true }
-          }).then((d: any) => {
-            //console.warn(d, d?.firm, d?.firm?.id);
-          })
+          strapi.entityService
+            .findOne(
+              "api::deployment.deployment",
+              Number(policyContext.params.id),
+              {
+                fields: [],
+                populate: { firm: true },
+              }
+            )
+            .then((d: any) => {
+              //console.warn(d, d?.firm, d?.firm?.id);
+            });
 
           return true;
-
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/status',
+    method: "GET",
+    path: "/deployment/:setupId/status",
     handler: `plugin::${pluginId}.deployment.status`,
     config: {
       policies: [
@@ -79,13 +104,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/:type/exist',
+    method: "GET",
+    path: "/deployment/:setupId/:type/exist",
     handler: `plugin::${pluginId}.deployment.nameAlreadyExist`,
     config: {
       policies: [
@@ -95,13 +120,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/dashboards',
+    method: "GET",
+    path: "/deployment/:setupId/dashboards",
     handler: `plugin::${pluginId}.deployment.getDashboards`,
     config: {
       policies: [
@@ -111,13 +136,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/deviceTypes',
+    method: "GET",
+    path: "/deployment/:setupId/deviceTypes",
     handler: `plugin::${pluginId}.deployment.getDevices`,
     config: {
       policies: [
@@ -127,13 +152,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/profiles',
+    method: "GET",
+    path: "/deployment/:setupId/profiles",
     handler: `plugin::${pluginId}.deployment.getSetupStepsProfiles`,
     config: {
       policies: [
@@ -143,13 +168,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/dashboard/:id',
+    method: "GET",
+    path: "/deployment/:setupId/dashboard/:id",
     handler: `plugin::${pluginId}.deployment.getDashboardInfo`,
     config: {
       policies: [
@@ -159,13 +184,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/steps',
+    method: "GET",
+    path: "/deployment/:setupId/steps",
     handler: `plugin::${pluginId}.deployment.getStepsFromDeployment`,
     config: {
       policies: [
@@ -175,13 +200,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/steps/progress',
+    method: "GET",
+    path: "/deployment/:setupId/steps/progress",
     handler: `plugin::${pluginId}.deployment.getStepsProgressFromDeployment`,
     config: {
       policies: [
@@ -191,13 +216,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'GET',
-    path: '/deployment/:setupId/steps/progressComplete',
+    method: "GET",
+    path: "/deployment/:setupId/steps/progressComplete",
     handler: `plugin::${pluginId}.deployment.getStepsProgressCompleteFromDeployment`,
     config: {
       policies: [
@@ -207,13 +232,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'POST',
-    path: '/deployment/:setupId/steps/progress',
+    method: "POST",
+    path: "/deployment/:setupId/steps/progress",
     handler: `plugin::${pluginId}.deployment.updateStepsProgressFromDeployment`,
     config: {
       policies: [
@@ -223,13 +248,13 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
   {
-    method: 'POST',
-    path: '/deployment/:setupId/steps/action',
+    method: "POST",
+    path: "/deployment/:setupId/steps/action",
     handler: `plugin::${pluginId}.deployment.stepAction`,
     config: {
       policies: [
@@ -239,9 +264,8 @@ export default [
           }
 
           return false;
-        }
-      ]
+        },
+      ],
     },
   },
-
-]
+];
