@@ -1,55 +1,34 @@
-import { ContentBox } from "@strapi/helper-plugin";
-import { useEffect, useState } from "react";
-import * as React from "react";
-
-import { useIntl } from "react-intl";
-import { TextInput } from "@strapi/design-system"
-import { Grid, GridItem } from '@strapi/design-system';
-import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system';
-import { useFetchClient } from '@strapi/helper-plugin';
-import { Field, FieldLabel, FieldHint, FieldError, FieldInput, FieldAction } from '@strapi/design-system';
 import {
-  Dots,
-  NextLink,
-  PageLink,
-  Pagination,
-  PreviousLink,
+  Box,
+  Breadcrumbs,
+  Button,
   Card,
-  CardHeader,
   CardBody,
   CardCheckbox,
-  CardAction,
-  CardAsset,
-  CardTimer,
   CardContent,
-  CardBadge,
-  CardTitle,
+  CardHeader,
   CardSubtitle,
-  Button,
-  Box,
-  IconButton,
-  KeyboardNavigable,
-  Typography,
-  Flex,
-  Breadcrumbs,
-  Link as LinkButton,
+  CardTitle,
   Crumb,
+  EmptyStateLayout,
+  Field,
+  Flex,
+  Grid,
+  GridItem,
+  KeyboardNavigable,
   Loader,
-} from '@strapi/design-system';
-import { EmptyStateLayout } from '@strapi/design-system';
-import {
-  Plus,
-  Pencil,
-  Trash,
-  Dashboard,
-  Link,
-  ChartBubble,
-  Server,
-  CollectionType,
-  User,
-  ArrowLeft
-} from '@strapi/icons';
-import { NavLink } from "react-router-dom";
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalLayout,
+  Typography
+} from "@strapi/design-system";
+import { useFetchClient } from "@strapi/helper-plugin";
+import { ArrowLeft, Pencil, User } from "@strapi/icons";
+import * as React from "react";
+import { useEffect, useState } from "react";
+
+import { useIntl } from "react-intl";
 import { ComponentItem } from "./SingleThingsboardComponent";
 
 
@@ -87,11 +66,11 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const GridComponantItem  = (e: { id: string, type: string}) => {
+const GridComponantItem = (e: { id: string, type: string, tenant: { id: string } }) => {
   return (
     <>
       <GridItem col={6}>
-        <ComponentItem id={e.id} type={e.type} key={e.id} />
+        <ComponentItem id={e.id} type={e.type} key={e.id} tenant={e.tenant} />
       </GridItem>
     </>
   );
@@ -109,6 +88,7 @@ const TBIDInput = React.forwardRef((props, ref) => {
 
   const getOrgValue = (): any[] => {
     try {
+      console.warn(value);
       return JSON.parse(value) || [];
     } catch (e) {
       return [];
@@ -191,8 +171,8 @@ const TBIDInput = React.forwardRef((props, ref) => {
       <KeyboardNavigable >
         <Grid gap={"1rem"} col={12}>
         {
-          getOrgValue().map((e: { id: string, entityType: string}) => {
-            return (<GridComponantItem id={e.id} type={e.entityType} />);
+          getOrgValue().map((e: { id: string, entityType: string, tenantId: { id: string } }) => {
+            return (<GridComponantItem id={e.id} type={e.entityType} tenant={{ id: e.tenantId.id }} />);
           })
         }
           {
@@ -306,5 +286,3 @@ const TBIDInput = React.forwardRef((props, ref) => {
 });
 
 export default TBIDInput;
-
-
