@@ -262,7 +262,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         data: {
           id: deploymentId,
           deployed: constructJson,
-          status: "failed,
+          status: "failed"
         },
       });
 

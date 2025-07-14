@@ -36,6 +36,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     );
     ctx.body = s;
   },
+  async component(ctx) {
+    const s = JSON.stringify(
+      await strapi
+        .plugin(pluginId)
+        .service("thingsboardService")
+        .getThingsboardComponent(ctx.params.componentId, ctx.params.componentType, ctx.params.tenantId)
+    );
+    ctx.body = s;
+  },
   async createTenantForFirm(ctx) {
     const s = JSON.stringify(
       await strapi

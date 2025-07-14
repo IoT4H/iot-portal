@@ -1,7 +1,7 @@
-import { Strapi } from '@strapi/strapi';
+import { Strapi } from "@strapi/strapi";
 import axios, { AxiosResponse } from "axios";
 import { randomUUID } from "crypto";
-import { createHash } from 'node:crypto'
+import { createHash } from "node:crypto";
 import pluginId from "../../admin/src/pluginId";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
@@ -42,38 +42,49 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
 
   },
-  async getThingsboardComponent(profileId: string, componentType: string, tenantId: string) {
+    async getThingsboardComponent(componentId: string, componentType: string, tenantId: string) {
     componentType = componentType.toLowerCase().replace(/[_ ]/gim, '');
       switch (componentType) {
         case "dashboard":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/dashboard/${profileId}`
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/dashboard/${componentId}`
           })
             .then((response: any) => response.data));
         case "assetprofile":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/assetProfile/${profileId}`
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/assetProfile/${componentId}`
           })
             .then((response: any) => response.data));
         case "deviceprofile":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/deviceProfile/${profileId}`
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/deviceProfile/${componentId}`
           })
             .then((response: any) => response.data));
         case "rulechain":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${profileId}`
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/ruleChain/${componentId}`
           })
             .then((response: any) => response.data));
-
         case "rulechainmetadata":
           return (await this.axiosAsTenant(tenantId, {
             method: 'get',
-            url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/ruleChain/${profileId}/metadata`
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/ruleChain/${componentId}/metadata`
+          })
+            .then((response: any) => response.data));
+        case "asset":
+          return (await this.axiosAsTenant(tenantId, {
+            method: "get",
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/asset/${componentId}`
+          })
+            .then((response: any) => response.data));
+        case "device":
+          return (await this.axiosAsTenant(tenantId, {
+            method: "get",
+            url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/device/${componentId}`
           })
             .then((response: any) => response.data));
       }
@@ -674,20 +685,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
   },
 
-  async getThingsboardDeviceOrAsset(tenantId: string, componentType: "ASSET" | "DEVICE", componentId: string) {
-    switch (componentType) {
-      case "ASSET":
-        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/asset/${componentId}`})
-          .then((response: any) => {
-            return response.data
-          })
-      case "DEVICE":
-        return  this.axiosAsTenant(tenantId,{method: 'get', url: strapi.plugin(pluginId).config('thingsboardUrl') + `/api/device/${componentId}` })
-          .then((response: any) => {
-            return response.data
-          })
-    }
 
+    //TODO: potentially unused, validate and then remove
+  async getThingsboardDeviceOrAsset(tenantId: string, componentType: "ASSET" | "DEVICE", componentId: string) {
+    return this.getThingsboardComponent(componentId, componentType, tenantId);
   },
   async getThingsboardDeviceOrAssetByName(tenantId: string, componentType: "ASSET" | "DEVICE", name: string) {
     switch (componentType) {
