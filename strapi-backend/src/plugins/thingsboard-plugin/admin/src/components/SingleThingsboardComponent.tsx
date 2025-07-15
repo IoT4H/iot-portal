@@ -105,11 +105,18 @@ export const ComponentItem = (e: {
   const [displayedName, SetDisplayedName] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    try {
+
     get(
       `/thingsboard-plugin/tenant/${e.tenant?.id}/${e.type?.toLowerCase()}/${e.id}`)
       .then((response: any) => {
         SetDisplayedName(response.data.name);
+      }).catch((reason: any) => {
+      console.warn(reason);
       });
+    } catch (e) {
+      console.warn(e);
+    }
   }, []);
 
   return (
