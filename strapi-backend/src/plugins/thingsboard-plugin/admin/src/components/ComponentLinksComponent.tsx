@@ -1,8 +1,7 @@
-import { Box, EmptyStateLayout, Field, FieldLabel, Flex, Grid, GridItem } from '@strapi/design-system';
-import { useFetchClient } from '@strapi/helper-plugin';
+import { Box, EmptyStateLayout, Field, FieldLabel, Flex, Grid, GridItem } from "@strapi/design-system";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { ComponentStructure } from "./ComponentStructure"
+import { ComponentStructure } from "./ComponentStructure";
 import { ComponentItem } from "./SingleThingsboardComponent";
 
 
@@ -43,18 +42,18 @@ class ErrorBoundary extends React.Component {
 
 const ComponantLinkItem  = ({link} : {link: ComponentStructure}) => {
 
-
-
   return (
     <>
       <GridItem col={12}>
         <Flex gap={"8"} justifyContent={"center"}>
-          {link.template ? <ComponentItem id={link.template.id} type={link.template.entityType} /> : <ComponentItem id={"Template Reference missing"} type={undefined} />}
+          {link.template ?
+            <ComponentItem id={link.template.id} type={link.template.entityType} tenant={link.template.tenantId} /> :
+            <ComponentItem id={"Template Reference missing"} type={undefined} />}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                stroke="currentColor" height={"3em"} >
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"/>
           </svg>
-          {link && <ComponentItem id={link.id} type={link.entityType} />}
+          {link && <ComponentItem id={link.id} type={link.entityType} tenant={link.tenantId} />}
         </Flex>
       </GridItem>
     </>
@@ -76,8 +75,6 @@ const TBIDInput = React.forwardRef((props, ref) => {
   };
 
   const [currentValue, SetCurrentValue] = useState(getOrgValue());
-
-  const { get } = useFetchClient();
 
   useEffect(() => {
     SetCurrentValue(getOrgValue());
