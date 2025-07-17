@@ -6,19 +6,25 @@ import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { Suspense, useContext } from "react";
 
 export default function GalleryImage({
-    src,
-    thumbnailSrc,
-    className,
-    alt,
-    caption,
-    init,
-    imageList
-}: {
+                                       src,
+                                       thumbnailSrc,
+                                       className,
+                                       wrapperClassName,
+                                       alt,
+                                       altPreview = true,
+                                       caption,
+                                       captionPreview = true,
+                                       init,
+                                       imageList
+                                     }: {
     src?: string;
     thumbnailSrc?: string;
     className?: string;
+  wrapperClassName?: string;
     alt?: string;
+  altPreview?: boolean;
     caption?: string;
+  captionPreview?: boolean;
     init?: number;
     imageList?: any[];
 }) {
@@ -28,48 +34,50 @@ export default function GalleryImage({
         /* eslint-disable-next-line @next/next/no-img-element */
     }
     const image = (
-        <div className={`relative ${className} bg-gray-950/5`}>
-            <img
-                src={thumbnailSrc || src}
-                data-src={src}
-                className={` cursor-zoom-in gallery-image ${className}`}
-                title={caption}
-                alt={alt}
-                loading="lazy"
-                onClick={(event) => {
-                    const list: any[] = [];
-                    if (!imageList || !init) {
-                        // @ts-ignore
-                        const collection: HTMLCollection =
-                            event.target.parentElement.getElementsByTagName("img");
+      <div
+        className={`relative bg-transparent flex flex-row ${wrapperClassName}`}>
+        <img
+          src={thumbnailSrc || src}
+          data-src={src}
+          className={` cursor-zoom-in gallery-image order-1 basis-2/3 ${className}`}
+          title={caption}
+          alt={alt}
+          loading="lazy"
+          onClick={(event) => {
+            const list: any[] = [];
+            if (!imageList || !init) {
+              const collection: HTMLCollection =
+                // @ts-ignore
+                event.target.parentElement.getElementsByTagName("img");
 
-                        for (let i = 0; i < collection.length; i++) {
-                            const objekt = collection.item(i);
-                            if (objekt === null) {
-                                continue;
-                            }
+              for (let i = 0; i < collection.length; i++) {
+                const objekt = collection.item(i);
+                if (objekt === null) {
+                  continue;
+                }
 
-                            const link = {
-                                url: objekt.getAttribute("data-src"),
-                                alternativeText:
-                                    objekt.getAttribute("title") ||
-                                    objekt.getAttribute("data-alternativeText"),
-                                caption:
-                                    objekt.getAttribute("alt") ||
-                                    objekt.getAttribute("data-caption")
-                            };
-                            if (link === null) {
-                                continue;
-                            }
+                const link = {
+                  url: objekt.getAttribute("data-src"),
+                  alternativeText:
+                    objekt.getAttribute("title") ||
+                    objekt.getAttribute("data-alternativeText"),
+                  caption:
+                    objekt.getAttribute("alt") ||
+                    objekt.getAttribute("data-caption")
+                };
+                if (link === null) {
+                  continue;
+                }
 
-                            list.push(link);
-                        }
-                    }
+                list.push(link);
+              }
+            }
 
-                    gallery(init || list.findIndex((s) => s.url === src), imageList || list);
-                }}
-            />
-            <Copyright alt={alt} />
+            gallery(init || list.findIndex((s) => s.url === src), imageList || list);
+          }}
+        />
+        {captionPreview && <Caption text={caption} />}
+        {altPreview && <Copyright alt={alt} />}
         </div>
     );
 
@@ -86,7 +94,8 @@ export function Copyright({ alt }: { alt?: string }) {
             {!!alt && (
                 <div
                     className={
-                        "h-8 absolute bottom-0 left-0 flex flex-row items-center bg-gray-300/20 px-2 text-ellipsis rounded-tr max-w-full cursor-help text-left"
+                      "h-8 absolute bottom-0 left-0 flex flex-row items-center bg-gray-500 px-2 text-ellipsis text-left" +
+                      " rounded-tr max-w-full cursor-help z-[1]"
                     }
                     title={alt}
                 >
@@ -98,4 +107,21 @@ export function Copyright({ alt }: { alt?: string }) {
             )}
         </>
     );
+}
+
+export function Caption({ text }: { text?: string }) {
+  return (
+    <>
+      {!!text && (
+        <div
+          className={
+            "p-8 block top-0 right-0 items-center bg-zinc-700 text-ellipsis flex-grow-0" +
+            " w-fit max-w-max text-center justify-stretch text-wrap overflow-wrap rounded-r" +
+            " whitespace-pre-line break-normal indent-4 hyphens-auto inline-block  max-h-full order-2"
+          }>
+          {text}a asd asd asd as dasd asd asdadasd asdgdfg dfg dfg df gdfg f
+        </div>
+      )}
+    </>
+  );
 }

@@ -22,11 +22,11 @@ export const BaseLayoutLink = ({
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            console.log(pathname, href, pathname.startsWith(href));
-            SetActive(pathname.startsWith(href));
+
+          SetActive(pathname.startsWith(href));
         } else {
-            console.log(typeof window, "window");
-            SetActive(false);
+
+          SetActive(false);
         }
     }, [href, pathname]);
 
@@ -38,9 +38,8 @@ export const BaseLayoutLink = ({
         }
     }, [href]);
 
-    console.log(pathname, href, pathname.startsWith(href));
 
-    return (
+  return (
         <Link
             key={title}
             href={!deactivated() ? href : "#"}

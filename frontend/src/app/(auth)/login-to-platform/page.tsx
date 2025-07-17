@@ -11,8 +11,8 @@ export type Dashboard = {
 function Connect() {
     useEffect(() => {
         window.addEventListener("message", function (event) {
-            console.log(event);
-            if (event.data === "login") {
+
+          if (event.data === "login") {
                 console.warn("child calling the parent method");
             }
         });
@@ -27,9 +27,9 @@ function Connect() {
 
     const transmitToken = (iframe: any) => {
         window.addEventListener("message", (message) => {
-            console.log(message, iframe.contentWindow);
 
-            if (message.data === IFRAME_LOGIN_READY && iframe.contentWindow) {
+
+          if (message.data === IFRAME_LOGIN_READY && iframe.contentWindow) {
                 iframe.contentWindow.postMessage(PARENT_LOGIN_READY, message.origin);
             }
 

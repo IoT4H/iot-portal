@@ -27,51 +27,6 @@ html {
 /*}*/
 
 
-.markdown ul , .markdown li {
-  list-style: initial;
-  padding: initial;
-  margin: initial;
-}
-
-.markdown ul {
-  margin-left: 2.5rem;
-}
-
-.markdown p:has(img:nth-of-type(2)) {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: stretch;
-  align-items: stretch;
-    justify-content: space-evenly;
-    gap: 1rem;
-    padding: 1rem;
-
-
-}
-
-.markdown p:has(img:nth-of-type(2)) img {
-  height: 12em;
-}
-
-
-/*img.gallery-image {*/
-/*  background-image: url("/image.svg");*/
-/*  background-position: center;*/
-/*  background-repeat: no-repeat;*/
-/*  background-size: 30%;*/
-/*  !* animation: skeleton-loading 1s linear infinite alternate; *!*/
-/*}*/
-
-
-
-.markdown pre {
-      overflow-x: auto;
-      white-space: pre-wrap;
-      white-space: -moz-pre-wrap;
-      white-space: -o-pre-wrap;
-      word-wrap: break-word;
-}
-
 @keyframes skeleton-loading {
 
   0% {

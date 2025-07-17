@@ -31,12 +31,12 @@ export function mapUseCase(
     if (keyWordMap.size > 0) {
         if (description != undefined) {
             description = JSON.parse(JSON.stringify(description).replaceAll(masterRegex, replacer));
-            console.log(JSON.stringify(description, null, 2));
+
         }
 
         if (useCase.attributes.summary != undefined) {
             summary = JSON.parse(JSON.stringify(summary).replaceAll(masterRegex, replacer));
-            console.log(JSON.stringify(summary, null, 2));
+
         }
     }
 
@@ -96,7 +96,7 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
             }
         }
     } else if (slugData.error) {
-        console.log(slugData.error);
+
     }
     return slugToLink;
 }

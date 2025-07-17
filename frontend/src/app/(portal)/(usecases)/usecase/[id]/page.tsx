@@ -1,9 +1,6 @@
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
-import {
-    generateSlugToLinkMap,
-    mapUseCase
-} from "@iot-portal/frontend/app/common/mappingFunctions";
+import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { fetchAPI, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import * as React from "react";
 
@@ -11,7 +8,7 @@ function Info({ description }: { description: any[] }) {
     return (
         <BlocksRenderer
             content={description}
-            className={"markdown mx-8 text-justify"}
+            className={"markdown px-8"}
         ></BlocksRenderer>
     );
 }
@@ -31,6 +28,7 @@ function PictureGallery({ pictures }: { pictures?: any[] }) {
                             thumbnailSrc={getStrapiURLForFrontend(pic.formats.thumbnail.url)}
                             caption={pic.caption}
                             alt={pic.alternativeText}
+                            captionPreview={false}
                             src={getStrapiURLForFrontend(pic.url)}
                             init={index}
                             imageList={pictures}
@@ -99,6 +97,8 @@ export default async function UseCasePage({ params }: { params: { id: number } }
                                     key={pL.hash}
                                     src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)}
                                     alt={pL.alternativeText}
+                                    altPreview={true}
+                                    captionPreview={false}
                                 />
                             ))}
                         </div>

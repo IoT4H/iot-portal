@@ -35,7 +35,7 @@ export class APITool {
             request.send(null);
 
             if (request.status === 200) {
-                console.log(request.responseText);
+
                 const data = JSON.parse(request.responseText);
                 APITool.StrapiURL = data.StrapiURL;
                 APITool.FrontendStrapiURL = data.StrapiURL;
