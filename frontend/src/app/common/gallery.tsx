@@ -74,7 +74,8 @@ export default function Gallery({ index, pics }: { index: number; pics: any[] })
                                     onLoad={() => SetCanPlay(true)}
                                     className={
                                         (canPlay ? "visible " : "invisible ") +
-                                        "min-h-0 min-w-0 w-min h-min transition-all ease-out bg-white duration-500 object-contain max-height-100"
+                                      "min-h-0 min-w-0 w-min h-min transition-all ease-out bg-white duration-500" +
+                                      " object-contain max-height-100 cursor-zoom-out"
                                     }
                                 />
 
@@ -110,14 +111,15 @@ export default function Gallery({ index, pics }: { index: number; pics: any[] })
                                 }}
                             >
                                 <ChevronRightIcon className={"w-24 h-24"} />
-                                <div
-                                    className={
-                                        "w-16 text-white/80 bg-orange-500/50 hover:bg-orange-500/80 hover:text-white absolute top-0 right-0 cursor-pointer"
-                                    }
-                                    onClick={() => gallery(0, [])}
-                                >
-                                    <XMarkIcon />
-                                </div>
+                            </div>
+                            <div
+                              className={
+                                "w-16 text-white/80 bg-orange-500/50 hover:bg-orange-500/80 hover:text-white" +
+                                " absolute top-0 right-0 cursor-pointer z-[90]"
+                              }
+                              onClick={() => gallery(0, [])}
+                            >
+                                <XMarkIcon />
                             </div>
                         </div>
                     </div>

@@ -10,7 +10,7 @@ export async function GET(request: Request, context: { params: Params }) {
     // Add a new header
     newHeaders.set("Content-Type", "application/json");
 
-    console.log("send init parameter ", getUrls());
+    console.info("send init parameter ", getUrls());
 
     return NextResponse.json(getUrls(), { status: 200, headers: newHeaders });
 }

@@ -128,16 +128,16 @@ export function FieldSetPatternInput(p: any) {
     const [inputArray, SetInputArray] = useReducer(
         (state: string[], action: { type: "init" | "update"; index?: number; value: any }) => {
             if (action.type === "init") {
-                console.log(state, action);
-                return action.value;
+
+              return action.value;
             } else if (action.type === "update" && action.index !== undefined) {
                 const c = state;
                 c[action.index] = action.value;
-                console.log("refreshed", c, action);
-                SetOutput((c || []).join(""));
+
+              SetOutput((c || []).join(""));
                 return c;
             } else {
-                console.log("???: ", state, action);
+
             }
         },
         []
@@ -217,11 +217,11 @@ export function FieldSetPatternInput(p: any) {
 
                                             // if(event.currentTarget.validity) {
                                             //     let fi = indexs.findIndex((v, vi, va) => v === i);
-                                            //     console.log(fi, i, "find index");
+                                          //
                                             //     if(fi !== -1) {
                                             //         let refI = indexs[fi + 1];
-                                            //         console.log(refI, fi, "ref index");
-                                            //         console.log(elRefs[refI]);
+                                          //
+                                          //
                                             //     }
                                             // }
                                         }}

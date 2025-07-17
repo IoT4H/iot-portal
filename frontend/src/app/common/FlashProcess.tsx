@@ -1,11 +1,7 @@
 "use client";
 import { CheckBadgeIcon, CheckIcon, WifiIcon } from "@heroicons/react/24/solid";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
-import {
-    FieldSetCheckbox,
-    FieldSetInput,
-    FieldSetSelect
-} from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetCheckbox, FieldSetInput, FieldSetSelect } from "@iot-portal/frontend/app/common/FieldSet";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { fetchAPI, getLittleFSURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
@@ -93,10 +89,10 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
     const scanForSerialDevices = () => {
         // @ts-ignore
         navigator.serial.getPorts().then((devices) => {
-            console.log(`Total devices: ${devices.length}`);
+            console.debug(`Total devices: ${devices.length}`);
             SetDevices(devices);
             devices.forEach((device: any) => {
-                console.log(
+                console.debug(
                     `Product name: ${device.productName}, serial number ${device.serialNumber}`
                 );
             });
@@ -161,7 +157,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
         },
         writeLine(data: any) {
             // @ts-ignore
-            console.log(data);
+
 
             if (data.match(new RegExp(/VendorID|ProductID/i))) {
                 SetVendorID(data.match(new RegExp(/(?<=VendorID )(\d|\w)+/i))[0]);
@@ -202,7 +198,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
         },
         write(data: any) {
             // @ts-ignore
-            console.log(data);
+
             if (data === ConnectionState.CONNECTING) {
                 SetState(data);
             }
@@ -229,7 +225,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                     // Temporarily broken
                     // await esploader.flashId();
                 } catch (e: any) {
-                    console.log(`${e.message}`);
+
                     SetErrors([`${e.message}`]);
                 } finally {
                     resolve();
@@ -761,22 +757,21 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
 
                 // Non-numeric or blank offset
                 if (Number.isNaN(offset))
-                    console.log(
+                    console.warn(
                         `Offset (${offset}) field in row ` + index + " is not a valid address!"
                     );
                 // Repeated offset used
                 else if (offsetArr.includes(offset))
-                    console.log("Offset field in row " + index + " is already in use!");
+                    console.warn("Offset field in row " + index + " is already in use!");
                 else offsetArr.push(offset);
 
                 const fileObj = fileArray[index].data;
                 fileData = fileObj.data;
-                if (fileData == null) console.log("No file selected for row " + index + "!");
+                if (fileData == null) console.warn("No file selected for row " + index + "!");
             }
 
             //------
 
-            console.log(fileArray);
 
             try {
                 const flashOptions: FlashOptions = {
@@ -800,7 +795,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                     calculateMD5Hash: (image: string): string =>
                         CryptoJS.MD5(CryptoJS.enc.Latin1.parse(image)).toString()
                 } as FlashOptions;
-                console.log(esploader);
+
                 if (esploader) {
                     await esploader.writeFlash(flashOptions);
                 } else {
@@ -815,7 +810,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
             resolve();
         }).then(() => {
             SetState(FlashState.COMPLETE);
-            console.log("complete flash");
+            console.debug("complete flash");
         });
     };
 
@@ -828,7 +823,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
     const hardReset = () => {
         if (esploader) {
             esploader.hardReset().then(() => {
-                console.log("hard reset");
+                console.debug("hard reset");
 
                 if (transport) {
                     transport.disconnect().then(() => {

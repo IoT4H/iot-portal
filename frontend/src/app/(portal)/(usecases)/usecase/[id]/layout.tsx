@@ -7,19 +7,14 @@ import {
     SignalIcon
 } from "@heroicons/react/20/solid";
 import ShareButton from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/[id]/share-button";
-import SetupButton, {
-    SetupButtonReplacement
-} from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
+import SetupButton, { SetupButtonReplacement } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/setup-button";
 import { Tab } from "@iot-portal/frontend/app/(portal)/(usecases)/usecase/tabs";
 import { Badge, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
 import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import Loading from "@iot-portal/frontend/app/common/loading";
-import {
-    generateSlugToLinkMap,
-    mapUseCase
-} from "@iot-portal/frontend/app/common/mappingFunctions";
+import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import TextWithHeadline from "@iot-portal/frontend/app/common/skeletons/textWithHeadline";
 import { fetchAPI, getStrapiURL, getStrapiURLForFrontend } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -152,6 +147,7 @@ export default async function UseCase(props: {
                                         src={getStrapiURLForFrontend() + useCase.thumbnail.url}
                                         alt={useCase.thumbnail.alternativeText}
                                         caption={useCase.thumbnail.caption}
+                                        captionPreview={false}
                                         className={
                                             "relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "
                                         }

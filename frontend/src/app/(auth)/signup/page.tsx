@@ -1,11 +1,7 @@
 "use client";
 import { EnvelopeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import Button from "@iot-portal/frontend/app/common/button";
-import {
-    FieldSetCheckbox,
-    FieldSetInput,
-    RequiredStar
-} from "@iot-portal/frontend/app/common/FieldSet";
+import { FieldSetCheckbox, FieldSetInput, RequiredStar } from "@iot-portal/frontend/app/common/FieldSet";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -49,7 +45,6 @@ export default function Page() {
     }, [firstname, lastname, firmname, email, password, legal, passwordMatch, emailMatch]);
 
     const signUp = useCallback(() => {
-        console.log("signup");
         if (formValid) {
             LoadingState.startLoading();
             fetchAPI(

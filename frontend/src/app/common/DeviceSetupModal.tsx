@@ -36,9 +36,8 @@ const Modal = ({
 
     const [flashProcess, switchFlashProcess] = useState<boolean>(false);
 
-    console.log(config);
 
-    const [relations, SetRelations] = useState([]);
+  const [relations, SetRelations] = useState([]);
     const [relationValues, SetRelationValues] = useReducer(
         (state: Map<number, any>, action: { index: any; relation: any }) => {
             const b = state;
@@ -78,14 +77,14 @@ const Modal = ({
         )
             .then(
                 (response) => {
-                    console.log(response);
-                    if (response && response.id) {
+
+                  if (response && response.id) {
                         SetComponent(response.id);
                     }
 
                     if (response.error) {
-                        console.log("TEST_2");
-                        SetError(response.error.message);
+
+                      SetError(response.error.message);
                     }
 
                     if (Array.of(...step.data.flashInstruction).length > 0) {
@@ -93,13 +92,13 @@ const Modal = ({
                     }
 
                     if (!response.error && Array.of(...step.data.flashInstruction).length === 0) {
-                        console.log("TEST_");
-                        if (onClose) onClose();
+
+                      if (onClose) onClose();
                     }
                 },
                 (reason) => {
-                    console.log("TEST_3");
-                    SetError(reason.error.message);
+
+                  SetError(reason.error.message);
                 }
             )
             .finally(() => {
@@ -150,7 +149,7 @@ const Modal = ({
     }, [step]);
 
     useEffect(() => {
-        console.log(name, relations);
+
     }, [name, relations]);
 
     useEffect(() => {
@@ -174,8 +173,8 @@ const Modal = ({
                 if (response.id?.id) {
                     SetOverlapStatus(overlaps.OVERLAP);
                 }
-                console.log(response);
-                if (response.error?.status == 404) {
+
+              if (response.error?.status == 404) {
                     SetOverlapStatus(overlaps.NO_OVERLAP);
                 }
             });
