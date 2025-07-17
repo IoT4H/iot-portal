@@ -17,6 +17,8 @@ export default function Start({ params }: { params: { id: number } }) {
     const [title, setTitle] = useState<string>();
     const [description, setDescription] = useState<string>();
 
+    const [titleInUse, SetTitleInUse] = useState<boolean>(false);
+
     const [useCase, SetUseCase] = useState<UseCase>();
 
     const pathname = usePathname();
@@ -42,24 +44,67 @@ export default function Start({ params }: { params: { id: number } }) {
         });
     }, [params.id]);
 
+    useEffect(() => {
+        fetchAPI(
+          "/api/thingsboard-plugin/deployment/exist",
+          {
+              search: useCase?.title,
+              setupId: useCase?.id
+          },
+          {
+              headers: {
+                  Authorization: `Bearer ${Auth.getToken()}`
+              }
+          }
+        ).then((data) => {
+            if (data.exists) {
+                setTitle(data.suggestions[data.suggestions.length - 1] || title);
+                SetTitleInUse(false);
+            }
+        });
+    }, [useCase]);
+
+    useEffect(() => {
+        fetchAPI(
+          "/api/thingsboard-plugin/deployment/exist",
+          {
+              search: title ? title.trim() : undefined,
+              setupId: useCase?.id
+          },
+          {
+              headers: {
+                  Authorization: `Bearer ${Auth.getToken()}`
+              }
+          }
+        ).then((data) => {
+            SetTitleInUse(data.exists);
+        });
+    }, [title]);
+
     const [toDeployedSetupLink, SettoDeployedSetupLink] = useState("");
     const toDeployedSetup = useRef<HTMLAnchorElement>();
-    // @ts-ignore
     const hiddenLink = (
         <Link
             href={toDeployedSetupLink}
             replace={true}
             className={"hidden"}
+          // @ts-ignore
             ref={toDeployedSetup}
         ></Link>
     );
 
+
     const setupStart = () => {
         LoadingState.startLoading();
+        setTitle((title || "").trim());
+        setDescription((description || "").trim());
         useCase &&
             fetchAPI(
                 `/api/thingsboard-plugin/usecase/${useCase.id}/setup/deploy`,
-                { title: title, description: description },
+              {
+                  title: title,
+                  description: description
+              },
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -101,7 +146,7 @@ export default function Start({ params }: { params: { id: number } }) {
                                 className={"block text-xl mt-8 flex flex-row items-center gap-1"}
                                 title={"Titel um das Setup wiederzuerkennen"}
                             >
-                                Title{" "}
+                                Titel{" "}
                                 <InformationCircleIcon
                                     className={"inline-block align-center h-4 w-4"}
                                 ></InformationCircleIcon>
@@ -118,6 +163,10 @@ export default function Start({ params }: { params: { id: number } }) {
                                 }}
                                 autoFocus
                             />
+                            <span className={"h-8 block"}>
+                                {titleInUse ? (<span className={"text-red-500 "}> Titel schon in Nutzung</span>) : (
+                                  <span className={"text-green-600 "}> Titel ist verfügbar</span>)}
+                            </span>
                             <label
                                 htmlFor={"description"}
                                 className={"block text-xl mt-8 flex flex-row items-center gap-1"}
@@ -145,7 +194,7 @@ export default function Start({ params }: { params: { id: number } }) {
                             ></textarea>
                             <button
                                 className={
-                                    "mt-4 cursor-pointer w-full text-center rounded-md ml-auto bg-orange-500/80 hover:bg-orange-500 text-white flex-row flex gap-4 justify-center items-center uppercase mx-4 px-4 py-4"
+                                    `mt-4 w-full text-center rounded-md ml-auto text-white flex-row flex gap-4 justify-center items-center uppercase mx-4 px-4 py-4 ${((title || "").length == 0 || (description || "").length == 0 || titleInUse) ? "bg-gray-500 hover:bg-gray-500 cursor-not-allowed" : "bg-orange-500/80 hover:bg-orange-500 cursor-pointer"}`
                                 }
                             >
                                 Einrichten

@@ -22,6 +22,15 @@ export default {
       },
     },
     {
+      method: "GET",
+      path: "/tenant/:tenantId/:componentType/:componentId",
+      handler: `plugin::${pluginId}.deployment.component`,
+      config: {
+        policies: [],
+        auth: false
+      }
+    },
+    {
       method: 'GET',
       path: '/firm/:firmId/createTenant',
       handler: `plugin::${pluginId}.deployment.createTenantForFirm`,
