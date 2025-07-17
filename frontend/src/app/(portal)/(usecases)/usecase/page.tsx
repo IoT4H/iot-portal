@@ -1,9 +1,6 @@
 import { ListItemUseCase, ListUseCase, UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 import BaseBody from "@iot-portal/frontend/app/common/baseBody";
-import {
-    generateSlugToLinkMap,
-    mapUseCase
-} from "@iot-portal/frontend/app/common/mappingFunctions";
+import { generateSlugToLinkMap, mapUseCase } from "@iot-portal/frontend/app/common/mappingFunctions";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -52,7 +49,6 @@ export default async function Home() {
         return useCasesData
             ? useCasesData.data.map((useCase: any): UseCase => {
                   const uc = mapUseCase(useCase, slugLinker);
-                  console.log(uc);
                   return uc;
               })
             : [];

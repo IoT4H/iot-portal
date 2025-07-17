@@ -1,12 +1,10 @@
 "use client";
 import GalleryImage from "@iot-portal/frontend/app/common/galleryImage";
 import LinkPreviewCard from "@iot-portal/frontend/app/common/LinkPreviewCard";
-import {
-    BlocksContent,
-    BlocksRenderer as StrapiBlocksRenderer
-} from "@strapi/blocks-react-renderer";
+import { BlocksContent, BlocksRenderer as StrapiBlocksRenderer } from "@strapi/blocks-react-renderer";
 import Link from "next/link";
 import * as React from "react";
+import { useCallback } from "react";
 
 const BlocksRenderer = ({
     content,
@@ -15,8 +13,20 @@ const BlocksRenderer = ({
     content: BlocksContent;
     className?: string;
 }) => {
-    return (
-        <div className={`markdown group/markdown  ${className ? className : ""}`}>
+
+  const images = useCallback(() => content.filter((b) => {
+    return b.type == "image";
+  }).map((block: { image: any } | any) => block.image), [content]);
+
+
+  const imageIndexPos = useCallback((image: any) => {
+    return images().findIndex((b: any) => b.hash === image.hash);
+  }, [images]);
+
+
+  return (
+    <div
+      className={`markdown group/markdown  ${className ? className : ""} flex flex-row flex-wrap w-full justify-center gap-y-1 gap-x-1 wrap-break-word text-pretty whitespace-pre-line`}>
             <StrapiBlocksRenderer
                 content={content}
                 blocks={{
@@ -28,7 +38,8 @@ const BlocksRenderer = ({
                         plainText?: string;
                     }) => {
                         return (
-                            <p className="w-full text-neutral dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0">
+                          <p
+                            className="w-full text-neutral wrap-break-word pre-l dark:text-white my-2 selection:bg-orange-100/10 selection:text-orange-500 last:mb-0">
                                 {plainText || children || ""}
                             </p>
                         );
@@ -37,7 +48,7 @@ const BlocksRenderer = ({
                         switch (level) {
                             case 1:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h1 className="dark:text-white font-bold text-3xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h1>
@@ -45,7 +56,7 @@ const BlocksRenderer = ({
                                 );
                             case 2:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h2 className="dark:text-white font-bold text-2xl border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h2>
@@ -53,7 +64,7 @@ const BlocksRenderer = ({
                                 );
                             case 3:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h3 className="dark:text-white font-bold text-xl  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h3>
@@ -61,7 +72,7 @@ const BlocksRenderer = ({
                                 );
                             case 4:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h4 className="dark:text-white font-bold text-lg  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h4>
@@ -69,7 +80,7 @@ const BlocksRenderer = ({
                                 );
                             case 5:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h5 className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h5>
@@ -77,7 +88,7 @@ const BlocksRenderer = ({
                                 );
                             case 6:
                                 return (
-                                    <div className={"mb-1 mt-0.5"}>
+                                  <div className={" w-full"}>
                                         <h6 className="dark:text-white font-bold text-md  border-solid border-b-[0.2em] inline-block pr-[0.5em] py-1 border-orange-500 pb-[1px]">
                                             {children || plainText}
                                         </h6>
@@ -85,7 +96,7 @@ const BlocksRenderer = ({
                                 );
                             default:
                                 return (
-                                    <div className={" mb-[1.5rem] last:mb-0"}>
+                                  <div className={""}>
                                         <h4 className={"text-xl font-bold dark:text-white"}>
                                             {children || plainText}
                                         </h4>
@@ -99,7 +110,8 @@ const BlocksRenderer = ({
                                 return (
                                     <ol
                                         className={
-                                            "w-full  list-outside list-decimal  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"
+                                          "w-full list-decimal selection:bg-orange-100/10" +
+                                          " selection:text-orange-500"
                                         }
                                     >
                                         {children || plainText}
@@ -110,7 +122,8 @@ const BlocksRenderer = ({
                                 return (
                                     <ul
                                         className={
-                                            "w-full  list-outside list-disc  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"
+                                          "w-full list-disc  selection:bg-orange-100/10" +
+                                          " selection:text-orange-500"
                                         }
                                     >
                                         {children || plainText}
@@ -122,7 +135,7 @@ const BlocksRenderer = ({
                         return (
                             <li
                                 className={
-                                    "list-outside  selection:bg-orange-100/10 selection:text-orange-500 mb-[1.5rem] last:mb-0"
+                                  "list-inside list-[inherit] selection:bg-orange-100/10 selection:text-orange-500"
                                 }
                             >
                                 {children || plainText}
@@ -150,19 +163,23 @@ const BlocksRenderer = ({
                         return (
                             <GalleryImage
                                 className={
-                                    " w-max h-max max-h-64 mx-auto object-contain mb-[1.5rem] last:mb-0"
+                                  " h-max max-h-64 object-contain max-w-min"
                                 }
-                                alt={image.alternativeText || "test"}
+                                wrapperClassName={"  flex-nowrap w-fit" +
+                                  " max-w-[50%]"}
+                                alt={image.alternativeText || undefined}
                                 thumbnailSrc={image.previewUrl || image.url}
-                                caption={image.caption || ""}
+                                caption={image.caption || undefined}
                                 src={image.url}
+                                imageList={images()}
+                                init={imageIndexPos(image)}
                             />
                         );
                     },
                     quote: ({ children, plainText }) => {
                         return (
                             <blockquote
-                                className={"p-2 border-l-4 border-orange-500 mb-[1.5rem] last:mb-0"}
+                              className={"p-2 border-l-4 border-orange-500"}
                             >
                                 {children || plainText}
                             </blockquote>
@@ -170,7 +187,7 @@ const BlocksRenderer = ({
                     },
                     code: ({ children, plainText }) => {
                         return (
-                            <pre className={`mb-[1.5rem] last:mb-0`}>
+                          <pre className={``}>
                                 <code>{children || plainText}</code>
                             </pre>
                         );

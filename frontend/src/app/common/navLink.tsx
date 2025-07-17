@@ -13,10 +13,10 @@ export const NavLink = (item: any) => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            console.log(pathname, item.attributes.url, pathname.startsWith(item.attributes.url));
+
             SetActive(pathname.startsWith(item.attributes.url));
         } else {
-            console.log(typeof window, "window");
+
             SetActive(false);
         }
     }, [item.attributes.url, pathname]);

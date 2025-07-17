@@ -146,7 +146,7 @@ export default function ConfigurationSteps({ params }: { params: { id: number } 
                 </p>
                 {Array.isArray(fusionSteps) &&
                     fusionSteps.map((s, index, a) => {
-                        console.log(s, index);
+
                         return (
                             <Step
                                 key={s.id.toString() + "-" + s.__component}

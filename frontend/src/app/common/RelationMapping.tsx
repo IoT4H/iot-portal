@@ -28,7 +28,7 @@ export const createRelation = (
             })
         }
     ).then((res) => {
-        console.log(res);
+
     });
 };
 
@@ -54,13 +54,13 @@ export const RelationMapField = (p: any) => {
 
     useEffect(() => {
         if (value === undefined && options.length > 0) {
-            console.log(options[0]);
+
             SetValue(options[0]);
         }
     }, [options]);
 
     useEffect(() => {
-        console.log(value, linkingComponent);
+
         onChange && onChange(value);
         if (linkingComponent !== undefined && value !== undefined) {
             createRelation(deploymentId, linkingComponent, value, relation);

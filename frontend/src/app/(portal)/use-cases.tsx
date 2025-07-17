@@ -40,7 +40,7 @@ export function Badge({ name }: { name: string; color?: string }) {
 }
 
 export function ListItemUseCase({ useCase }: { useCase: UseCase }) {
-    console.log(useCase.partnerLogos);
+
 
     return (
         <>
