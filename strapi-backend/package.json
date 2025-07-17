@@ -1,40 +1,49 @@
 {
-  "name": "strapi-backend",
-  "private": true,
-  "version": "0.1.0",
-  "description": "A Strapi application for IOT4H Portal",
-  "scripts": {
-    "develop": "strapi develop",
-    "start": "strapi start",
-    "build": "strapi build",
-    "strapi": "strapi"
-  },
-  "dependencies": {
-    "@strapi/plugin-i18n": "4.16.2",
-    "@strapi/plugin-users-permissions": "4.16.2",
-    "@strapi/provider-email-nodemailer": "^4.25.9",
-    "@strapi/strapi": "4.16.2",
-    "better-sqlite3": "8.6.0",
-    "pg": "^8.11.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-intl": "^6.5.5",
-    "react-router-dom": "^5.3.4",
-    "strapi-plugin-duplicate-button": "^1.1.14",
-    "strapi-plugin-heroicons-field": "^0.0.5",
-    "strapi-plugin-menus": "^1.5.0",
-    "styled-components": "^5.3.3"
-  },
-  "author": {
-    "name": "Bastian Rickmann",
-    "email": "bastian.rickmann@accenture.com"
-  },
-  "strapi": {
-    "uuid": "eab5288d-719a-438c-b201-56cf53f1337a"
-  },
-  "engines": {
-    "node": ">18.0.0 <=18.x.x",
-    "npm": ">=10.0.0"
-  },
-  "license": "MIT"
+    "name": "strapi-backend",
+    "version": "0.1.0",
+    "private": true,
+    "description": "A Strapi application for IOT4H Portal",
+    "license": "MIT",
+    "author": {
+        "name": "Bastian Rickmann",
+        "email": "bastian.rickmann@accenture.com"
+    },
+    "scripts": {
+        "build": "strapi build",
+        "develop": "strapi develop",
+        "start": "strapi start",
+        "strapi": "strapi"
+    },
+    "dependencies": {
+        "@strapi/plugin-i18n": "4.16.2",
+        "@strapi/plugin-users-permissions": "4.16.2",
+        "@strapi/provider-email-nodemailer": "^4.25.9",
+        "@strapi/strapi": "4.16.2",
+        "better-sqlite3": "8.6.0",
+        "pg": "^8.11.3",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-intl": "^6.5.5",
+        "react-router-dom": "^5.3.4",
+        "strapi-plugin-duplicate-button": "^1.1.14",
+        "strapi-plugin-heroicons-field": "^0.0.5",
+        "strapi-plugin-menus": "^1.5.0",
+        "styled-components": "^5.3.3"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.31.0",
+        "@eslint/json": "^0.13.0",
+        "eslint": "^9.31.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "globals": "^16.3.0",
+        "prettier": "^2.8.4",
+        "typescript-eslint": "^8.37.0"
+    },
+    "engines": {
+        "node": ">18.0.0 <=18.x.x",
+        "npm": ">=10.0.0"
+    },
+    "strapi": {
+        "uuid": "eab5288d-719a-438c-b201-56cf53f1337a"
+    }
 }

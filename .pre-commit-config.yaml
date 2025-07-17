@@ -1,9 +1,39 @@
 repos:
   - repo: local
     hooks:
-      - id: eslint
-        name: Run ESLint + Prettier fix in frontend/
-        entry: bash -c 'cd frontend && npx eslint --fix $(echo "$@" | tr " " "\n" | grep "^frontend/")'
-        language: system
-        pass_filenames: true
-        files: ^frontend/.*\.(js|ts|jsx|tsx)$
+        - id: prettier_local
+          name: prettier
+          language: system
+          entry: npx
+          args:
+            - --prefix
+            - frontend
+            - prettier
+            - --ignore-unknown
+            - --write
+          files: ^frontend/src/app/\(auth\)/.*\.(js|jsx|ts|tsx)$
+        - id: eslint
+          name: eslint
+          entry: frontend\\node_modules\\.bin\\eslint.cmd
+          pass_filenames: true
+          language: system
+          files: ^frontend/src/app/\(auth\)/.*\.(js|jsx|ts|tsx|css|scss|json|md|html)$
+
+        - id: prettier_backend
+          name: prettier (strapi backend)
+          language: system
+          entry: npx
+          args:
+            - --prefix
+            - strapi-backend
+            - prettier
+            - --ignore-unknown
+            - --write
+          files: ^strapi-backend/(?!database/).*?\.(js|ts|html|json)$
+
+        - id: eslint_backend
+          name: eslint (strapi backend)
+          language: system
+          entry: strapi-backend\\node_modules\\.bin\\eslint.cmd
+          pass_filenames: true
+          files: ^strapi-backend/(?!database/).*?\.(js|ts)$
