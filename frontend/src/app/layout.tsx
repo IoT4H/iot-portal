@@ -1,9 +1,7 @@
 import AuthWrapper from "@iot-portal/frontend/app/common/AuthWrapper";
 import Footer from "@iot-portal/frontend/app/common/Footer";
 import Header from "@iot-portal/frontend/app/common/Header";
-import PageBlockingSpinner, {
-    LoadingWrapper
-} from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import PageBlockingSpinner, { LoadingWrapper } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import PromptAreaComponent from "@iot-portal/frontend/app/common/promptArea";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -36,6 +34,7 @@ export async function generateMetadata({ params }: { params: Params }) {
           }
         : {};
 }
+
 export default async function RootLayout(props: any) {
     return (
         <html lang="de" className={"dark"}>

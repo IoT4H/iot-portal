@@ -2,15 +2,25 @@ import BlocksRenderer from "@iot-portal/frontend/app/common/BlocksRenderer";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
 import { notFound } from "next/navigation";
 
+
+export const dynamic = "force-dynamic";
+
+
 export default async function Page({ params }: { params: { catchAll: string[] } }) {
+
     const data =
         (
             await fetchAPI("/api/pages", {
                 fields: "*",
                 filters: {
-                    url: {
-                        $eq: "/" + params.catchAll.join("/")
+                  $or: [
+                    {
+                      url: { $eq: "/" + (params.catchAll || []).join("/") }
+                    },
+                    {
+                      url: { $eq: "/" + (params.catchAll || []).join("/") + "/" }
                     }
+                  ]
                 }
             })
         )?.data || [];
