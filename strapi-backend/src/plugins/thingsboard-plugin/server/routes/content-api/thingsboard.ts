@@ -122,4 +122,36 @@ export default [
       ]
     }
   },
+  {
+    method: "POST",
+    path: "/deployment/telemetry/:entityType/:entityId/attributes/:scope",
+    handler: `plugin::${pluginId}.telemetry.postTelemetry`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    }
+  },
+  {
+    method: "GET",
+    path: "/deployment/telemetry/:entityType/:entityId/values/attributes/:scope",
+    handler: `plugin::${pluginId}.telemetry.getTelemetry`,
+    config: {
+      policies: [
+        (policyContext, config, { strapi }) => {
+          if (policyContext.state.isAuthenticated) {
+            return true;
+          }
+
+          return false;
+        }
+      ]
+    }
+  }
 ]

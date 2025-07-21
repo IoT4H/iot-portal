@@ -46,6 +46,12 @@
       "type": "component",
       "repeatable": false,
       "component": "firmware.flash-config"
+    },
+    "serverAttributes": {
+      "displayName": "attributes",
+      "type": "component",
+      "repeatable": true,
+      "component": "instructions.attributes"
     }
   }
 }
