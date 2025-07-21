@@ -97,6 +97,32 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response: any) => response.data));
   },
 
+    async setTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED" | "SERVER", payload: {
+      [key: string]: any
+    }) {
+      return (await this.axiosAsTenant(tenantId, {
+        method: "POST",
+        url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/plugins/telemetry/${entityType}/${id}/attributes/${scope}`,
+        body: payload
+      })
+        .then((response: any) => response.data));
+    },
+
+    async getTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED" | "SERVER", keys?: string[]) {
+      const params = keys ? {
+        params: {
+          keys: keys.join(",")
+        }
+      } : {};
+
+      return (await this.axiosAsTenant(tenantId, {
+        method: "POST",
+        url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/plugins/telemetry/${entityType}/${id}/values/attributes/${scope}`,
+        ...params
+      })
+        .then((response: any) => response.data));
+    },
+
   async getTelemetryKeysForDevice(tenantId, entityType, id) {
     return (await this.axiosAsTenant(tenantId, {
       method: 'get',

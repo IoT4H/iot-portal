@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_instructions_attributes",
+  "info": {
+    "displayName": "attributes",
+    "icon": "cog",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "attributeName": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "text",
+        "number"
+      ],
+      "required": true,
+      "default": "text"
+    },
+    "defaultValue": {
+      "type": "string",
+      "required": true
+    },
+    "maxValue": {
+      "type": "float"
+    },
+    "minValue": {
+      "type": "float"
+    },
+    "enforced": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}
