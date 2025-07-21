@@ -246,40 +246,47 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return profiles;
   },
   async getInstructionStepsFromDeployment(deploymentId: number) {
-    const deployment: any = await strapi.entityService.findOne("api::deployment.deployment", deploymentId, {
-      populate: {
-        use_case: {
-          populate: {
-            setupSteps: {
-              populate: {
-                meta: {
-                  populate: "*"
-                },
-                tasks: {
-                  populate: "*"
-                },
-                relations: {
-                  populate: "*"
-                },
-                flashConfig: {
-                  populate: "*"
-                },
-                flashInstruction: {
-                  populate: {
-                    binary: {
-                      populate: "*"
-                    }
+    const deployment: any = await strapi.entityService.findOne(
+      "api::deployment.deployment",
+      deploymentId,
+      {
+        populate: {
+          use_case: {
+            populate: {
+              setupSteps: {
+                populate: {
+                  meta: {
+                    populate: "*"
+                  },
+                  tasks: {
+                    populate: "*"
+                  },
+                  relations: {
+                    populate: "*"
+                  },
+                  flashConfig: {
+                    populate: "*"
+                  },
+                  flashInstruction: {
+                    populate: {
+                      binary: {
+                        populate: "*"
+                      },
+                    },
+                  },
+                  alternativeLabel: {
+                    populate: "*"
+                  },
+                  serverAttributes: {
+                    populate: "*"
                   }
                 },
-                alternativeLabel: {
-                  populate: "*"
-                }
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       }
-    });
+    );
 
     const cMs = deployment.use_case.setupSteps.map((step) => step.__component === "instructions.setup-instruction" ? this.replaceUUIDsForDeployment(deployment.deployed, step) : step);
 
