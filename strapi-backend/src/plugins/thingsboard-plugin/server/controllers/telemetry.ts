@@ -58,7 +58,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const tenantId = user.firm.TenentUID;
     ctx.body = await strapi
       .plugin(pluginId)
-      .service("thingsboardService").getTelemetryForDeviceAsset(tenantId, ctx.params.entityType, ctx.params.entityId, ctx.params.scope, ctx.query.keys);
+      .service("thingsboardService")
+      .getTelemetryForDeviceAsset(
+        tenantId,
+        ctx.params.entityType,
+        ctx.params.entityId,
+        ctx.params.scope,
+        ctx.query.keys
+      );
   },
 
   async postTelemetry(ctx) {
