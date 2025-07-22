@@ -1,14 +1,14 @@
 export default ({ env }) => ({
-  host: env('HOST', '0.0.0.0'),
-  port: env.int('PORT', 1337),
-  url: env("STRAPI_URL","/"),
-  thingsboardUrl:  env("THINGSBOARD_URL","http://localhost:9090"),
-  thingsboardSysAdminUsername:  env("THINGSBOARD_SYSADMIN", ""),
-  thingsboardSysAdminPassword:  env("THINGSBOARD_PASSWORD", ""),
-  app: {
-    keys: env.array('APP_KEYS'),
-  },
-  webhooks: {
-    populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
-  },
+    host: env('HOST', '0.0.0.0'),
+    port: env.int('PORT', 1337),
+    url: env('STRAPI_URL', '/'),
+    thingsboardUrl: env('THINGSBOARD_URL', 'http://localhost:9090'),
+    thingsboardSysAdminUsername: env('THINGSBOARD_SYSADMIN', ''),
+    thingsboardSysAdminPassword: env('THINGSBOARD_PASSWORD', ''),
+    app: {
+        keys: env.array('APP_KEYS')
+    },
+    webhooks: {
+        populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false)
+    }
 });

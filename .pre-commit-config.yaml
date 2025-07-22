@@ -29,11 +29,11 @@ repos:
             - prettier
             - --ignore-unknown
             - --write
-          files: ^strapi-backend/(?!database/).*?\.(js|ts|html|json)$
+          files: ^strapi-backend/(?!database/).*?\.(js|ts|html)$
 
         - id: eslint_backend
           name: eslint (strapi backend)
           language: system
-          entry: strapi-backend\\node_modules\\.bin\\eslint.cmd
+          entry: npx eslint
           pass_filenames: true
           files: ^strapi-backend/(?!database/).*?\.(js|ts)$

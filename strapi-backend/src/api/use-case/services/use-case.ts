@@ -4,6 +4,6 @@
  * use-case service
  */
 
-import { factories } from "@strapi/strapi";
+import { factories } from '@strapi/strapi';
 
-export default factories.createCoreService("api::use-case.use-case");
+export default factories.createCoreService('api::use-case.use-case');
