@@ -551,5 +551,102 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     await Promise.allSettled(profiles.map(async (p: any) => {
       return await strapi.plugin("thingsboard-plugin").service("thingsboardService").deleteThingsboardComponentForTenant(tenentUID, p.entityType.replace("_", "").toLowerCase(), p.id);
     }));
-  }
+  },
+  async existsDeploymentWithName(
+    tenentId: number,
+    deploymentName?: string,
+    useCaseId?: number
+  ) {
+    console.warn(deploymentName, tenentId);
+
+    const match = await strapi.entityService.findMany(
+      "api::deployment.deployment",
+      {
+        filters: {
+          name: { $eq: deploymentName },
+          firm: { TenentUID: { $eq: tenentId } }
+        },
+        populate: {
+          firm: { fields: ["TenentUID"] },
+          use_case: { fields: ["id", "Titel"] }
+        },
+        sort: { createdAt: "desc" }
+      }
+    );
+
+    let found = false;
+
+    let findAlternative = new Array<any>();
+
+    if (deploymentName) {
+      findAlternative.push({
+        name: { $startsWith: deploymentName }
+      });
+    }
+
+    if (useCaseId) {
+      findAlternative.push({
+        use_case: { id: useCaseId }
+      });
+    }
+
+    console.log(match);
+    if (Array.isArray(match) && match.length > 0) {
+      const firstmatch: any = match[0];
+      console.log(firstmatch);
+      found = true;
+      findAlternative.push({
+        use_case: { id: firstmatch.use_case.id }
+      });
+    }
+
+    const deployments = await strapi.entityService.findMany(
+      "api::deployment.deployment",
+      {
+        filters: {
+          $or: [...findAlternative],
+          firm: { TenentUID: { $eq: tenentId } }
+        },
+        populate: {
+          firm: { fields: ["TenentUID"] },
+          use_case: { fields: ["id", "Titel"] }
+        },
+        sort: { createdAt: "desc" }
+      }
+    );
+    let suggestions = new Set<string>();
+
+    const numberSuffix = (match, p1, offset, string, groups) => {
+      if (match.trim().length > 0) {
+        return (Number(match.trim()) + 1).toString();
+      } else {
+        return " 2";
+      }
+    };
+
+    if (Array.isArray(deployments) && deployments.length > 0) {
+      const newSuggestion = deploymentName.replace(
+        /([0-9]*)\s*$/,
+        numberSuffix
+      );
+      if (!deployments.map((d) => d.name).includes(newSuggestion)) {
+        suggestions.add(newSuggestion.trim());
+      }
+    } else {
+      suggestions.add(
+        deploymentName.replace(/([0-9]*)\s*$/, numberSuffix).trim()
+      );
+    }
+
+    if (Array.isArray(deployments) && deployments.length > 0) {
+      deployments.forEach((deploy: any) => {
+        const newSuggestion = deploy.name.replace(/([0-9]*)\s*$/, numberSuffix);
+        if (!deployments.map((d) => d.name).includes(newSuggestion)) {
+          suggestions.add(newSuggestion.trim());
+        }
+      });
+    }
+
+    return { exists: found, suggestions: Array.from(suggestions.values()) };
+  },
 });
