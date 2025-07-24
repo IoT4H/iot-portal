@@ -61,10 +61,10 @@ const Modal = ({
         <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
           <AttributeEdit Attributes={Attributes} deviceAsset={device} deployment={deployment} allValid={(b) => {
             SetAllValid(b.reduce((pV, Cv) => pV && Cv, true));
-          }} externalSaveTrigger={handleRegister} />
+          }} /*externalSaveTrigger={handleRegister} */ />
         </div>
 
-        <button
+        {/* <button
           className={
             "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"
           }
@@ -74,7 +74,7 @@ const Modal = ({
           }}
         >
           Speichern
-        </button>
+        </button>*/}
       </ModalUI>
     </>
   );
