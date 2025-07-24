@@ -124,7 +124,7 @@ export default [
   },
   {
     method: "POST",
-    path: "/deployment/telemetry/:entityType/:entityId/attributes/:scope",
+    path: "/deployment/:setupId/telemetry/:entityType/:entityId/attributes/:scope",
     handler: `plugin::${pluginId}.telemetry.postTelemetry`,
     config: {
       policies: [
@@ -140,7 +140,7 @@ export default [
   },
   {
     method: "GET",
-    path: "/deployment/telemetry/:entityType/:entityId/values/attributes/:scope",
+    path: "/deployment/:setupId/telemetry/:entityType/:entityId/values/attributes/:scope",
     handler: `plugin::${pluginId}.telemetry.getTelemetry`,
     config: {
       policies: [

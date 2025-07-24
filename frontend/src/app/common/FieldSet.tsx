@@ -15,10 +15,10 @@ export function RequiredStar(p: any) {
 }
 
 export function FieldSetInput(p: any) {
-    const { children, ...props } = p;
+  const { children, actionButtons, ...props } = p;
 
     return (
-        <div className={`relative flex flex-col h-auto ${props.className || ""}`}>
+      <div className={`relative flex flex-col h-auto ${props.wrapperClassName || ""} group-field`}>
             <label
                 htmlFor={props.id}
                 className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50"
@@ -27,18 +27,24 @@ export function FieldSetInput(p: any) {
                 {props.required && <RequiredStar />}
             </label>
             <div className="mt-2">
-                {props.multiline ? (
+              {props.multiline ? (<div
+                  className="relative  bg-white flex-grow flex flex-row items-center block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 in-focus:ring-2  in-focus:ring-inset in-focus:ring-orange-400 sm:text-sm sm:leading-6 disabled:bg-gray-500 disabled:ring-gray-800">
                     <textarea
                         name={props.id}
                         {...props}
-                        className=" block h-[5em] resize-none w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6 disabled:bg-gray-500 disabled:ring-gray-800"
+                        className={`h-[inherit] ring-0 focus:ring-0 focus:border-0 border-0 flex-grow- flex-shrink-0 rounded-[inherit] w-full ${props.inputClassName || ""} `}
                     ></textarea>
-                ) : (
-                    <input
+
+                  {actionButtons}</div>
+              ) : (<div
+                  className="relative  bg-white flex-grow flex flex-row items-center block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 in-focus:ring-2  in-focus:ring-inset in-focus:ring-orange-400 sm:text-sm sm:leading-6 disabled:bg-gray-500 disabled:ring-gray-800">
+                  <input {...props}
+                         className={`h-[inherit] ring-0 border-0 flex-grow- flex-shrink-0 rounded-[inherit] w-full ${props.inputClassName || ""} `}
                         name={props.id}
-                        {...props}
-                        className=" flex-grow block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6 disabled:bg-gray-500 disabled:ring-gray-800"
-                    />
+
+
+                  />
+                  {actionButtons}</div>
                 )}
             </div>
             {children &&
@@ -55,7 +61,7 @@ export function FieldSetSelect(p: any) {
     const { children, ...props } = p;
 
     return (
-        <div className={`relative flex flex-col ${props.className || ""}`}>
+      <div className={`relative flex flex-col ${props.wrapperClassName || ""}`}>
             {props.label && (
                 <label
                     htmlFor={props.id}
@@ -84,7 +90,7 @@ export function FieldSetCheckbox(p: any) {
 
     return (
         <>
-            <div className={`relative block group/checkbox ${props.className || ""}`}>
+          <div className={`relative block group/checkbox ${props.wrapperClassName || ""}`}>
                 <label
                     htmlFor={props.id}
                     className={`relative flex gap-2 flex-row items-center p-0.5 group/checkbox group-[:not(:has(*:disabled))]/checkbox:cursor-pointer`}
@@ -174,7 +180,7 @@ export function FieldSetPatternInput(p: any) {
     }, [output]);
 
     return (
-        <div className={`relative flex flex-col h-auto ${props.className || ""}`}>
+      <div className={`relative flex flex-col h-auto ${props.wrapperClassName || ""}`}>
             <label
                 htmlFor={props.id}
                 className="block font-bold text-base leading-7 text-gray-900 dark:text-orange-50"

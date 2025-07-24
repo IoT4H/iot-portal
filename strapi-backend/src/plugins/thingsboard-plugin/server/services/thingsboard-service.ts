@@ -97,18 +97,23 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .then((response: any) => response.data));
   },
 
-    async setTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED" | "SERVER", payload: {
+    async setTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED_SCOPE" | "SERVER_SCOPE", payload: {
       [key: string]: any
     }) {
+      console.warn("SET", tenantId, entityType, id, scope, payload, JSON.stringify(payload));
+      console.warn(strapi.plugin(pluginId).config("thingsboardUrl") + `/api/plugins/telemetry/${entityType}/${id}/attributes/${scope}`);
       return (await this.axiosAsTenant(tenantId, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
         url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/plugins/telemetry/${entityType}/${id}/attributes/${scope}`,
-        body: payload
+        data: JSON.stringify(payload)
       })
-        .then((response: any) => response.data));
+        .then((response: any) => response.data))
     },
 
-    async getTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED" | "SERVER", keys?: string[]) {
+    async getTelemetryForDeviceAsset(tenantId: string, entityType: "DEVICE" | "ASSET", id: string, scope: "SHARED_SCOPE" | "SERVER_SCOPE", keys?: string[]) {
       const params = keys ? {
         params: {
           keys: keys.join(",")
@@ -116,7 +121,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       } : {};
 
       return (await this.axiosAsTenant(tenantId, {
-        method: "POST",
+        method: "GET",
         url: strapi.plugin(pluginId).config("thingsboardUrl") + `/api/plugins/telemetry/${entityType}/${id}/values/attributes/${scope}`,
         ...params
       })
@@ -416,6 +421,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async axiosAsUser(userId: string, params) {
     params.headers = Object.assign(params.headers || {},  {'X-Authorization': "Bearer " + (await this.getUserToken(userId)).token});
+    console.debug(params);
     return axios(params);
   },
   async axiosAsCustomerUser(tenantId: string, userId: string, params) {
