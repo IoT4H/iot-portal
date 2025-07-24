@@ -76,7 +76,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     ctx.body = await strapi
       .plugin(pluginId)
-      .service("thingsboardService").setTelemetryForDeviceAsset(tenantId, ctx.params.entityType, ctx.params.entityId, ctx.params.scope, ctx.body);
+      .service("thingsboardService").setTelemetryForDeviceAsset(tenantId, ctx.params.entityType, ctx.params.entityId, ctx.params.scope, ctx.request.body);
 
   }
 });

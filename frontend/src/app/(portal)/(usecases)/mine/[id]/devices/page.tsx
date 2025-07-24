@@ -1,6 +1,7 @@
 "use client";
 import { CpuChipIcon } from "@heroicons/react/20/solid";
 import { ArrowDownTrayIcon, PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import DeviceAttributeModal from "@iot-portal/frontend/app/common/DeviceAttributeModal";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
@@ -208,15 +209,16 @@ const DeviceBox = ({
                             <CpuChipIcon className={"w-4 aspect-square"} />
                         </div>
                     )}
+                  {Array.of(...stepData.data.serverAttributes).length > 0 && (
                     <div
                         title={"Bearbeiten"}
-                        onClick={() => toggleEditModalOpen}
+                        onClick={toggleEditModalOpen}
                         className={
                             "p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"
                         }
                     >
                         <PencilIcon className={"w-4 aspect-square"} />
-                    </div>
+                    </div>)}
                     <div
                         title={"Export"}
                         onClick={() => setExportModalOpen(true)}
@@ -248,14 +250,11 @@ const DeviceBox = ({
                 />
             )}
             {editModalOpen && (
-                <FlashProgress
-                    stepData={{
-                        ...stepData,
-                        deployment: setup.id,
-                        state: { device: { id: device.id.id } }
-                    }}
-                    onClose={() => toggleFlashModalOpen()}
-                />
+              <DeviceAttributeModal
+                stepData={{ ...stepData }}
+                device={device}
+                deployment={{ id: setup.id }}
+                onClose={() => toggleEditModalOpen()} />
             )}
             {exportModalOpen && typeof window !== "undefined" && (
                 <ExportTelemetryModal
