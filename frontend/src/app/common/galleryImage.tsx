@@ -119,7 +119,7 @@ export function Caption({ text }: { text?: string }) {
             " w-fit max-w-max text-center justify-stretch text-wrap overflow-wrap rounded-r" +
             " whitespace-pre-line break-normal indent-4 hyphens-auto inline-block  max-h-full order-2"
           }>
-          {text}a asd asd asd as dasd asd asdadasd asdgdfg dfg dfg df gdfg f
+            {text}
         </div>
       )}
     </>
