@@ -91,9 +91,10 @@ export default async function UseCasePage({ params }: { params: { id: number } }
                             {useCase.partnerLogos.map((pL) => (
                                 /* eslint-disable-next-line @next/next/no-img-element */
                                 <GalleryImage
-                                    className={
-                                        "w-40 object-center object-contain py-2 px-4 bg-white rounded "
+                                    wrapperClassName={
+                                        "w-40 object-center object-contain py-2 px-4 bg-white rounded  "
                                     }
+                                    className={"basis-auto"}
                                     key={pL.hash}
                                     src={getStrapiURLForFrontend(pL.formats?.small?.url || pL.url)}
                                     alt={pL.alternativeText}

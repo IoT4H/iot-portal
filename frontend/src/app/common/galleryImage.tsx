@@ -1,6 +1,6 @@
 "use client";
 
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon } from "@heroicons/react/16/solid";
 import { GalleryContext } from "@iot-portal/frontend/app/common/galleryContext";
 import Spinner from "@iot-portal/frontend/app/common/spinner";
 import { Suspense, useContext } from "react";
@@ -35,7 +35,7 @@ export default function GalleryImage({
     }
     const image = (
       <div
-        className={`relative bg-transparent flex flex-row ${wrapperClassName}`}>
+          className={`relative bg-transparent flex flex-col justify-center align-center ${wrapperClassName}`}>
         <img
           src={thumbnailSrc || src}
           data-src={src}
@@ -94,13 +94,13 @@ export function Copyright({ alt }: { alt?: string }) {
             {!!alt && (
                 <div
                     className={
-                      "h-8 absolute bottom-0 left-0 flex flex-row items-center bg-gray-500 px-2 text-ellipsis text-left" +
-                      " rounded-tr max-w-full cursor-help z-[1]"
+                        "min-h-10 absolute top-0 right-0 flex flex-row items-center bg-gray-500/80 py-1 px-2" +
+                        " text-ellipsis text-right rounded-bl-lg max-w-full cursor-help z-[1] text-sm"
                     }
                     title={alt}
                 >
                     <InformationCircleIcon
-                        className={"h-6 w-6 shrink-0 aspect-square mr-1 inline"}
+                        className={"h-4 w-4 shrink-0 aspect-square mr-1 inline"}
                     />
                     {alt}
                 </div>
@@ -115,9 +115,9 @@ export function Caption({ text }: { text?: string }) {
       {!!text && (
         <div
           className={
-            "p-8 block top-0 right-0 items-center bg-zinc-700 text-ellipsis flex-grow-0" +
-            " w-fit max-w-max text-center justify-stretch text-wrap overflow-wrap rounded-r" +
-            " whitespace-pre-line break-normal indent-4 hyphens-auto inline-block  max-h-full order-2"
+              "py-2 px-4 block top-0 right-0 items-center bg-zinc-700 text-ellipsis flex-grow-0" +
+              " w-full text-center justify-stretch text-wrap overflow-wrap rounded-r" +
+              " whitespace-pre-line break-normal hyphens-auto inline-block  max-h-full order-2"
           }>
             {text}
         </div>

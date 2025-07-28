@@ -167,7 +167,7 @@ const BlocksRenderer = ({
                                 }
                                 wrapperClassName={"  flex-nowrap w-fit" +
                                   " max-w-[50%]"}
-                                alt={image.alternativeText || undefined}
+                                alt={image.name !== image.alternativeText ? image.alternativeText || undefined : undefined}
                                 thumbnailSrc={image.previewUrl || image.url}
                                 caption={image.caption || undefined}
                                 src={image.url}
