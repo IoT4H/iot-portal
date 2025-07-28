@@ -148,9 +148,10 @@ export default async function UseCase(props: {
                                         alt={useCase.thumbnail.alternativeText}
                                         caption={useCase.thumbnail.caption}
                                         captionPreview={false}
-                                        className={
-                                            "relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full object-cover "
+                                        wrapperClassName={
+                                            "relative aspect-video max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full"
                                         }
+                                        className={"h-full w-full object-cover max-w-fit max-h-fit min-w-full min-h-full max-w-full max-h-full"}
                                         aria-hidden={"true"}
                                     />
                                 </div>
