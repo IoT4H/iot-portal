@@ -16,7 +16,13 @@ const BlocksRenderer = ({
 
   const images = useCallback(() => content.filter((b) => {
     return b.type == "image";
-  }).map((block: { image: any } | any) => block.image), [content]);
+  }).map((block: { image: any } | any) => block.image).map((image) => {
+      let temp = image;
+      if (temp.name === image.alternativeText) {
+          image.alternativeText = undefined;
+      }
+      return temp;
+  }), [content]);
 
 
   const imageIndexPos = useCallback((image: any) => {
