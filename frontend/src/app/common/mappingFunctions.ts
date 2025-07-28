@@ -90,7 +90,7 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
             const keyWords = entry.attributes.keyWords;
             if (Array.isArray(keyWords)) {
                 for (const key of keyWords) {
-                    const slugLink = `" }, { "type": "link", "url": "/api/wissen/${entry.attributes.slug}", "children": [ { "type": "text", "text": "${key}" } ] }, { "type": "text", "text": "`;
+                    const slugLink = `" }, { "type": "link", "url": "/wissen/${entry.attributes.slug}", "children": [ { "type": "text", "text": "${key}" } ] }, { "type": "text", "text": "`;
                     slugToLink.set(key, slugLink);
                 }
             }
