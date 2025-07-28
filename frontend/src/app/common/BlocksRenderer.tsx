@@ -146,7 +146,8 @@ const BlocksRenderer = ({
                         return (
                             <Link
                                 className={
-                                    "text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10 selection:text-orange-500 relative "
+                                    "text-orange-500 underline-offset-4 underline  selection:bg-orange-100/10" +
+                                    " selection:text-orange-500 relative group/link "
                                 }
                                 href={url}
                             >
