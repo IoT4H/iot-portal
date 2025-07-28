@@ -8,7 +8,7 @@ function Info({ description }: { description: any[] }) {
     return (
         <BlocksRenderer
             content={description}
-            className={"markdown px-8"}
+            className={"markdown px-0 md:px-8 text-justify leading-7 text-pretty "}
         ></BlocksRenderer>
     );
 }
