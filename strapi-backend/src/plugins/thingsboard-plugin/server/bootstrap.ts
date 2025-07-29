@@ -1,4 +1,4 @@
-import { Strapi } from '@strapi/strapi';
+import { Strapi } from "@strapi/strapi";
 
 export default ({ strapi }: { strapi: Strapi }) => {
   // bootstrap phase
@@ -46,11 +46,26 @@ export default ({ strapi }: { strapi: Strapi }) => {
     },
     async beforeDelete(event: any) {
       const firm = await strapi.query('api::firm.firm').findOne(event.params);
-      await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID);
+      if (firm.TenentUID) {
+        console.log("TEST");
+        await strapi.plugin("thingsboard-plugin").service("thingsboardService").deleteTenant(firm.TenentUID);
+      }
+
     },
     async beforeDeleteMany(event: any) {
       const firms = await strapi.query('api::firm.firm').findMany(event.params);
-      firms.forEach(async (firm: any) => await strapi.plugin('thingsboard-plugin').service('thingsboardService').deleteTenant(firm.TenentUID));
+      for (const firm of firms) {
+        if (firm.TenentUID) {
+          console.log("TEST");
+          await strapi.plugin("thingsboard-plugin").service("thingsboardService").deleteTenant(firm.TenentUID);
+        }
+      }
+    },
+    async afterDelete(event: any) {
+      console.log(event);
+    },
+    async afterDeleteMany(event: any) {
+      console.log(event);
     }
   });
 
