@@ -7,3 +7,10 @@ repos:
         language: system
         pass_filenames: true
         files: ^frontend/.*\.(js|ts|jsx|tsx)$
+
+      - id: eslint_backend
+        name: Run ESLint + Prettier fix in strapi-backend/
+        entry: bash -c 'cd strapi-backend && npx eslint --fix $(echo "$@" | tr " " "\n" | grep "^strapi-backend/")'
+        language: system
+        pass_filenames: true
+        files: ^strapi-backend/(?!database/).*?\.(js|ts)$
