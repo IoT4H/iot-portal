@@ -92,21 +92,18 @@ const Modal = ({
                 (response) => {
                     if (response && response.id) {
                         SetComponent(response.id);
+                        if (!step.state?.device) {
+                            step.state = Object.assign(step.state || {}, { device: response.id });
+                        }
                     }
 
                     if (response.error) {
                         SetError(response.error.message);
                     }
 
-                    if (!response.error && Array.of(...step.data.flashInstruction).length > 0) {
+                    if (Array.of(...step.data.flashInstruction).length > 0) {
                         switchFlashProcess(true);
-                    }
-
-                    if (
-                        !response.error &&
-                        Array.of(...step.data.flashInstruction).length === 0 &&
-                        Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0
-                    ) {
+                    } else if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0) {
                         switchServerAttributeProcess(true);
                     }
 
@@ -147,7 +144,13 @@ const Modal = ({
                 })
             }
         )
-            .then((res) => {})
+            .then((res) => {
+                step.state = Object.assign(step.state || {}, { flash: { progress: 100 } });
+                switchFlashProcess(false);
+                if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0) {
+                    switchServerAttributeProcess(true);
+                }
+            })
             .finally(() => {
                 LoadingState.endLoading();
                 triggerStateRefresh && triggerStateRefresh();
@@ -173,7 +176,9 @@ const Modal = ({
                 })
             }
         )
-            .then((res) => {})
+            .then((res) => {
+                step.state = Object.assign(step.state || {}, { serverAttributes: { progress: 100 } });
+            })
             .finally(() => {
                 LoadingState.endLoading();
                 triggerStateRefresh && triggerStateRefresh();
@@ -364,8 +369,13 @@ const Modal = ({
             {flashProcess && !serverAttributeProcess && (
                 <FlashProgress
                     onClose={(b?: boolean) => {
-                        if (b) flashComplete();
-                        if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length === 0) {
+                        if (b) {
+                            flashComplete();
+
+                            if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length === 0) {
+                                if (onClose) onClose();
+                            }
+                        } else {
                             if (onClose) onClose();
                         }
                     }}
