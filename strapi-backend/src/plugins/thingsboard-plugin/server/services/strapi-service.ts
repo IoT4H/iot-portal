@@ -521,6 +521,31 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         );
       };
 
+      const createServerAttributes = async (newComponent: any, attributes: any[]) => {
+        await Promise.allSettled(
+          Array.of<{
+            key: string;
+            value: any;
+          }>(...attributes).map((attribute) => {
+            console.log(deployment, newComponent, {
+              [attribute.key]: attribute.value
+            });
+            return strapi
+              .plugin("thingsboard-plugin")
+              .service("thingsboardService")
+              .setTelemetryForDeviceAsset(
+                deployment.firm.TenentUID,
+                newComponent.entityType,
+                newComponent.id,
+                "SERVER_SCOPE",
+                {
+                  [attribute.key]: attribute.value
+                }
+              );
+          })
+        );
+      };
+
       let returnPromise;
 
       if ((await this.getInstructionStepsProgressCompleteFromDeployment(deploymentId)).complete) {
@@ -590,9 +615,20 @@ export default ({ strapi }: { strapi: Strapi }) => ({
               );
             returnPromise = new Promise((resolve, reject) => {
               returnPromise
-                .then(async (component) => {
+                .then((component) => {
                   console.log(component, data.parameter);
-                  createRelations(component.id, data.parameter?.relations || []).finally(() => {
+                  Promise.allSettled([
+                    createRelations(component.id, data.parameter?.relations || []),
+                    createServerAttributes(
+                      component.id,
+                      data.step.data.serverAttributes
+                        .filter((sa: any) => sa.enforced)
+                        .map((sa: any) => ({
+                          key: sa.attributeName,
+                          value: sa.type === "number" ? Number(sa.defaultValue) : sa.defaultValue
+                        }))
+                    )
+                  ]).finally(() => {
                     resolve(component);
                   });
                 })
