@@ -4,7 +4,7 @@ import DeviceAttributeModal from "@iot-portal/frontend/app/common/DeviceAttribut
 import { FieldSetInput, FieldSetPatternInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
-import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import PageBlockingSpinner, { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -25,9 +25,11 @@ const Modal = ({
     step,
     triggerStateRefresh
 }: {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onClose?: Function;
     config: any;
     step: any;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     triggerStateRefresh?: Function;
 }) => {
     const [name, SetName] = useState<string>("");
@@ -48,6 +50,7 @@ const Modal = ({
         new Map<number, any>([])
     );
 
+    /*
     const [serverAttributeValues, SetServerAttributeValues] = useReducer(
         (state: Map<string, any>, action: { attribute: string; value: any }) => {
             const b = state;
@@ -55,7 +58,7 @@ const Modal = ({
             return b;
         },
         new Map<string, any>([])
-    );
+    );*/
 
     const [error, SetError] = useState<string | undefined>();
 
@@ -95,8 +98,16 @@ const Modal = ({
                         SetError(response.error.message);
                     }
 
-                    if (Array.of(...step.data.flashInstruction).length > 0) {
+                    if (!response.error && Array.of(...step.data.flashInstruction).length > 0) {
                         switchFlashProcess(true);
+                    }
+
+                    if (
+                        !response.error &&
+                        Array.of(...step.data.flashInstruction).length === 0 &&
+                        Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0
+                    ) {
+                        switchServerAttributeProcess(true);
                     }
 
                     if (
@@ -186,20 +197,18 @@ const Modal = ({
     useEffect(() => {}, [name, relations]);
 
     useEffect(() => {
-        if (!(!step.data.setup || step.state.setup.progress < 100)) {
-            if (step.state.flash?.progress === undefined) {
-                switchFlashProcess(true);
-            } else {
-                switchFlashProcess(false);
-            }
-        }
-
-        if (!(!step.data.setup || step.state.setup.progress < 100 || step.state.flash?.progress === undefined)) {
-            if (step.state.serverAttributes?.progress !== undefined) {
-                switchServerAttributeProcess(true);
-            } else {
-                switchServerAttributeProcess(false);
-            }
+        if (!step.data.setup || step.state.setup?.progress !== 100) {
+            switchFlashProcess(false);
+            switchServerAttributeProcess(false);
+        } else if (step.state.flash?.progress !== 100 && Array.of(...step.data.flashInstruction).length > 0) {
+            switchServerAttributeProcess(false);
+            switchFlashProcess(true);
+        } else if (
+            step.state.serverAttributes?.progress !== 100 &&
+            Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0
+        ) {
+            switchFlashProcess(false);
+            switchServerAttributeProcess(true);
         }
     }, [step]);
 
@@ -352,7 +361,7 @@ const Modal = ({
                     </div>
                 </ModalUI>
             )}{" "}
-            {flashProcess && (
+            {flashProcess && !serverAttributeProcess && (
                 <FlashProgress
                     onClose={(b?: boolean) => {
                         if (b) flashComplete();
@@ -363,17 +372,20 @@ const Modal = ({
                     stepData={step}
                 ></FlashProgress>
             )}
-            {serverAttributeProcess && (
-                <DeviceAttributeModal
-                    onClose={(b?: boolean) => {
-                        if (b) serverAttributesComplete();
-                        if (onClose) onClose();
-                    }}
-                    stepData={step}
-                    device={{ id: step.state.device }}
-                    deployment={step.deployment}
-                ></DeviceAttributeModal>
-            )}
+            {serverAttributeProcess &&
+                (step.state?.device ? (
+                    <DeviceAttributeModal
+                        onClose={(b?: boolean) => {
+                            if (b) serverAttributesComplete();
+                            if (onClose) onClose();
+                        }}
+                        stepData={step}
+                        device={{ id: step.state.device }}
+                        deployment={{ id: config.deployment }}
+                    ></DeviceAttributeModal>
+                ) : (
+                    <PageBlockingSpinner />
+                ))}
             {error && (
                 <Prompt
                     type={PromptType.Error}
