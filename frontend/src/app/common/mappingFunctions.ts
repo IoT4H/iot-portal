@@ -1,13 +1,8 @@
 import { UseCase } from "@iot-portal/frontend/app/(portal)/use-cases";
 
-export function mapUseCase(
-    useCase: any,
-    keyWordMap: Map<string, string> = new Map<string, string>()
-): UseCase {
-    let description: any = useCase.attributes.description;
-    let summary: any = [
-        { type: "paragraph", children: [{ type: "text", text: useCase.attributes.summary || "" }] }
-    ];
+export function mapUseCase(useCase: any, keyWordMap: Map<string, string> = new Map<string, string>()): UseCase {
+    let description: any = useCase?.attributes.description || "";
+    let summary: any = [{ type: "paragraph", children: [{ type: "text", text: useCase?.attributes.summary || "" }] }];
 
     const masterRegexString =
         "\\b(?<!\\[)(" +
@@ -18,25 +13,17 @@ export function mapUseCase(
         ")(\\w{0,2})(?!\\]|-)\\b";
     const masterRegex = new RegExp(masterRegexString, "gm");
 
-    const replacer = (
-        match: string,
-        group1: string,
-        group2: string | undefined,
-        offset: number,
-        input: string
-    ) => {
+    const replacer = (match: string, group1: string, group2: string | undefined, offset: number, input: string) => {
         return keyWordMap.get(group1)?.replace(group1, match) || match;
     };
 
     if (keyWordMap.size > 0) {
         if (description != undefined) {
             description = JSON.parse(JSON.stringify(description).replaceAll(masterRegex, replacer));
-
         }
 
-        if (useCase.attributes.summary != undefined) {
+        if (useCase?.attributes.summary != undefined) {
             summary = JSON.parse(JSON.stringify(summary).replaceAll(masterRegex, replacer));
-
         }
     }
 
@@ -58,22 +45,14 @@ export function mapUseCase(
                 useCase.attributes.pictures.data &&
                 useCase.attributes.pictures.data.map((b: any) => b.attributes)) ||
             [],
-        tags:
-            (useCase.attributes.tags &&
-                useCase.attributes.tags.data.map((t: any) => t.attributes.name)) ||
-            [],
+        tags: (useCase.attributes.tags && useCase.attributes.tags.data.map((t: any) => t.attributes.name)) || [],
         devices:
-            (useCase.attributes.Images &&
-                useCase.attributes.Images.filter((i: any) => i.device.data !== null)) ||
-            [],
+            (useCase.attributes.Images && useCase.attributes.Images.filter((i: any) => i.device.data !== null)) || [],
         setupDuration: useCase.attributes.setupDuration,
         complexity: useCase.attributes.complexity,
         instructions: useCase.attributes.instructions,
         costs: useCase.attributes.costs,
-        firms:
-            (useCase.attributes.firms &&
-                useCase.attributes.firms.data.map((f: any) => f.attributes)) ||
-            [],
+        firms: (useCase.attributes.firms && useCase.attributes.firms.data.map((f: any) => f.attributes)) || [],
         partnerLogos:
             (useCase.attributes.partnerLogos &&
                 useCase.attributes.partnerLogos.data &&
@@ -96,7 +75,6 @@ export function generateSlugToLinkMap(slugData: any): Map<string, string> {
             }
         }
     } else if (slugData.error) {
-
     }
     return slugToLink;
 }

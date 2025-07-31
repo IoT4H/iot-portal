@@ -1,121 +1,111 @@
-import type { Schema, Attribute } from '@strapi/strapi';
+import type { Attribute, Schema } from "@strapi/strapi";
 
 export interface FirmFirmRoles extends Schema.Component {
-  collectionName: 'components_firm_firm_roles';
+  collectionName: "components_firm_firm_roles";
   info: {
-    displayName: 'firm_roles';
+    displayName: "firm_roles";
   };
   attributes: {
-    user: Attribute.Relation<
-      'firm.firm-roles',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    role: Attribute.Enumeration<['Admin', 'Nutzer']>;
-  };
-}
-
-export interface FirmwareFlashConfigAttribute extends Schema.Component {
-  collectionName: 'components_firmware_flash_config_attributes';
-  info: {
-    displayName: 'FlashConfigAttribute';
-    icon: 'chartBubble';
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    label: Attribute.String & Attribute.Required;
-    type: Attribute.Enumeration<['string', 'number']> & Attribute.Required;
+    role: Attribute.Enumeration<["Admin", "Nutzer"]>;
+    user: Attribute.Relation<"firm.firm-roles", "oneToOne", "plugin::users-permissions.user">;
   };
 }
 
 export interface FirmwareFlashConfig extends Schema.Component {
-  collectionName: 'components_firmware_flash_configs';
+  collectionName: "components_firmware_flash_configs";
   info: {
-    displayName: 'FlashConfig';
-    icon: 'chartBubble';
-    description: '';
+    description: "";
+    displayName: "FlashConfig";
+    icon: "chartBubble";
   };
   attributes: {
-    uploadSpeed: Attribute.Integer &
-      Attribute.SetMinMax<{
-        min: 1;
-        max: 5000000;
-      }> &
-      Attribute.DefaultTo<115200>;
+    deviceConnectName: Attribute.String;
+    littelfsSize: Attribute.String & Attribute.Required & Attribute.DefaultTo<"0x5000">;
+    littlefsOffset: Attribute.String & Attribute.Required & Attribute.DefaultTo<"0x310000">;
     monitorSpeed: Attribute.Integer &
-      Attribute.SetMinMax<{
-        min: 1;
-        max: 5000000;
-      }> &
+      Attribute.SetMinMax<
+        {
+          max: 5000000;
+          min: 1;
+        },
+        number
+      > &
       Attribute.DefaultTo<115200>;
     preRequirementText: Attribute.Blocks;
-    deviceConnectName: Attribute.String;
-    littlefsOffset: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'0x310000'>;
-    littelfsSize: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'0x5000'>;
+    uploadSpeed: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          max: 5000000;
+          min: 1;
+        },
+        number
+      > &
+      Attribute.DefaultTo<115200>;
+  };
+}
+
+export interface FirmwareFlashConfigAttribute extends Schema.Component {
+  collectionName: "components_firmware_flash_config_attributes";
+  info: {
+    displayName: "FlashConfigAttribute";
+    icon: "chartBubble";
+  };
+  attributes: {
+    label: Attribute.String & Attribute.Required;
+    name: Attribute.String & Attribute.Required;
+    type: Attribute.Enumeration<["string", "number"]> & Attribute.Required;
   };
 }
 
 export interface FirmwareFlashInstruction extends Schema.Component {
-  collectionName: 'components_firmware_flash_instructions';
+  collectionName: "components_firmware_flash_instructions";
   info: {
-    displayName: 'Flash Instruction';
-    icon: 'cog';
-    description: '';
+    description: "";
+    displayName: "Flash Instruction";
+    icon: "cog";
   };
   attributes: {
-    binary: Attribute.Media & Attribute.Required;
-    flashAddress: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'0x1000'>;
-    type: Attribute.Enumeration<
-      ['bootloader', 'firmware', 'partiontable', 'bundle', 'others']
-    >;
+    binary: Attribute.Media<"files"> & Attribute.Required;
+    flashAddress: Attribute.String & Attribute.Required & Attribute.DefaultTo<"0x1000">;
+    type: Attribute.Enumeration<["bootloader", "firmware", "partiontable", "bundle", "others"]>;
   };
 }
 
 export interface FirmwareTest extends Schema.Component {
-  collectionName: 'components_test_tests';
+  collectionName: "components_test_tests";
   info: {
-    displayName: 'Image';
-    description: '';
+    description: "";
+    displayName: "Image";
   };
   attributes: {
-    firmware: Attribute.Media;
     amount: Attribute.Integer & Attribute.DefaultTo<1>;
-    device: Attribute.Relation<
-      'firmware.test',
-      'oneToOne',
-      'api::device.device'
-    >;
+    device: Attribute.Relation<"firmware.test", "oneToOne", "api::device.device">;
+    firmware: Attribute.Media<"files">;
   };
 }
 
 export interface GeneralAddress extends Schema.Component {
-  collectionName: 'components_general_addresses';
+  collectionName: "components_general_addresses";
   info: {
-    displayName: 'Address';
-    icon: 'pinMap';
-    description: '';
+    description: "";
+    displayName: "Address";
+    icon: "pinMap";
   };
   attributes: {
     Address: Attribute.String;
     Address_2: Attribute.String;
     City: Attribute.String;
+    Country: Attribute.String & Attribute.DefaultTo<"Germany">;
     Postal_code: Attribute.String;
     State: Attribute.String;
-    Country: Attribute.String & Attribute.DefaultTo<'Germany'>;
   };
 }
 
 export interface InstructionsAlternativeLabel extends Schema.Component {
-  collectionName: 'components_instructions_alternative_labels';
+  collectionName: "components_instructions_alternative_labels";
   info: {
-    displayName: 'Alternative Label';
-    icon: 'feather';
+    displayName: "Alternative Label";
+    icon: "feather";
   };
   attributes: {
     form_alternative_label: Attribute.String & Attribute.Required;
@@ -123,11 +113,30 @@ export interface InstructionsAlternativeLabel extends Schema.Component {
   };
 }
 
-export interface InstructionsBaseInstruction extends Schema.Component {
-  collectionName: 'components_instructions_base_instructions';
+export interface InstructionsAttributes extends Schema.Component {
+  collectionName: "components_instructions_attributes";
   info: {
-    displayName: 'baseInstruction';
-    icon: 'file';
+    description: "";
+    displayName: "attributes";
+    icon: "cog";
+  };
+  attributes: {
+    attributeName: Attribute.String & Attribute.Required;
+    defaultValue: Attribute.String & Attribute.Required;
+    description: Attribute.String;
+    enforced: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    label: Attribute.String & Attribute.Required;
+    maxValue: Attribute.Float;
+    minValue: Attribute.Float;
+    type: Attribute.Enumeration<["text", "number"]> & Attribute.Required & Attribute.DefaultTo<"text">;
+  };
+}
+
+export interface InstructionsBaseInstruction extends Schema.Component {
+  collectionName: "components_instructions_base_instructions";
+  info: {
+    displayName: "baseInstruction";
+    icon: "file";
   };
   attributes: {
     name: Attribute.String & Attribute.Required;
@@ -136,93 +145,92 @@ export interface InstructionsBaseInstruction extends Schema.Component {
 }
 
 export interface InstructionsInstructions extends Schema.Component {
-  collectionName: 'components_instructions_instructions';
+  collectionName: "components_instructions_instructions";
   info: {
-    displayName: 'instructions';
-    description: '';
+    description: "";
+    displayName: "instructions";
   };
   attributes: {
-    stepName: Attribute.String;
-    pictures: Attribute.Media;
+    pictures: Attribute.Media<"images" | "files" | "videos" | "audios", true>;
     step: Attribute.RichText & Attribute.Required;
+    stepName: Attribute.String;
   };
 }
 
 export interface InstructionsListInstruction extends Schema.Component {
-  collectionName: 'components_instructions_list_instructions';
+  collectionName: "components_instructions_list_instructions";
   info: {
-    displayName: 'ListInstruction';
-    icon: 'bulletList';
-    description: '';
+    description: "";
+    displayName: "ListInstruction";
+    icon: "bulletList";
   };
   attributes: {
-    meta: Attribute.Component<'instructions.base-instruction'> &
-      Attribute.Required;
-    tasks: Attribute.Component<'instructions.task', true>;
+    meta: Attribute.Component<"instructions.base-instruction"> & Attribute.Required;
+    tasks: Attribute.Component<"instructions.task", true>;
   };
 }
 
 export interface InstructionsRelationToSetup extends Schema.Component {
-  collectionName: 'components_thingsboard_relation_to_setups';
+  collectionName: "components_thingsboard_relation_to_setups";
   info: {
-    displayName: 'relationToSetup';
-    description: '';
+    description: "";
+    displayName: "relationToSetup";
   };
   attributes: {
-    name: Attribute.String;
     component: Attribute.JSON &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        "plugin::thingsboard-plugin.singleThingsboardComponent",
         {
+          type: "AssetProfile";
           types: {
-            dashboard: false;
             AssetProfile: true;
+            dashboard: false;
             DeviceProfile: true;
           };
-          type: 'AssetProfile';
         }
       >;
+    direction: Attribute.Enumeration<["to", "from"]> & Attribute.Required;
     displayName: Attribute.String;
-    direction: Attribute.Enumeration<['to', 'from']> & Attribute.Required;
+    name: Attribute.String;
   };
 }
 
 export interface InstructionsSetupInstruction extends Schema.Component {
-  collectionName: 'components_instructions_setup_instructions';
+  collectionName: "components_instructions_setup_instructions";
   info: {
-    displayName: 'setupInstruction';
-    icon: 'bulletList';
-    description: '';
+    description: "";
+    displayName: "setupInstruction";
+    icon: "bulletList";
   };
   attributes: {
-    meta: Attribute.Component<'instructions.base-instruction'> &
-      Attribute.Required;
+    alternativeLabel: Attribute.Component<"instructions.alternative-label">;
+    flashConfig: Attribute.Component<"firmware.flash-config">;
+    flashInstruction: Attribute.Component<"firmware.flash-instruction", true>;
+    meta: Attribute.Component<"instructions.base-instruction"> & Attribute.Required;
+    relations: Attribute.Component<"instructions.relation-to-setup", true>;
+    serverAttributes: Attribute.Component<"instructions.attributes", true>;
     thingsboard_profile: Attribute.JSON &
       Attribute.Required &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.singleThingsboardComponent',
+        "plugin::thingsboard-plugin.singleThingsboardComponent",
         {
           types: {
+            AssetProfile: true;
             dashboard: false;
             DeviceProfile: true;
             RuleChain: false;
-            AssetProfile: true;
           };
         }
       >;
-    alternativeLabel: Attribute.Component<'instructions.alternative-label'>;
-    relations: Attribute.Component<'instructions.relation-to-setup', true>;
-    flashInstruction: Attribute.Component<'firmware.flash-instruction', true>;
-    flashConfig: Attribute.Component<'firmware.flash-config'>;
   };
 }
 
 export interface InstructionsTask extends Schema.Component {
-  collectionName: 'components_instructions_tasks';
+  collectionName: "components_instructions_tasks";
   info: {
-    displayName: 'Task';
-    icon: 'bulletList';
-    description: '';
+    description: "";
+    displayName: "Task";
+    icon: "bulletList";
   };
   attributes: {
     text: Attribute.String & Attribute.Required;
@@ -230,127 +238,122 @@ export interface InstructionsTask extends Schema.Component {
 }
 
 export interface InstructionsTextInstruction extends Schema.Component {
-  collectionName: 'components_instructions_text_instructions';
+  collectionName: "components_instructions_text_instructions";
   info: {
-    displayName: 'textInstruction';
-    icon: 'arrowRight';
-    description: '';
+    description: "";
+    displayName: "textInstruction";
+    icon: "arrowRight";
   };
   attributes: {
-    meta: Attribute.Component<'instructions.base-instruction'> &
-      Attribute.Required;
+    meta: Attribute.Component<"instructions.base-instruction"> & Attribute.Required;
   };
 }
 
 export interface ThingsboardAssetProfile extends Schema.Component {
-  collectionName: 'components_thingsboard_asset_profiles';
+  collectionName: "components_thingsboard_asset_profiles";
   info: {
-    displayName: 'Asset Profile';
-    icon: 'chartBubble';
+    displayName: "Asset Profile";
+    icon: "chartBubble";
   };
   attributes: {
     Reference: Attribute.JSON &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
+        "plugin::thingsboard-plugin.thingsboardComponent",
         {
-          type: 'AssetProfile';
+          type: "AssetProfile";
+        }
+      >;
+  };
+}
+
+export interface ThingsboardComponent extends Schema.Component {
+  collectionName: "components_general_components";
+  info: {
+    description: "";
+    displayName: "Device Profile";
+    icon: "server";
+  };
+  attributes: {
+    Reference: Attribute.JSON &
+      Attribute.CustomField<
+        "plugin::thingsboard-plugin.thingsboardComponent",
+        {
+          type: "DeviceProfile";
         }
       >;
   };
 }
 
 export interface ThingsboardComponentDescription extends Schema.Component {
-  collectionName: 'components_thingsboard_component_descriptions';
+  collectionName: "components_thingsboard_component_descriptions";
   info: {
-    displayName: 'Component Description';
-    icon: 'information';
+    displayName: "Component Description";
+    icon: "information";
   };
   attributes: {
-    Component: Attribute.JSON &
-      Attribute.CustomField<'plugin::thingsboard-plugin.thingsboardComponent'>;
-    device: Attribute.Relation<
-      'thingsboard.component-description',
-      'oneToOne',
-      'api::device.device'
-    >;
-  };
-}
-
-export interface ThingsboardComponent extends Schema.Component {
-  collectionName: 'components_general_components';
-  info: {
-    displayName: 'Device Profile';
-    description: '';
-    icon: 'server';
-  };
-  attributes: {
-    Reference: Attribute.JSON &
-      Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
-        {
-          type: 'DeviceProfile';
-        }
-      >;
+    Component: Attribute.JSON & Attribute.CustomField<"plugin::thingsboard-plugin.thingsboardComponent">;
+    device: Attribute.Relation<"thingsboard.component-description", "oneToOne", "api::device.device">;
   };
 }
 
 export interface ThingsboardDashboard extends Schema.Component {
-  collectionName: 'components_thingsboard_dashboards';
+  collectionName: "components_thingsboard_dashboards";
   info: {
-    displayName: 'Dashboard';
-    icon: 'dashboard';
-    description: '';
+    description: "";
+    displayName: "Dashboard";
+    icon: "dashboard";
   };
   attributes: {
     Reference: Attribute.JSON &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
+        "plugin::thingsboard-plugin.thingsboardComponent",
         {
-          type: 'Dashboard';
+          type: "Dashboard";
         }
       >;
   };
 }
 
 export interface ThingsboardRuleChain extends Schema.Component {
-  collectionName: 'components_thingsboard_rule_chains';
+  collectionName: "components_thingsboard_rule_chains";
   info: {
-    displayName: 'Rule Chain';
-    icon: 'link';
+    displayName: "Rule Chain";
+    icon: "link";
   };
   attributes: {
     Reference: Attribute.JSON &
       Attribute.CustomField<
-        'plugin::thingsboard-plugin.thingsboardComponent',
+        "plugin::thingsboard-plugin.thingsboardComponent",
         {
-          type: 'RuleChain';
+          type: "RuleChain";
         }
       >;
   };
 }
 
-declare module '@strapi/types' {
+declare module "@strapi/types" {
   export module Shared {
     export interface Components {
-      'firm.firm-roles': FirmFirmRoles;
-      'firmware.flash-config-attribute': FirmwareFlashConfigAttribute;
-      'firmware.flash-config': FirmwareFlashConfig;
-      'firmware.flash-instruction': FirmwareFlashInstruction;
-      'firmware.test': FirmwareTest;
-      'general.address': GeneralAddress;
-      'instructions.alternative-label': InstructionsAlternativeLabel;
-      'instructions.base-instruction': InstructionsBaseInstruction;
-      'instructions.instructions': InstructionsInstructions;
-      'instructions.list-instruction': InstructionsListInstruction;
-      'instructions.relation-to-setup': InstructionsRelationToSetup;
-      'instructions.setup-instruction': InstructionsSetupInstruction;
-      'instructions.task': InstructionsTask;
-      'instructions.text-instruction': InstructionsTextInstruction;
-      'thingsboard.asset-profile': ThingsboardAssetProfile;
-      'thingsboard.component-description': ThingsboardComponentDescription;
-      'thingsboard.component': ThingsboardComponent;
-      'thingsboard.dashboard': ThingsboardDashboard;
-      'thingsboard.rule-chain': ThingsboardRuleChain;
+      "firm.firm-roles": FirmFirmRoles;
+      "firmware.flash-config": FirmwareFlashConfig;
+      "firmware.flash-config-attribute": FirmwareFlashConfigAttribute;
+      "firmware.flash-instruction": FirmwareFlashInstruction;
+      "firmware.test": FirmwareTest;
+      "general.address": GeneralAddress;
+      "instructions.alternative-label": InstructionsAlternativeLabel;
+      "instructions.attributes": InstructionsAttributes;
+      "instructions.base-instruction": InstructionsBaseInstruction;
+      "instructions.instructions": InstructionsInstructions;
+      "instructions.list-instruction": InstructionsListInstruction;
+      "instructions.relation-to-setup": InstructionsRelationToSetup;
+      "instructions.setup-instruction": InstructionsSetupInstruction;
+      "instructions.task": InstructionsTask;
+      "instructions.text-instruction": InstructionsTextInstruction;
+      "thingsboard.asset-profile": ThingsboardAssetProfile;
+      "thingsboard.component": ThingsboardComponent;
+      "thingsboard.component-description": ThingsboardComponentDescription;
+      "thingsboard.dashboard": ThingsboardDashboard;
+      "thingsboard.rule-chain": ThingsboardRuleChain;
     }
   }
 }
