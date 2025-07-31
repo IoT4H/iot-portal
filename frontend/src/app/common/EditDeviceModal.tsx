@@ -32,10 +32,12 @@ const Modal = ({
     deployment,
     triggerStateRefresh
 }: {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onClose?: Function;
     stepData: any;
     deployment: { id: number };
     device: any;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     triggerStateRefresh?: Function;
 }) => {
     const Attributes = stepData.data.serverAttributes;
@@ -50,12 +52,16 @@ const Modal = ({
 
     const triggerChild = () => {
         childRunRef.current?.();
+        allValid && onClose && onClose(true);
     };
 
     return (
         <>
-            <ModalUI onClose={onClose} name={`Bearbeiten`} canClose={allValid}>
-                <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
+            <ModalUI onClose={onClose} name={`Eigenschaften bearbeiten`} canClose={allValid}>
+                <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4 flex flex-col gap-y-8"}>
+                    <p className={"w-full text-center mt-4 text-pretty"}>
+                        Hier können die Hinterlegten Eigenschaften für dieses Gerät angepasst werden.
+                    </p>
                     <AttributeEdit
                         Attributes={Attributes}
                         deviceAsset={device}
@@ -65,19 +71,20 @@ const Modal = ({
                         }}
                         externalSaveTrigger={handleRegister}
                     />
+                    <div className={"mt-8 flex flex-row justify-center"}>
+                        <button
+                            className={
+                                "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"
+                            }
+                            disabled={!allValid}
+                            onClick={() => {
+                                triggerChild && triggerChild();
+                            }}
+                        >
+                            Speichern
+                        </button>
+                    </div>
                 </div>
-
-                <button
-                    className={
-                        "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"
-                    }
-                    disabled={!allValid}
-                    onClick={() => {
-                        triggerChild && triggerChild();
-                    }}
-                >
-                    Speichern
-                </button>
             </ModalUI>
         </>
     );
@@ -109,7 +116,6 @@ export const AttributeEdit = ({
     };
 
     const run = () => {
-        console.log("Child triggered");
         subChildFns.current.forEach((fn) => fn());
     };
 
@@ -122,6 +128,7 @@ export const AttributeEdit = ({
             {Attributes &&
                 Attributes.map((s: ServerAttributeProps, i: number) => (
                     <ServerAttribute
+                        key={i}
                         s={s}
                         deviceAsset={deviceAsset}
                         deployment={deployment}
@@ -170,11 +177,12 @@ export const ServerAttribute = ({
 
     const [v, SetV] = useState();
     const [prevV, SetPrevV] = useState();
+    const [preview, SetPreview] = useState();
     const [loadingPrevV, SetLoadingPrevV] = useState<boolean>(false);
 
     useEffect(() => {
-        validValued((serverAttributeProps.enforced && prevV) || !serverAttributeProps.enforced);
-    }, [prevV]);
+        validValued((serverAttributeProps.enforced && v == "TEST") || !serverAttributeProps.enforced);
+    }, [prevV, v, serverAttributeProps]);
 
     const getCurrentValue = useCallback(() => {
         SetLoadingPrevV(true);
@@ -189,20 +197,23 @@ export const ServerAttribute = ({
             }
         )
             .then((response: any) => {
-                const v = Array.of(...response).find((r: any) => {
-                    return r.key === serverAttributeProps.attributeName;
-                })?.value;
+                const v =
+                    Array.of<{ key: string; value: any }>(...response).find((r: { key: string; value: any }) => {
+                        return r.key === serverAttributeProps.attributeName;
+                    })?.value || undefined;
                 if (v) {
                     SetV(v);
                     SetPrevV(v);
-                } else if (v === undefined && serverAttributeProps.defaultValue) {
+                    SetPreview(v);
+                } else {
                     SetV(serverAttributeProps.defaultValue);
                     SetPrevV(serverAttributeProps.defaultValue);
+                    SetPreview(serverAttributeProps.defaultValue);
                 }
-
-                SetLoadingPrevV(false);
             })
-            .finally(() => {});
+            .finally(() => {
+                SetLoadingPrevV(false);
+            });
     }, [deployment, deviceAsset]);
 
     useEffect(() => {
@@ -250,7 +261,7 @@ export const ServerAttribute = ({
                 inputClassName={"pr-10"}
                 required={serverAttributeProps.enforced}
                 {...props}
-                placeholder={serverAttributeProps.defaultValue}
+                placeholder={preview}
                 onChange={(event: { currentTarget: { value: any } }) => {
                     SetV(event.currentTarget.value);
                 }}
@@ -264,7 +275,7 @@ export const ServerAttribute = ({
                                 <ArrowRightIcon className={"h-5 w-5"} />
                             </button>
                         )}
-                        {prevV === v && !loadingPrevV && (
+                        {prevV === v && !loadingPrevV && externalSaveTrigger === undefined && (
                             <div className={"p-1 absolute  text-green-500 right-2"}>
                                 <CheckIcon className={"h-5 w-5"} />
                             </div>
