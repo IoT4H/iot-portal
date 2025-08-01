@@ -410,18 +410,24 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                             <FieldSetInput
                                 label={"Wlan-Name (SSID)"}
                                 disabled={!wifiConfig}
+                                autocomplete={"off"}
+                                type={"text"}
+                                name={"ssid"}
                                 required={wifiConfig}
                                 onChange={(event: any) => SetWifiSSID(event.currentTarget.value)}
                             />
                             <FieldSetInput
                                 label={"Passwort"}
                                 type={"password"}
+                                name={"wifi-password"}
+                                autocomplete={"off"}
                                 disabled={!wifiConfig}
                                 required={wifiConfig}
                                 onChange={(event: any) => SetWifiPassword(event.currentTarget.value)}
                             />
                             <FieldSetSelect
                                 label={"Sicherheit"}
+                                autocomplete={"off"}
                                 disabled={!wifiConfig}
                                 required={wifiConfig}
                                 onChange={(event: any) => SetWifiSec(event.currentTarget.value)}
