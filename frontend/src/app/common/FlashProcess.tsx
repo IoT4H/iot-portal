@@ -92,9 +92,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
             console.debug(`Total devices: ${devices.length}`);
             SetDevices(devices);
             devices.forEach((device: any) => {
-                console.debug(
-                    `Product name: ${device.productName}, serial number ${device.serialNumber}`
-                );
+                console.debug(`Product name: ${device.productName}, serial number ${device.serialNumber}`);
             });
         });
     };
@@ -157,7 +155,6 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
         },
         writeLine(data: any) {
             // @ts-ignore
-
 
             if (data.match(new RegExp(/VendorID|ProductID/i))) {
                 SetVendorID(data.match(new RegExp(/(?<=VendorID )(\d|\w)+/i))[0]);
@@ -225,7 +222,6 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                     // Temporarily broken
                     // await esploader.flashId();
                 } catch (e: any) {
-
                     SetErrors([`${e.message}`]);
                 } finally {
                     resolve();
@@ -331,19 +327,13 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                                 {stepData.data.flashConfig?.deviceConnectName && (
                                     <p className={"text-sm  text-center"}>
                                         Dies sollte in der Regel der{" "}
-                                        <b>
-                                            &quot; {stepData.data.flashConfig?.deviceConnectName}{" "}
-                                            &quot;
-                                        </b>{" "}
-                                        sein.{" "}
+                                        <b>&quot; {stepData.data.flashConfig?.deviceConnectName} &quot;</b> sein.{" "}
                                     </p>
                                 )}
                             </>
                         ) : (
                             <>
-                                <span className={"text-xl font-bold text-center"}>
-                                    Verbindung wird aufgebaut
-                                </span>
+                                <span className={"text-xl font-bold text-center"}>Verbindung wird aufgebaut</span>
                                 <div className={"relative flex flex-row justify-center mt-4"}>
                                     <Spinner className={"h-24"}></Spinner>
                                 </div>
@@ -405,29 +395,13 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
             <Instruction
                 title={"Konfigurieren"}
                 content={
-                    <div
-                        className={
-                            " flex flex-col place-content-start h-full bg-black/10 rounded-lg"
-                        }
-                    >
+                    <div className={" flex flex-col place-content-start h-full bg-black/10 rounded-lg"}>
                         <div
-                            className={
-                                "flex flex-row flex-grow-0 flex-shrink-0 font-bold text-lg gap-x-1 bg-zinc-700"
-                            }
+                            className={"flex flex-row flex-grow-0 flex-shrink-0 font-bold text-lg gap-x-1 bg-zinc-700"}
                         >
-                            <div
-                                className={
-                                    "bg-black/10 px-6 py-4 flex-grow-0 cursor-pointer rounded-t-lg"
-                                }
-                            >
-                                WLAN
-                            </div>
+                            <div className={"bg-black/10 px-6 py-4 flex-grow-0 cursor-pointer rounded-t-lg"}>WLAN</div>
                         </div>
-                        <form
-                            className={
-                                "flex-grow-1 overflow-y-auto p-4 gap-y-2 flex flex-col rounded-tr-lg"
-                            }
-                        >
+                        <form className={"flex-grow-1 overflow-y-auto p-4 gap-y-2 flex flex-col rounded-tr-lg"}>
                             <FieldSetCheckbox
                                 label={"Ein / Aus"}
                                 onClick={(event: any) => SetWifiConfig(event.currentTarget.checked)}
@@ -436,20 +410,24 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                             <FieldSetInput
                                 label={"Wlan-Name (SSID)"}
                                 disabled={!wifiConfig}
+                                autocomplete={"off"}
+                                type={"text"}
+                                name={"ssid"}
                                 required={wifiConfig}
                                 onChange={(event: any) => SetWifiSSID(event.currentTarget.value)}
                             />
                             <FieldSetInput
                                 label={"Passwort"}
                                 type={"password"}
+                                name={"wifi-password"}
+                                autocomplete={"off"}
                                 disabled={!wifiConfig}
                                 required={wifiConfig}
-                                onChange={(event: any) =>
-                                    SetWifiPassword(event.currentTarget.value)
-                                }
+                                onChange={(event: any) => SetWifiPassword(event.currentTarget.value)}
                             />
                             <FieldSetSelect
                                 label={"Sicherheit"}
+                                autocomplete={"off"}
                                 disabled={!wifiConfig}
                                 required={wifiConfig}
                                 onChange={(event: any) => SetWifiSec(event.currentTarget.value)}
@@ -501,9 +479,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
             <Instruction
                 title={"Flashen"}
                 content={
-                    <div
-                        className={" flex flex-col gap-4 place-content-center h-full items-center"}
-                    >
+                    <div className={" flex flex-col gap-4 place-content-center h-full items-center"}>
                         <div className={"flex flex-col items-center gap-2 mb-4"}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -531,11 +507,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                                 </div>
                             )}
                         </div>
-                        {!flashProgress && (
-                            <p className={"text-sm  text-center"}>
-                                Nun wird die Firmware aufgespielt.
-                            </p>
-                        )}
+                        {!flashProgress && <p className={"text-sm  text-center"}>Nun wird die Firmware aufgespielt.</p>}
                         {flashProgress && (
                             <>
                                 <p className={"text-sm  text-center"}>
@@ -555,8 +527,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                             Flashen starten
                         </div>
                         <span className={"text-[0.6rem]"}>
-                            * All Espressif&apos;s logos are trademarks of Espressif Systems
-                            (Shanghai) Co., Ltd.
+                            * All Espressif&apos;s logos are trademarks of Espressif Systems (Shanghai) Co., Ltd.
                         </span>
                     </div>
                 }
@@ -613,10 +584,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                 action={
                     // @ts-ignore
                     window.navigator.serial ? (
-                        <div
-                            className={"btn-primary w-min"}
-                            onClick={() => SetStep(Steps.ANSCHLIESSEN)}
-                        >
+                        <div className={"btn-primary w-min"} onClick={() => SetStep(Steps.ANSCHLIESSEN)}>
                             Erledigt
                         </div>
                     ) : undefined
@@ -634,9 +602,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                         <div>
                             <CheckBadgeIcon className={"h-32"} />
                         </div>
-                        <p className={"text-md text-center font-bold"}>
-                            Der Vorgang ist nun abgeschlossen.
-                        </p>
+                        <p className={"text-md text-center font-bold"}>Der Vorgang ist nun abgeschlossen.</p>
                         <ConfettiExplosion
                             duration={5000}
                             width={1200}
@@ -676,9 +642,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
 
                             const response = await fetch(
                                 `${getLittleFSURL()}?${qs.stringify({
-                                    littlefsSize: parseInt(
-                                        stepData.data.flashConfig?.littlefsSize || "0xE0000"
-                                    )
+                                    littlefsSize: parseInt(stepData.data.flashConfig?.littlefsSize || "0xE0000")
                                 })}`,
                                 {
                                     method: "post",
@@ -714,12 +678,9 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                         return {
                             data: await new Promise(async (resolve, reject) => {
                                 try {
-                                    const response = await fetch(
-                                        getStrapiURLForFrontend(fI.binary.url),
-                                        {
-                                            cache: "force-cache"
-                                        }
-                                    );
+                                    const response = await fetch(getStrapiURLForFrontend(fI.binary.url), {
+                                        cache: "force-cache"
+                                    });
                                     if (!response.ok) {
                                         throw new Error(`HTTP error! status: ${response.status}`);
                                     }
@@ -757,9 +718,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
 
                 // Non-numeric or blank offset
                 if (Number.isNaN(offset))
-                    console.warn(
-                        `Offset (${offset}) field in row ` + index + " is not a valid address!"
-                    );
+                    console.warn(`Offset (${offset}) field in row ` + index + " is not a valid address!");
                 // Repeated offset used
                 else if (offsetArr.includes(offset))
                     console.warn("Offset field in row " + index + " is already in use!");
@@ -771,7 +730,6 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
             }
 
             //------
-
 
             try {
                 const flashOptions: FlashOptions = {
@@ -787,8 +745,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                         SetFileFlashCount(fileArray.length);
                         SetFlashProgress(
                             Math.round(
-                                ((written / total) * 100) / fileArray.length +
-                                    fileIndex * (100 / fileArray.length)
+                                ((written / total) * 100) / fileArray.length + fileIndex * (100 / fileArray.length)
                             )
                         );
                     },
@@ -869,10 +826,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
                                     name={s.name}
                                     note={s.note}
                                     active={step === s.name}
-                                    done={
-                                        index < sarray.findIndex((f) => step === f.name) ||
-                                        step === Steps.FERTIG
-                                    }
+                                    done={index < sarray.findIndex((f) => step === f.name) || step === Steps.FERTIG}
                                 ></Step>
                             );
                         })}
@@ -892,17 +846,7 @@ const FlashProgress = ({ onClose, stepData }: { onClose?: Function; stepData: an
     );
 };
 
-const Step = ({
-    name,
-    note,
-    active,
-    done
-}: {
-    name: string;
-    note: string;
-    active: boolean;
-    done: boolean;
-}) => {
+const Step = ({ name, note, active, done }: { name: string; note: string; active: boolean; done: boolean }) => {
     return (
         <div className={"flex flex-row items-center justify-end"}>
             <div className={"text-right mb-6 mt-2 pr-4"}>
@@ -920,11 +864,7 @@ const Step = ({
 
 const ProgressBar = ({ progress }: { progress?: number }) => {
     return (
-        <div
-            className={
-                "rounded-xl overflow-hidden h-6 bg-white/10 block w-64 mt-4 text-center relative isolate"
-            }
-        >
+        <div className={"rounded-xl overflow-hidden h-6 bg-white/10 block w-64 mt-4 text-center relative isolate"}>
             <div className={"text-white z-10"}>{progress || 0}%</div>
             <div
                 className={"h-full bg-orange-500 absolute top-0 -z-10 transition-all"}
@@ -945,16 +885,9 @@ const Instruction = ({
 }) => {
     return (
         <div className={"flex flex-col h-full gap-4 place-content-between"}>
-            <span className={"block text-2xl font-bold text-center pb-4 flex-grow-0 flex-shrink-0"}>
-                {" "}
-                {title}
-            </span>
+            <span className={"block text-2xl font-bold text-center pb-4 flex-grow-0 flex-shrink-0"}> {title}</span>
             <div className={" flex-grow flex-shrink-0"}>{content}</div>
-            {action && (
-                <div className={" flex-grow-0 flex-shrink-0 flex flex-row justify-center"}>
-                    {action}
-                </div>
-            )}
+            {action && <div className={" flex-grow-0 flex-shrink-0 flex flex-row justify-center"}>{action}</div>}
         </div>
     );
 };

@@ -1,8 +1,8 @@
 "use client";
 import { CpuChipIcon } from "@heroicons/react/20/solid";
 import { ArrowDownTrayIcon, PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
-import DeviceAttributeModal from "@iot-portal/frontend/app/common/DeviceAttributeModal";
 import DeviceSetupModal from "@iot-portal/frontend/app/common/DeviceSetupModal";
+import EditDeviceModal from "@iot-portal/frontend/app/common/EditDeviceModal";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -25,16 +25,11 @@ const DeviceBox = ({
     device: any;
     setup: any;
     stepData: any;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     devicesRefresh: Function;
 }) => {
-    const [flashModalOpen, toggleFlashModalOpen] = useReducer(
-        (prevState: boolean): boolean => !prevState,
-        false
-    );
-    const [editModalOpen, toggleEditModalOpen] = useReducer(
-        (prevState: boolean): boolean => !prevState,
-        false
-    );
+    const [flashModalOpen, toggleFlashModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
+    const [editModalOpen, toggleEditModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
     const [exportModalOpen, setExportModalOpen] = useState(false);
     const [availableKeys, setAvailableKeys] = useState<string[]>([]);
     const defaultDateRange: Range[] = [
@@ -117,10 +112,7 @@ const DeviceBox = ({
                     }
                 );
 
-                if (
-                    !data ||
-                    Object.values(data).every((arr) => !Array.isArray(arr) || arr.length === 0)
-                ) {
+                if (!data || Object.values(data).every((arr) => !Array.isArray(arr) || arr.length === 0)) {
                     toast.error("Zeitraum enthält keine Sensordaten zum Exportieren.");
                     return;
                 }
@@ -202,38 +194,31 @@ const DeviceBox = ({
                         <div
                             title={"Flashen"}
                             onClick={toggleFlashModalOpen}
-                            className={
-                                "p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"
-                            }
+                            className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-blue-600/50 text-white cursor-pointer"}
                         >
                             <CpuChipIcon className={"w-4 aspect-square"} />
                         </div>
                     )}
-                  {Array.of(...stepData.data.serverAttributes).length > 0 && (
-                    <div
-                        title={"Bearbeiten"}
-                        onClick={toggleEditModalOpen}
-                        className={
-                            "p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"
-                        }
-                    >
-                        <PencilIcon className={"w-4 aspect-square"} />
-                    </div>)}
+                    {Array.of(...stepData.data.serverAttributes).length > 0 && (
+                        <div
+                            title={"Bearbeiten"}
+                            onClick={toggleEditModalOpen}
+                            className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-green-600/50 text-white cursor-pointer"}
+                        >
+                            <PencilIcon className={"w-4 aspect-square"} />
+                        </div>
+                    )}
                     <div
                         title={"Export"}
                         onClick={() => setExportModalOpen(true)}
-                        className={
-                            "p-2 rounded-3xl bg-gray-400/25 hover:bg-base-300 text-white cursor-pointer"
-                        }
+                        className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-base-300 text-white cursor-pointer"}
                     >
                         <ArrowDownTrayIcon className={"w-4 aspect-square"} />
                     </div>
                     <div
                         title={"Löschen"}
                         onClick={() => deleteDevice()}
-                        className={
-                            "p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"
-                        }
+                        className={"p-2 rounded-3xl bg-gray-400/25 hover:bg-red-600/50 text-white cursor-pointer"}
                     >
                         <TrashIcon className={"w-4 aspect-square"} />
                     </div>
@@ -250,11 +235,12 @@ const DeviceBox = ({
                 />
             )}
             {editModalOpen && (
-              <DeviceAttributeModal
-                stepData={{ ...stepData }}
-                device={device}
-                deployment={{ id: setup.id }}
-                onClose={() => toggleEditModalOpen()} />
+                <EditDeviceModal
+                    stepData={{ ...stepData }}
+                    device={device}
+                    deployment={{ id: setup.id }}
+                    onClose={() => toggleEditModalOpen()}
+                />
             )}
             {exportModalOpen && typeof window !== "undefined" && (
                 <ExportTelemetryModal
@@ -276,10 +262,7 @@ const DeviceBox = ({
 const ProfileBox = ({ profile, setup, stepData }: { profile: any; setup: any; stepData?: any }) => {
     const [devices, SetDevices] = useState<any>();
 
-    const [modalOpen, toggleModalOpen] = useReducer(
-        (prevState: boolean): boolean => !prevState,
-        false
-    );
+    const [modalOpen, toggleModalOpen] = useReducer((prevState: boolean): boolean => !prevState, false);
 
     const loadDevices = useCallback(() => {
         LoadingState.startLoading();
@@ -306,9 +289,7 @@ const ProfileBox = ({ profile, setup, stepData }: { profile: any; setup: any; st
     return (
         <div className={`p-4 bg-gray-500/20 rounded`}>
             <div className={"flex flex-row items-center"}>
-                <h2 className={"text-xl font-bold flex-shrink"}>
-                    {profile.name.replace(setup.name + " | ", "")}
-                </h2>
+                <h2 className={"text-xl font-bold flex-shrink"}>{profile.name.replace(setup.name + " | ", "")}</h2>
                 <div className={"aspect-square flex-shrink-0 ml-auto"}>
                     {!!stepData.data && (
                         <>
@@ -326,10 +307,8 @@ const ProfileBox = ({ profile, setup, stepData }: { profile: any; setup: any; st
                                     config={{
                                         deployment: setup.id,
                                         thingsboard_profile: stepData.data.thingsboard_profile,
-                                        form_alternative_label:
-                                            stepData.data.form_alternative_label,
-                                        form_alternative_label_required:
-                                            stepData.data.form_alternative_label_required
+                                        form_alternative_label: stepData.data.form_alternative_label,
+                                        form_alternative_label_required: stepData.data.form_alternative_label_required
                                     }}
                                     step={stepData}
                                     triggerStateRefresh={() => loadDevices()}
@@ -403,11 +382,7 @@ const Page = ({ params }: { params: { id: number } }) => {
                     }
                 }
             ).then((respond) => {
-                SetSteps(
-                    Array.of(...respond).filter(
-                        (step) => step.__component === "instructions.setup-instruction"
-                    )
-                );
+                SetSteps(Array.of(...respond).filter((step) => step.__component === "instructions.setup-instruction"));
             });
         });
     }, []);
@@ -426,8 +401,7 @@ const Page = ({ params }: { params: { id: number } }) => {
                                     data: steps?.find(
                                         (step) =>
                                             step.thingsboard_profile.id == profile.id.id &&
-                                            step.thingsboard_profile.entityType ==
-                                                profile.id.entityType
+                                            step.thingsboard_profile.entityType == profile.id.entityType
                                     )
                                 }}
                             />

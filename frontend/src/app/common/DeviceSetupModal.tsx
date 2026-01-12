@@ -1,9 +1,10 @@
 "use client";
 
+import DeviceAttributeModal from "@iot-portal/frontend/app/common/DeviceAttributeModal";
 import { FieldSetInput, FieldSetPatternInput } from "@iot-portal/frontend/app/common/FieldSet";
 import FlashProgress from "@iot-portal/frontend/app/common/FlashProcess";
 import { ModalUI } from "@iot-portal/frontend/app/common/modal";
-import { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
+import PageBlockingSpinner, { LoadingState } from "@iot-portal/frontend/app/common/pageBlockingSpinner";
 import { Prompt, PromptType } from "@iot-portal/frontend/app/common/prompt";
 import { RelationMappings } from "@iot-portal/frontend/app/common/RelationMapping";
 import { fetchAPI } from "@iot-portal/frontend/lib/api";
@@ -24,9 +25,11 @@ const Modal = ({
     step,
     triggerStateRefresh
 }: {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onClose?: Function;
     config: any;
     step: any;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     triggerStateRefresh?: Function;
 }) => {
     const [name, SetName] = useState<string>("");
@@ -35,9 +38,9 @@ const Modal = ({
     const [gateway, SetGateway] = useState<boolean>(false);
 
     const [flashProcess, switchFlashProcess] = useState<boolean>(false);
+    const [serverAttributeProcess, switchServerAttributeProcess] = useState<boolean>(false);
 
-
-  const [relations, SetRelations] = useState([]);
+    const [relations, SetRelations] = useState([]);
     const [relationValues, SetRelationValues] = useReducer(
         (state: Map<number, any>, action: { index: any; relation: any }) => {
             const b = state;
@@ -46,6 +49,16 @@ const Modal = ({
         },
         new Map<number, any>([])
     );
+
+    /*
+    const [serverAttributeValues, SetServerAttributeValues] = useReducer(
+        (state: Map<string, any>, action: { attribute: string; value: any }) => {
+            const b = state;
+            b.set(action.attribute, action.value);
+            return b;
+        },
+        new Map<string, any>([])
+    );*/
 
     const [error, SetError] = useState<string | undefined>();
 
@@ -77,28 +90,33 @@ const Modal = ({
         )
             .then(
                 (response) => {
-
-                  if (response && response.id) {
+                    if (response && response.id) {
                         SetComponent(response.id);
+                        if (!step.state?.device) {
+                            step.state = Object.assign(step.state || {}, { device: response.id });
+                        }
                     }
 
                     if (response.error) {
-
-                      SetError(response.error.message);
+                        SetError(response.error.message);
                     }
 
                     if (Array.of(...step.data.flashInstruction).length > 0) {
                         switchFlashProcess(true);
+                    } else if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0) {
+                        switchServerAttributeProcess(true);
                     }
 
-                    if (!response.error && Array.of(...step.data.flashInstruction).length === 0) {
-
-                      if (onClose) onClose();
+                    if (
+                        !response.error &&
+                        Array.of(...step.data.flashInstruction).length === 0 &&
+                        Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length === 0
+                    ) {
+                        if (onClose) onClose();
                     }
                 },
                 (reason) => {
-
-                  SetError(reason.error.message);
+                    SetError(reason.error.message);
                 }
             )
             .finally(() => {
@@ -126,7 +144,41 @@ const Modal = ({
                 })
             }
         )
-            .then((res) => {})
+            .then((res) => {
+                step.state = Object.assign(step.state || {}, { flash: { progress: 100 } });
+                switchFlashProcess(false);
+                if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0) {
+                    switchServerAttributeProcess(true);
+                }
+            })
+            .finally(() => {
+                LoadingState.endLoading();
+                triggerStateRefresh && triggerStateRefresh();
+            });
+    };
+
+    const serverAttributesComplete = () => {
+        fetchAPI(
+            `/api/thingsboard-plugin/deployment/${config.deployment}/steps/action`,
+            {},
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify({
+                    step: step,
+                    parameter: {
+                        serverAttributes: {
+                            progress: 100
+                        }
+                    }
+                })
+            }
+        )
+            .then((res) => {
+                step.state = Object.assign(step.state || {}, { serverAttributes: { progress: 100 } });
+            })
             .finally(() => {
                 LoadingState.endLoading();
                 triggerStateRefresh && triggerStateRefresh();
@@ -139,8 +191,7 @@ const Modal = ({
         return (
             label.length > 0 &&
             relations.length === Array.from(relationValues.values()).length &&
-            (!step.data.alternativeLabel ||
-                (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP))
+            (!step.data.alternativeLabel || (name.length > 0 && overlapStatus === overlaps.NO_OVERLAP))
         );
     };
 
@@ -148,13 +199,21 @@ const Modal = ({
         SetRelations(step.data.relations);
     }, [step]);
 
-    useEffect(() => {
-
-    }, [name, relations]);
+    useEffect(() => {}, [name, relations]);
 
     useEffect(() => {
-        if (!(!step.data.setup || step.state.setup.progress < 100)) {
+        if (!step.data.setup || step.state.setup?.progress !== 100) {
+            switchFlashProcess(false);
+            switchServerAttributeProcess(false);
+        } else if (step.state.flash?.progress !== 100 && Array.of(...step.data.flashInstruction).length > 0) {
+            switchServerAttributeProcess(false);
             switchFlashProcess(true);
+        } else if (
+            step.state.serverAttributes?.progress !== 100 &&
+            Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length > 0
+        ) {
+            switchFlashProcess(false);
+            switchServerAttributeProcess(true);
         }
     }, [step]);
 
@@ -174,7 +233,7 @@ const Modal = ({
                     SetOverlapStatus(overlaps.OVERLAP);
                 }
 
-              if (response.error?.status == 404) {
+                if (response.error?.status == 404) {
                     SetOverlapStatus(overlaps.NO_OVERLAP);
                 }
             });
@@ -183,173 +242,160 @@ const Modal = ({
 
     return (
         <>
-            {
-                !flashProcess ? (
-                    <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
-                        <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
-                            <div className={""}>
-                                <p className={"w-full text-center mt-4 text-pretty"}>
-                                    Folgende Informationen werden benötigt,
-                                    <br /> um die richtigen Konfigurationen in der Datenplattform zu
-                                    hinterlegen.
-                                </p>
-                                <div className={"flex flex-col gap-6 pt-4"}>
-                                    <div>
-                                        <FieldSetInput
-                                            label={"Name"}
-                                            type="text"
-                                            required
-                                            name="label"
-                                            onChange={(event: any) =>
-                                                SetLabel(event.currentTarget.value)
-                                            }
-                                        ></FieldSetInput>
-                                    </div>
-                                    {!!step.data.alternativeLabel &&
-                                        (!step.data.alternativeLabel
-                                            .form_alternative_label_pattern ? (
-                                            <div>
-                                                <FieldSetInput
-                                                    label={
-                                                        step.data.alternativeLabel
-                                                            .form_alternative_label
-                                                    }
-                                                    type="text"
-                                                    required
-                                                    name="name"
-                                                    onChange={(event: any) =>
-                                                        SetName(event.currentTarget.value)
-                                                    }
-                                                >
-                                                    {(overlapStatus === overlaps.OVERLAP && (
-                                                        <span className={"text-red-600"}>
-                                                            {
-                                                                step.data.alternativeLabel
-                                                                    .form_alternative_label
-                                                            }{" "}
-                                                            bereits in Verwendung!
+            {!flashProcess && !serverAttributeProcess && (
+                <ModalUI onClose={onClose} name={`${step.data.meta.name}`}>
+                    <div className={" min-w-[30vw] max-w-[80vw] w-80 pb-4 mt-4"}>
+                        <div className={""}>
+                            <p className={"w-full text-center mt-4 text-pretty"}>
+                                Folgende Informationen werden benötigt,
+                                <br /> um die richtigen Konfigurationen in der Datenplattform zu hinterlegen.
+                            </p>
+                            <div className={"flex flex-col gap-6 pt-4"}>
+                                <div>
+                                    <FieldSetInput
+                                        label={"Name"}
+                                        type="text"
+                                        required
+                                        name="label"
+                                        onChange={(event: any) => SetLabel(event.currentTarget.value)}
+                                    ></FieldSetInput>
+                                </div>
+                                {!!step.data.alternativeLabel &&
+                                    (!step.data.alternativeLabel.form_alternative_label_pattern ? (
+                                        <div>
+                                            <FieldSetInput
+                                                label={step.data.alternativeLabel.form_alternative_label}
+                                                type="text"
+                                                required
+                                                name="name"
+                                                onChange={(event: any) => SetName(event.currentTarget.value)}
+                                            >
+                                                {(overlapStatus === overlaps.OVERLAP && (
+                                                    <span className={"text-red-600"}>
+                                                        {step.data.alternativeLabel.form_alternative_label} bereits in
+                                                        Verwendung!
+                                                    </span>
+                                                )) ||
+                                                    (overlapStatus === overlaps.NO_OVERLAP && (
+                                                        <span className={"text-green-600"}>
+                                                            {step.data.alternativeLabel.form_alternative_label} noch
+                                                            nicht verwendet!
                                                         </span>
                                                     )) ||
-                                                        (overlapStatus === overlaps.NO_OVERLAP && (
-                                                            <span className={"text-green-600"}>
-                                                                {
-                                                                    step.data.alternativeLabel
-                                                                        .form_alternative_label
-                                                                }{" "}
-                                                                noch nicht verwendet!
-                                                            </span>
-                                                        )) ||
-                                                        (overlapStatus === overlaps.LOADING && (
-                                                            <>
-                                                                <span>Prüft...</span>
-                                                            </>
-                                                        ))}
-                                                </FieldSetInput>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <FieldSetPatternInput
-                                                    label={
-                                                        step.data.alternativeLabel
-                                                            .form_alternative_label
-                                                    }
-                                                    required
-                                                    name="name"
-                                                    pattern={
-                                                        step.data.alternativeLabel
-                                                            .form_alternative_label_pattern
-                                                    }
-                                                    onChange={(value: string) => {
-                                                        SetName(value);
-                                                    }}
-                                                >
-                                                    {(overlapStatus === overlaps.OVERLAP && (
-                                                        <span className={"text-red-600"}>
-                                                            {
-                                                                step.data.alternativeLabel
-                                                                    .form_alternative_label
-                                                            }{" "}
-                                                            bereits in Verwendung!
+                                                    (overlapStatus === overlaps.LOADING && (
+                                                        <>
+                                                            <span>Prüft...</span>
+                                                        </>
+                                                    ))}
+                                            </FieldSetInput>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <FieldSetPatternInput
+                                                label={step.data.alternativeLabel.form_alternative_label}
+                                                required
+                                                name="name"
+                                                pattern={step.data.alternativeLabel.form_alternative_label_pattern}
+                                                onChange={(value: string) => {
+                                                    SetName(value);
+                                                }}
+                                            >
+                                                {(overlapStatus === overlaps.OVERLAP && (
+                                                    <span className={"text-red-600"}>
+                                                        {step.data.alternativeLabel.form_alternative_label} bereits in
+                                                        Verwendung!
+                                                    </span>
+                                                )) ||
+                                                    (overlapStatus === overlaps.NO_OVERLAP && (
+                                                        <span className={"text-green-600"}>
+                                                            {step.data.alternativeLabel.form_alternative_label} noch
+                                                            nicht verwendet!
                                                         </span>
                                                     )) ||
-                                                        (overlapStatus === overlaps.NO_OVERLAP && (
-                                                            <span className={"text-green-600"}>
-                                                                {
-                                                                    step.data.alternativeLabel
-                                                                        .form_alternative_label
-                                                                }{" "}
-                                                                noch nicht verwendet!
-                                                            </span>
-                                                        )) ||
-                                                        (overlapStatus === overlaps.LOADING && (
-                                                            <>
-                                                                <span>Prüft...</span>
-                                                            </>
-                                                        ))}
-                                                </FieldSetPatternInput>
-                                            </div>
-                                        ))}
-                                    <div>
-                                        <FieldSetInput
-                                            label={"Beschreibung (Optional)"}
-                                            multiline
-                                            type="text"
-                                            placeholder={
-                                                "Dieses Feld kann optional eine Erklärung zum Gerät enthalten."
-                                            }
-                                            name="description"
-                                            className={"h-12"}
-                                            onChange={(event: any) =>
-                                                SetDescription(event.currentTarget.value)
-                                            }
-                                        ></FieldSetInput>
-                                    </div>
-                                    <RelationMappings
-                                        relations={relations}
-                                        linkingComponent={component}
-                                        deploymentId={config.deployment}
-                                        onChanges={relations.map((r: any, i, a) => {
-                                            return (value: any) => {
-                                                return value
-                                                    ? SetRelationValues({
-                                                          index: i,
-                                                          relation: {
-                                                              toId: value.id,
-                                                              direction: r.direction,
-                                                              name: r.name
-                                                          }
-                                                      })
-                                                    : () => {};
-                                            };
-                                        })}
-                                    />
+                                                    (overlapStatus === overlaps.LOADING && (
+                                                        <>
+                                                            <span>Prüft...</span>
+                                                        </>
+                                                    ))}
+                                            </FieldSetPatternInput>
+                                        </div>
+                                    ))}
+                                <div>
+                                    <FieldSetInput
+                                        label={"Beschreibung (Optional)"}
+                                        multiline
+                                        type="text"
+                                        placeholder={"Dieses Feld kann optional eine Erklärung zum Gerät enthalten."}
+                                        name="description"
+                                        className={"h-12"}
+                                        onChange={(event: any) => SetDescription(event.currentTarget.value)}
+                                    ></FieldSetInput>
                                 </div>
-                                <div className={"mt-8 flex flex-row justify-center"}>
-                                    <button
-                                        className={
-                                            "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"
-                                        }
-                                        disabled={!actionable()}
-                                        onClick={() => setupDevice()}
-                                    >
-                                        Anlegen
-                                    </button>
-                                </div>
+                                <RelationMappings
+                                    relations={relations}
+                                    linkingComponent={component}
+                                    deploymentId={config.deployment}
+                                    onChanges={relations.map((r: any, i, a) => {
+                                        return (value: any) => {
+                                            return value
+                                                ? SetRelationValues({
+                                                      index: i,
+                                                      relation: {
+                                                          toId: value.id,
+                                                          direction: r.direction,
+                                                          name: r.name
+                                                      }
+                                                  })
+                                                : () => {};
+                                        };
+                                    })}
+                                />
+                            </div>
+                            <div className={"mt-8 flex flex-row justify-center"}>
+                                <button
+                                    className={
+                                        "rounded hover:bg-orange-600 bg-orange-500 text-white px-8 py-2 drop-shadow disabled:bg-zinc-500 disabled:cursor-not-allowed"
+                                    }
+                                    disabled={!actionable()}
+                                    onClick={() => setupDevice()}
+                                >
+                                    Anlegen
+                                </button>
                             </div>
                         </div>
-                    </ModalUI>
-                ) : (
-                    <FlashProgress
+                    </div>
+                </ModalUI>
+            )}{" "}
+            {flashProcess && !serverAttributeProcess && (
+                <FlashProgress
+                    onClose={(b?: boolean) => {
+                        if (b) {
+                            flashComplete();
+
+                            if (Array.of(...step.data.serverAttributes).filter((sa) => sa.enforced).length === 0) {
+                                if (onClose) onClose();
+                            }
+                        } else {
+                            if (onClose) onClose();
+                        }
+                    }}
+                    stepData={step}
+                ></FlashProgress>
+            )}
+            {serverAttributeProcess &&
+                (step.state?.device ? (
+                    <DeviceAttributeModal
                         onClose={(b?: boolean) => {
-                            if (b) flashComplete();
+                            if (b) serverAttributesComplete();
                             if (onClose) onClose();
                         }}
                         stepData={step}
-                    ></FlashProgress>
-                )
-
-                //TODO: move FlashProgress out into Step
-            }
+                        device={{ id: step.state.device }}
+                        deployment={{ id: config.deployment }}
+                    ></DeviceAttributeModal>
+                ) : (
+                    <PageBlockingSpinner />
+                ))}
             {error && (
                 <Prompt
                     type={PromptType.Error}
